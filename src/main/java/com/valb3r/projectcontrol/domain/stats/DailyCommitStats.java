@@ -1,4 +1,4 @@
-package com.valb3r.projectcontrol.domain;
+package com.valb3r.projectcontrol.domain.stats;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,10 +8,6 @@ import lombok.Setter;
 import lombok.ToString;
 import org.neo4j.ogm.annotation.NodeEntity;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import java.util.List;
-
 @Getter
 @Setter
 @ToString
@@ -19,11 +15,5 @@ import java.util.List;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 @NodeEntity
-public class User {
-
-    @NotBlank
-    private String name;
-
-    @NotEmpty
-    private List<String> aliases;
+public class DailyCommitStats extends CommitStats {
 }

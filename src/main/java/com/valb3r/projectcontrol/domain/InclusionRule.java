@@ -8,6 +8,8 @@ import lombok.Setter;
 import lombok.ToString;
 import org.neo4j.ogm.annotation.NodeEntity;
 
+import javax.validation.constraints.NotBlank;
+
 @Getter
 @Setter
 @ToString
@@ -16,4 +18,10 @@ import org.neo4j.ogm.annotation.NodeEntity;
 @Builder(toBuilder = true)
 @NodeEntity
 public class InclusionRule {
+
+    @NotBlank
+    private String name;
+
+    @NotBlank
+    private String rule;
 }

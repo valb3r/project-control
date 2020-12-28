@@ -1,4 +1,4 @@
-package com.valb3r.projectcontrol.domain;
+package com.valb3r.projectcontrol.domain.stats;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,5 +15,5 @@ import org.neo4j.ogm.annotation.NodeEntity;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 @NodeEntity
-public class DailyCommitStats {
+public class TotalCommitStats extends CommitStats {
 }
