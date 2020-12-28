@@ -1,0 +1,41 @@
+plugins {
+	id 'org.springframework.boot' version '2.3.4.RELEASE'
+	id 'io.spring.dependency-management' version '1.0.10.RELEASE'
+	id 'java'
+}
+
+group = 'com.valb3r'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-data-neo4j'
+	implementation 'org.springframework.boot:spring-boot-starter-data-rest'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+	implementation 'org.neo4j:neo4j-ogm-bolt-native-types:3.2.17'
+	implementation 'org.springdoc:springdoc-openapi-ui:1.5.0'
+	implementation 'org.springdoc:springdoc-openapi-data-rest:1.5.0'
+
+	implementation 'org.eclipse.jgit:org.eclipse.jgit:5.10.0.202012080955-r'
+	implementation 'org.drools:drools-engine-classic:7.45.0.Final'
+
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+test {
+	useJUnitPlatform()
+}
