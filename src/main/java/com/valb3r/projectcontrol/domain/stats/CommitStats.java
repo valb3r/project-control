@@ -22,6 +22,9 @@ public abstract class CommitStats extends Accountable {
     private Instant to;
 
     @Min(0)
+    private long commitCount;
+
+    @Min(0)
     private long linesAdded;
 
     @Min(0)

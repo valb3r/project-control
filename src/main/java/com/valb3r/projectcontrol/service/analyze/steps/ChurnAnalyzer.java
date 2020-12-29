@@ -28,7 +28,10 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.WeekFields;
 import java.util.HashMap;
+import java.util.Locale;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.kie.internal.io.ResourceFactory.newByteArrayResource;
@@ -67,9 +70,13 @@ public class ChurnAnalyzer implements AnalysisStep {
                             .build()
             );
 
-            var stat = commitStatsRepo.findBy(alias.getId(), analyzed.getDate()).orElseGet(() -> WeeklyCommitStats.builder().alias(alias).repo(repo).build());
+            var weekStart = analyzed.getDate().truncatedTo(ChronoUnit.DAYS).with(WeekFields.of(Locale.UK).dayOfWeek(), 1);
+            var weekEnd = analyzed.getDate().truncatedTo(ChronoUnit.DAYS).with(WeekFields.of(Locale.UK).dayOfWeek(), 7);
+            var stat = commitStatsRepo.findBy(alias.getId(), analyzed.getDate())
+                    .orElseGet(() -> WeeklyCommitStats.builder().alias(alias).repo(repo).from(weekStart).to(weekEnd).build());
             stat.setLinesRemoved(stat.getLinesRemoved() + analyzed.getLinesDeleted());
             stat.setLinesAdded(stat.getLinesAdded() + analyzed.getLinesAdded());
+            stat.setCommitCount(stat.getCommitCount() + 1);
         }
     }
 
