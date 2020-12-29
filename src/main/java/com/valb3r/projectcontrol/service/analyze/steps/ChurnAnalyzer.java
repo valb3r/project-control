@@ -112,7 +112,7 @@ public class ChurnAnalyzer implements AnalysisStep {
             long linesAdded = 0;
 
             for (var diff : diffs) {
-                var context = new ChurnContext(diff.getNewPath());
+                var context = new ChurnContext(diff.getNewPath(), ctx.getCommit().getAuthorIdent().getName(), ctx.getCommit().getAuthorIdent().getWhen().toInstant());
                 stateless.execute(context);
 
                 if (context.isExclude() || !context.isInclude()) {
@@ -133,6 +133,8 @@ public class ChurnAnalyzer implements AnalysisStep {
     @RequiredArgsConstructor
     public static class ChurnContext {
         private final String path;
+        private final String author;
+        private final Instant commitDate;
 
         private boolean exclude;
         private boolean include = true;
