@@ -1,24 +1,21 @@
 package com.valb3r.projectcontrol.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.springframework.data.annotation.ReadOnlyProperty;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.UUID;
 
 @Getter
 @Setter
 @ToString
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder(toBuilder = true)
+@SuperBuilder
 @NodeEntity
 public class GitRepo {
 
@@ -29,11 +26,23 @@ public class GitRepo {
     private String name;
 
     @NotBlank
+    private String branchToAnalyze;
+
+    @NotBlank
     private String url;
+
+    @NotNull
+    private UUID uuid;
+
+    private boolean isPrivate;
 
     @NotNull
     @ReadOnlyProperty
     private AnalysisState analysisState;
+
+    private Long commitsProcessed;
+
+    private String errorMessage;
 
     public enum AnalysisState {
         NONE,
@@ -41,6 +50,7 @@ public class GitRepo {
         CLONED,
         CHURN_COUNTED,
         LOC_OWNERSHIP_COUNTED,
-        FINISHED
+        FINISHED,
+        FAILED
     }
 }

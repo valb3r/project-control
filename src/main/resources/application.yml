@@ -1,7 +1,7 @@
 spring:
   data:
     neo4j:
-      uri: bolt://localhost:7687
+      uri: bolt://localhost:17687
       username: neo4j
       password: docker
       open-in-view: false
@@ -16,3 +16,9 @@ spring:
 server:
   error:
     include-message: always
+
+
+git:
+  username:
+  password:
+  repos-path: ./repos

@@ -3,6 +3,7 @@ package com.valb3r.projectcontrol.config;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.util.StringUtils;
 
 import javax.validation.constraints.NotBlank;
 
@@ -16,4 +17,8 @@ public class GitConfig {
 
     @NotBlank
     private String reposPath;
+
+    public boolean hasCredentials() {
+        return StringUtils.hasText(username) && StringUtils.hasText(password);
+    }
 }
