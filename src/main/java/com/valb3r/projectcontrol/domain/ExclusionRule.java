@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 
 import javax.validation.constraints.NotBlank;
@@ -17,7 +18,10 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 @NodeEntity
-public class ExclusionRule {
+public class ExclusionRule extends LinkableToRepo {
+
+    @Id
+    private Long id;
 
     @NotBlank
     private String name;

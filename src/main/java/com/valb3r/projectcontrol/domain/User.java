@@ -6,10 +6,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Relationship;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
 @Getter
@@ -21,9 +22,14 @@ import java.util.List;
 @NodeEntity
 public class User {
 
+    public static final String ALIAS = "alias";
+
+    @Id
+    private Long id;
+
     @NotBlank
     private String name;
 
-    @NotEmpty
-    private List<String> aliases;
+    @Relationship(ALIAS)
+    private List<Alias> aliases;
 }

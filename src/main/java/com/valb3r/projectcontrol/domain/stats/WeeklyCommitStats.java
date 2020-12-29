@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 
 @Getter
@@ -15,5 +16,8 @@ import org.neo4j.ogm.annotation.NodeEntity;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 @NodeEntity
-public class DailyCommitStats extends CommitStats {
+public class WeeklyCommitStats extends CommitStats {
+
+    @Id
+    private Long id;
 }

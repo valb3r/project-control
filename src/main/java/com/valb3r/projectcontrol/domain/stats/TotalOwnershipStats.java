@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 
 @Getter
@@ -16,4 +17,7 @@ import org.neo4j.ogm.annotation.NodeEntity;
 @Builder(toBuilder = true)
 @NodeEntity
 public class TotalOwnershipStats extends Accountable {
+
+    @Id
+    private Long id;
 }

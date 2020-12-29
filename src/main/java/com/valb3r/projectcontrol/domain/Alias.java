@@ -8,10 +8,8 @@ import lombok.Setter;
 import lombok.ToString;
 import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
-import org.springframework.data.annotation.ReadOnlyProperty;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
@@ -20,7 +18,7 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 @NodeEntity
-public class GitRepo {
+public class Alias extends LinkableToRepo {
 
     @Id
     private Long id;
@@ -28,19 +26,5 @@ public class GitRepo {
     @NotBlank
     private String name;
 
-    @NotBlank
-    private String url;
-
-    @NotNull
-    @ReadOnlyProperty
-    private AnalysisState analysisState;
-
-    public enum AnalysisState {
-        NONE,
-        STARTED,
-        CLONED,
-        CHURN_COUNTED,
-        LOC_OWNERSHIP_COUNTED,
-        FINISHED
-    }
+    private User user;
 }
