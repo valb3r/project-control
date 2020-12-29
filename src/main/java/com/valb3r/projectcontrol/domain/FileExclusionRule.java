@@ -14,7 +14,7 @@ import javax.validation.constraints.NotBlank;
 @ToString
 @SuperBuilder
 @NodeEntity
-public class InclusionRule extends LinkableToRepo {
+public class FileExclusionRule extends LinkableToRepo {
 
     @Id
     private Long id;

@@ -25,7 +25,7 @@ public abstract class CommitStats extends Accountable {
     private long linesAdded;
 
     @Min(0)
-    private long churn;
+    private long linesRemoved;
 
     @Min(0)
     private long linesOwned;
