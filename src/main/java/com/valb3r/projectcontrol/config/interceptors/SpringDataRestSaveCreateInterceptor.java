@@ -1,4 +1,4 @@
-package com.valb3r.projectcontrol.interceptors;
+package com.valb3r.projectcontrol.config.interceptors;
 
 import com.valb3r.projectcontrol.config.OpenInViewSpringDataInterceptor;
 import com.valb3r.projectcontrol.config.annotation.AfterSaveDo;

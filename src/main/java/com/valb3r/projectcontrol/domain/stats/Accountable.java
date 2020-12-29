@@ -1,23 +1,28 @@
 package com.valb3r.projectcontrol.domain.stats;
 
-import com.valb3r.projectcontrol.config.annotation.OnSaveValidationGroup;
 import com.valb3r.projectcontrol.domain.Alias;
+import com.valb3r.projectcontrol.domain.GitRepo;
 import com.valb3r.projectcontrol.domain.LinkableToRepo;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.experimental.SuperBuilder;
 import org.neo4j.ogm.annotation.Relationship;
 
 import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
-@SuperBuilder
+@NoArgsConstructor
 public abstract class Accountable extends LinkableToRepo {
 
     public static final String OF_ALIAS = "OF";
 
-    @NotNull(groups = OnSaveValidationGroup.class)
+    @NotNull
     @Relationship(type = OF_ALIAS)
-    private Alias alias;
+    protected Alias alias;
+
+    public Accountable(GitRepo repo, Alias alias) {
+        super(repo);
+        this.alias = alias;
+    }
 }

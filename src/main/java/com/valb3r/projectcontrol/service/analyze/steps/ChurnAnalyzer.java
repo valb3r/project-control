@@ -11,6 +11,7 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.diff.DiffFormatter;
 import org.eclipse.jgit.diff.Edit;
 import org.eclipse.jgit.diff.RawTextComparator;
@@ -27,12 +28,15 @@ import org.kie.api.runtime.KieContainer;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.time.Instant;
 import java.util.HashMap;
+import java.util.List;
 
 import static com.valb3r.projectcontrol.service.analyze.DateUtil.weekEnd;
 import static com.valb3r.projectcontrol.service.analyze.DateUtil.weekStart;
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.eclipse.jgit.lib.Constants.HEAD;
 import static org.kie.internal.io.ResourceFactory.newByteArrayResource;
 
 @Order(0)
@@ -49,45 +53,52 @@ public class ChurnAnalyzer implements AnalysisStep {
     @SneakyThrows
     public void execute(Git git, GitRepo repo) {
         var aliasCache = new HashMap<String, Alias>();
-        var walk = new RevWalk(git.getRepository());
-        var container = container(repo);
-        RevCommit commit;
-        while ((commit = walk.next()) != null) {
-            var name = commit.getAuthorIdent().getName();
-            var alias = aliasCache.computeIfAbsent(
-                    name,
-                    id -> aliases.findByNameAndRepoId(name, repo.getId())
-                            .orElseGet(() -> aliases.save(Alias.builder().name(name).repo(repo).build()))
-            );
-
-            var analyzed = analyzeCommit(
-                    AnalysisCtx.builder()
-                            .container(container)
-                            .repo(git.getRepository())
-                            .commit(commit)
-                            .walk(walk)
-                            .build()
-            );
-
-            var stat = commitStatsRepo.findBy(alias.getId(), analyzed.getDate())
-                    .orElseGet(() ->
-                            WeeklyCommitStats.builder()
-                                    .alias(alias)
-                                    .repo(repo)
-                                    .from(weekStart(analyzed.getDate()))
-                                    .to(weekEnd(analyzed.getDate()))
-                                    .build()
-                    );
-
-            stat.setLinesRemoved(stat.getLinesRemoved() + analyzed.getLinesDeleted());
-            stat.setLinesAdded(stat.getLinesAdded() + analyzed.getLinesAdded());
-            stat.setCommitCount(stat.getCommitCount() + 1);
+        try (var walk = new RevWalk(git.getRepository())) {
+            walk.markStart(walk.parseCommit(git.getRepository().resolve(HEAD)));
+            var container = container(repo);
+            RevCommit commit;
+            while ((commit = walk.next()) != null) {
+                processCommit(git, repo, aliasCache, walk, container, commit);
+            }
         }
     }
 
     @Override
     public GitRepo.AnalysisState stateOnSuccess() {
         return GitRepo.AnalysisState.CHURN_COUNTED;
+    }
+
+    private void processCommit(Git git, GitRepo repo, HashMap<String, Alias> aliasCache, RevWalk walk, KieContainer container, RevCommit commit) {
+        var name = commit.getAuthorIdent().getName();
+        var alias = aliasCache.computeIfAbsent(
+                name,
+                id -> aliases.findByNameAndRepoId(name, repo.getId())
+                        .orElseGet(() -> aliases.save(Alias.builder().name(name).repo(repo).build()))
+        );
+
+        var analyzed = analyzeCommit(
+                AnalysisCtx.builder()
+                        .container(container)
+                        .repo(git.getRepository())
+                        .commit(commit)
+                        .walk(walk)
+                        .build()
+        );
+
+        var stat = commitStatsRepo.findBy(alias.getId(), weekStart(analyzed.getDate()))
+                .orElseGet(() ->
+                        WeeklyCommitStats.builder()
+                                .alias(alias)
+                                .repo(repo)
+                                .from(weekStart(analyzed.getDate()))
+                                .to(weekEnd(analyzed.getDate()))
+                                .build()
+                );
+
+        stat.setLinesRemoved(stat.getLinesRemoved() + analyzed.getLinesDeleted());
+        stat.setLinesAdded(stat.getLinesAdded() + analyzed.getLinesAdded());
+        stat.setCommitCount(stat.getCommitCount() + 1);
+        commitStatsRepo.save(stat);
     }
 
     private KieContainer container(GitRepo repo) {
@@ -108,16 +119,12 @@ public class ChurnAnalyzer implements AnalysisStep {
 
     @SneakyThrows
     private CommitStat analyzeCommit(AnalysisCtx ctx) {
-        RevCommit parent = ctx.getRepo().parseCommit(ctx.getCommit().getParent(0).getId());
         try (DiffFormatter df = new DiffFormatter(DisabledOutputStream.INSTANCE)) {
             df.setRepository(ctx.getRepo());
             df.setDiffComparator(RawTextComparator.DEFAULT);
             df.setDetectRenames(true);
 
-            var diffs = ctx.getCommit().getParentCount() > 0
-                    ? df.scan(parent.getTree(), ctx.getCommit().getTree())
-                    : df.scan(new EmptyTreeIterator(), new CanonicalTreeParser(null, ctx.getWalk().getObjectReader(), ctx.getCommit().getTree()));
-
+            List<DiffEntry> diffs = computeDiffEntries(ctx, df);
             var stateless = ctx.getContainer().newStatelessKieSession();
 
             long linesDeleted = 0;
@@ -139,6 +146,17 @@ public class ChurnAnalyzer implements AnalysisStep {
 
             return new CommitStat(linesAdded, linesDeleted, ctx.getCommit().getAuthorIdent().getWhen().toInstant());
         }
+    }
+
+    private List<DiffEntry> computeDiffEntries(AnalysisCtx ctx, DiffFormatter df) throws IOException {
+        List<DiffEntry> diffs;
+        if (ctx.getCommit().getParentCount() > 0) {
+            RevCommit parent = ctx.getRepo().parseCommit(ctx.getCommit().getParent(0).getId());
+            diffs = df.scan(parent.getTree(), ctx.getCommit().getTree());
+        } else {
+            diffs = df.scan(new EmptyTreeIterator(), new CanonicalTreeParser(null, ctx.getWalk().getObjectReader(), ctx.getCommit().getTree()));
+        }
+        return diffs;
     }
 
     @Data

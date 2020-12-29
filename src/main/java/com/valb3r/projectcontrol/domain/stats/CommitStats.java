@@ -1,9 +1,11 @@
 package com.valb3r.projectcontrol.domain.stats;
 
+import com.valb3r.projectcontrol.config.annotation.OnSaveValidationGroup;
+import com.valb3r.projectcontrol.domain.Alias;
+import com.valb3r.projectcontrol.domain.GitRepo;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
-import lombok.experimental.SuperBuilder;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -11,25 +13,34 @@ import java.time.Instant;
 
 @Getter
 @Setter
-@ToString
-@SuperBuilder
+@NoArgsConstructor
 public abstract class CommitStats extends Accountable {
 
-    @NotNull
-    private Instant from;
+    @NotNull(groups = OnSaveValidationGroup.class)
+    protected Instant from;
 
-    @NotNull
-    private Instant to;
+    @NotNull(groups = OnSaveValidationGroup.class)
+    protected Instant to;
 
-    @Min(0)
-    private long commitCount;
+    @Min(value = 0, groups = OnSaveValidationGroup.class)
+    protected long commitCount;
 
-    @Min(0)
-    private long linesAdded;
+    @Min(value = 0, groups = OnSaveValidationGroup.class)
+    protected long linesAdded;
 
-    @Min(0)
-    private long linesRemoved;
+    @Min(value = 0, groups = OnSaveValidationGroup.class)
+    protected long linesRemoved;
 
-    @Min(0)
-    private long linesOwned;
+    @Min(value = 0, groups = OnSaveValidationGroup.class)
+    protected long linesOwned;
+
+    public CommitStats(GitRepo repo, Alias alias, @NotNull Instant from, @NotNull Instant to, @Min(0) long commitCount, @Min(0) long linesAdded, @Min(0) long linesRemoved, @Min(0) long linesOwned) {
+        super(repo, alias);
+        this.from = from;
+        this.to = to;
+        this.commitCount = commitCount;
+        this.linesAdded = linesAdded;
+        this.linesRemoved = linesRemoved;
+        this.linesOwned = linesOwned;
+    }
 }

@@ -14,6 +14,6 @@ import java.util.Optional;
 @RepositoryRestResource
 public interface WeeklyCommitStatsRepository extends Neo4jRepository<WeeklyCommitStats, Long> {
 
-    @Query("MATCH (w:WeeklyCommitStats)-[:OF]->(a:Alias) WHERE id(a) = $aliasId AND w.from = $start RETURN w")
+    @Query("MATCH (w:WeeklyCommitStats)-[r:OF]->(a:Alias) WHERE id(a) = $aliasId AND w.from = $start RETURN w")
     Optional<WeeklyCommitStats> findBy(@Param("aliasId") long aliasId, @Param("start") Instant start);
 }

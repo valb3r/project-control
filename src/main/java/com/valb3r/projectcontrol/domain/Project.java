@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.neo4j.ogm.annotation.GeneratedValue;
 import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Relationship;
@@ -29,20 +30,21 @@ public class Project {
     public static final String OF_USERS = "OF";
 
     @Id
+    @GeneratedValue
     private Long id;
 
-    @NotBlank
+    @NotBlank(groups = OnSaveValidationGroup.class)
     private String name;
 
-    @NotNull
+    @NotNull(groups = OnSaveValidationGroup.class)
     @Builder.Default
     private Status status = Status.CREATED;
 
-    @NotEmpty(groups = OnSaveValidationGroup.class)
+    @NotEmpty
     @Relationship(OF_REPOS)
     private List<GitRepo> repos;
 
-    @NotEmpty(groups = OnSaveValidationGroup.class)
+    @NotEmpty
     @Relationship(OF_USERS)
     private List<User> users;
 

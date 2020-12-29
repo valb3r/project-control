@@ -1,12 +1,15 @@
 package com.valb3r.projectcontrol.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
+import org.neo4j.ogm.annotation.GeneratedValue;
 import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
-import org.springframework.data.annotation.ReadOnlyProperty;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -16,10 +19,13 @@ import java.util.UUID;
 @Setter
 @ToString
 @SuperBuilder
+@NoArgsConstructor
+@AllArgsConstructor
 @NodeEntity
 public class GitRepo {
 
     @Id
+    @GeneratedValue
     private Long id;
 
     @NotBlank
@@ -32,13 +38,14 @@ public class GitRepo {
     private String url;
 
     @NotNull
-    private UUID uuid;
+    @Builder.Default
+    private String uuid = UUID.randomUUID().toString();
 
-    private boolean isPrivate;
+    private boolean needsAuthentication;
 
     @NotNull
-    @ReadOnlyProperty
-    private AnalysisState analysisState;
+    @Builder.Default
+    private AnalysisState analysisState = AnalysisState.NONE;
 
     private Long commitsProcessed;
 
@@ -47,6 +54,7 @@ public class GitRepo {
     public enum AnalysisState {
         NONE,
         STARTED,
+        CLONING,
         CLONED,
         CHURN_COUNTED,
         LOC_OWNERSHIP_COUNTED,
