@@ -43,9 +43,15 @@ public class GitRepo {
 
     private boolean needsAuthentication;
 
+    private String lastAnalyzedCommit;
+
     @NotNull
     @Builder.Default
     private AnalysisState analysisState = AnalysisState.NONE;
+
+    @NotNull
+    @Builder.Default
+    private AnalysisState lastGoodState = AnalysisState.NONE;
 
     private Long commitsProcessed;
 
@@ -56,9 +62,10 @@ public class GitRepo {
         STARTED,
         CLONING,
         CLONED,
+        CHURN_COUNTING,
         CHURN_COUNTED,
         LOC_OWNERSHIP_COUNTED,
         FINISHED,
-        FAILED
+        FAILED;
     }
 }

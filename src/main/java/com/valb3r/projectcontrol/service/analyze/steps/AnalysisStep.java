@@ -5,6 +5,7 @@ import org.eclipse.jgit.api.Git;
 
 public interface AnalysisStep {
 
-    void execute(Git git, GitRepo repo);
+    Git execute(Git git, GitRepo repo);
+    GitRepo.AnalysisState stateOnStart();
     GitRepo.AnalysisState stateOnSuccess();
 }

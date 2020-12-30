@@ -6,6 +6,7 @@ import com.valb3r.projectcontrol.domain.stats.WeeklyCommitStats;
 import com.valb3r.projectcontrol.repository.AliasRepository;
 import com.valb3r.projectcontrol.repository.FileExclusionRuleRepository;
 import com.valb3r.projectcontrol.repository.FileInclusionRuleRepository;
+import com.valb3r.projectcontrol.repository.GitRepoRepository;
 import com.valb3r.projectcontrol.repository.WeeklyCommitStatsRepository;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -36,31 +37,29 @@ import java.util.List;
 import static com.valb3r.projectcontrol.service.analyze.DateUtil.weekEnd;
 import static com.valb3r.projectcontrol.service.analyze.DateUtil.weekStart;
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static org.eclipse.jgit.lib.Constants.HEAD;
 import static org.kie.internal.io.ResourceFactory.newByteArrayResource;
 
-@Order(0)
+@Order(1)
 @Service
-@RequiredArgsConstructor
-public class ChurnAnalyzer implements AnalysisStep {
+public class ChurnAnalyzer extends CommitBasedAnalyzer implements AnalysisStep {
 
     private final AliasRepository aliases;
     private final WeeklyCommitStatsRepository commitStatsRepo;
     private final FileInclusionRuleRepository inclusionRepo;
     private final FileExclusionRuleRepository exclusionRepo;
 
+    public ChurnAnalyzer(GitRepoRepository gitRepoRepository, AliasRepository aliases, WeeklyCommitStatsRepository commitStatsRepo,
+                         FileInclusionRuleRepository inclusionRepo, FileExclusionRuleRepository exclusionRepo) {
+        super(gitRepoRepository);
+        this.aliases = aliases;
+        this.commitStatsRepo = commitStatsRepo;
+        this.inclusionRepo = inclusionRepo;
+        this.exclusionRepo = exclusionRepo;
+    }
+
     @Override
-    @SneakyThrows
-    public void execute(Git git, GitRepo repo) {
-        var aliasCache = new HashMap<String, Alias>();
-        try (var walk = new RevWalk(git.getRepository())) {
-            walk.markStart(walk.parseCommit(git.getRepository().resolve(HEAD)));
-            var container = container(repo);
-            RevCommit commit;
-            while ((commit = walk.next()) != null) {
-                processCommit(git, repo, aliasCache, walk, container, commit);
-            }
-        }
+    public GitRepo.AnalysisState stateOnStart() {
+        return GitRepo.AnalysisState.CHURN_COUNTING;
     }
 
     @Override
@@ -68,7 +67,8 @@ public class ChurnAnalyzer implements AnalysisStep {
         return GitRepo.AnalysisState.CHURN_COUNTED;
     }
 
-    private void processCommit(Git git, GitRepo repo, HashMap<String, Alias> aliasCache, RevWalk walk, KieContainer container, RevCommit commit) {
+    @Override
+    protected void processCommit(Git git, GitRepo repo, HashMap<String, Alias> aliasCache, RevWalk walk, KieContainer container, RevCommit commit) {
         var name = commit.getAuthorIdent().getName();
         var alias = aliasCache.computeIfAbsent(
                 name,
@@ -101,7 +101,8 @@ public class ChurnAnalyzer implements AnalysisStep {
         commitStatsRepo.save(stat);
     }
 
-    private KieContainer container(GitRepo repo) {
+    @Override
+    protected KieContainer container(GitRepo repo) {
         var inclusion = inclusionRepo.findByRepoId(repo.getId());
         var exclusion = exclusionRepo.findByRepoId(repo.getId());
         KieServices services = KieServices.Factory.get();
