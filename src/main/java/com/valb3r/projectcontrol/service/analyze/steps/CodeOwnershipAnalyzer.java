@@ -62,6 +62,7 @@ public class CodeOwnershipAnalyzer extends CommitBasedAnalyzer implements Analys
         try (var treeWalk = new TreeWalk(ctx.getGit().getRepository())) {
             var tree = ctx.getWalk().parseTree(target.getTree().getId());
             treeWalk.addTree(tree);
+            treeWalk.setRecursive(true);
             while (treeWalk.next()) {
                 var context = new RuleContext(treeWalk.getPathString(), ctx.getCommit().getAuthorIdent().getName(), ctx.getCommit().getAuthorIdent().getWhen().toInstant());
                 stateless.execute(context);
