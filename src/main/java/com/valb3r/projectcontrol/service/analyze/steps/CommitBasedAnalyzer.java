@@ -49,7 +49,12 @@ public abstract class CommitBasedAnalyzer {
                     gitRepoRepository.save(repo);
                 }
             }
-            repo.setCommitsProcessed(counter);
+
+            if (commit != null) {
+                repo.setCommitsProcessed(counter);
+                repo.setLastAnalyzedCommit(commit.getName());
+                gitRepoRepository.save(repo);
+            }
         }
     }
 
