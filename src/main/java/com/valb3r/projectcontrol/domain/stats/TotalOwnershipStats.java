@@ -20,7 +20,6 @@ import java.time.Instant;
 @Getter
 @Setter
 @ToString
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @NodeEntity
@@ -40,8 +39,11 @@ public class TotalOwnershipStats extends Accountable {
     protected long linesOwned;
 
     @Builder
-    public TotalOwnershipStats(GitRepo repo, Alias alias, Long id) {
+    public TotalOwnershipStats(GitRepo repo, Alias alias, Long id, @NotNull(groups = OnSaveValidationGroup.class) Instant from, @NotNull(groups = OnSaveValidationGroup.class) Instant to, @Min(value = 0, groups = OnSaveValidationGroup.class) long linesOwned) {
         super(repo, alias);
         this.id = id;
+        this.from = from;
+        this.to = to;
+        this.linesOwned = linesOwned;
     }
 }

@@ -29,7 +29,11 @@ public class RepoAnalyzer {
             var initialState = repo.getLastGoodState();
             boolean failedOnStepEnd = false;
             for (var step : steps) {
-                if (initialState != GitRepo.AnalysisState.NONE && initialState != GitRepo.AnalysisState.FINISHED && !failedOnStepEnd) {
+                if (initialState == GitRepo.AnalysisState.NONE || initialState == GitRepo.AnalysisState.FINISHED) {
+                    repo.setLastAnalyzedCommit(null);
+                }
+
+                if (hasErrorsAndGitInitialized(git, initialState, failedOnStepEnd)) {
                     if (initialState == step.stateOnSuccess()) {
                         failedOnStepEnd = true;
                         continue;
@@ -39,6 +43,7 @@ public class RepoAnalyzer {
                         continue;
                     }
                 }
+
                 stateUpdatingService.updateStatus(repo, step.stateOnStart());
                 git = step.execute(git, repo);
                 stateUpdatingService.updateStatus(repo, step.stateOnSuccess());
@@ -50,5 +55,9 @@ public class RepoAnalyzer {
             stateUpdatingService.updateStatus(repo, GitRepo.AnalysisState.FAILED);
         }
 
+    }
+
+    private boolean hasErrorsAndGitInitialized(Git git, GitRepo.AnalysisState initialState, boolean failedOnStepEnd) {
+        return null != git && initialState != GitRepo.AnalysisState.NONE && initialState != GitRepo.AnalysisState.FINISHED && !failedOnStepEnd;
     }
 }

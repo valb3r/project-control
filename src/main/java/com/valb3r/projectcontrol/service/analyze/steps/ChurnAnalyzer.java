@@ -1,6 +1,5 @@
 package com.valb3r.projectcontrol.service.analyze.steps;
 
-import com.valb3r.projectcontrol.domain.Alias;
 import com.valb3r.projectcontrol.domain.GitRepo;
 import com.valb3r.projectcontrol.domain.stats.WeeklyCommitStats;
 import com.valb3r.projectcontrol.repository.AliasRepository;
@@ -11,13 +10,11 @@ import com.valb3r.projectcontrol.service.analyze.StateUpdatingService;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.diff.DiffFormatter;
 import org.eclipse.jgit.diff.Edit;
 import org.eclipse.jgit.diff.RawTextComparator;
 import org.eclipse.jgit.revwalk.RevCommit;
-import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.treewalk.CanonicalTreeParser;
 import org.eclipse.jgit.treewalk.EmptyTreeIterator;
 import org.eclipse.jgit.util.io.DisabledOutputStream;
@@ -31,7 +28,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.time.Instant;
-import java.util.HashMap;
 import java.util.List;
 
 import static com.valb3r.projectcontrol.service.analyze.DateUtil.weekEnd;
@@ -43,18 +39,11 @@ import static org.kie.internal.io.ResourceFactory.newByteArrayResource;
 @Service
 public class ChurnAnalyzer extends CommitBasedAnalyzer implements AnalysisStep {
 
-    private final AliasRepository aliases;
     private final WeeklyCommitStatsRepository commitStatsRepo;
-    private final FileInclusionRuleRepository inclusionRepo;
-    private final FileExclusionRuleRepository exclusionRepo;
 
-    public ChurnAnalyzer(StateUpdatingService stateUpdatingService, AliasRepository aliases, WeeklyCommitStatsRepository commitStatsRepo,
-                         FileInclusionRuleRepository inclusionRepo, FileExclusionRuleRepository exclusionRepo) {
-        super(stateUpdatingService);
-        this.aliases = aliases;
+    public ChurnAnalyzer(AliasRepository aliases, StateUpdatingService stateUpdatingService, FileInclusionRuleRepository inclusionRepo, FileExclusionRuleRepository exclusionRepo, WeeklyCommitStatsRepository commitStatsRepo) {
+        super(aliases, stateUpdatingService, inclusionRepo, exclusionRepo);
         this.commitStatsRepo = commitStatsRepo;
-        this.inclusionRepo = inclusionRepo;
-        this.exclusionRepo = exclusionRepo;
     }
 
     @Override
@@ -68,20 +57,15 @@ public class ChurnAnalyzer extends CommitBasedAnalyzer implements AnalysisStep {
     }
 
     @Override
-    protected void processCommit(Git git, GitRepo repo, HashMap<String, Alias> aliasCache, RevWalk walk, KieContainer container, RevCommit commit) {
-        var name = commit.getAuthorIdent().getName();
-        var alias = aliasCache.computeIfAbsent(
-                name,
-                id -> aliases.findByNameAndRepoId(name, repo.getId())
-                        .orElseGet(() -> aliases.save(Alias.builder().name(name).repo(repo).build()))
-        );
-
+    protected void processCommit(CommitCtx ctx) {
+        var name = ctx.getCommit().getAuthorIdent().getName();
+        var alias = alias(name, ctx);
         var analyzed = analyzeCommit(
                 AnalysisCtx.builder()
-                        .container(container)
-                        .repo(git.getRepository())
-                        .commit(commit)
-                        .walk(walk)
+                        .container(ctx.getContainer())
+                        .repo(ctx.getGit().getRepository())
+                        .commit(ctx.getCommit())
+                        .walk(ctx.getWalk())
                         .build()
         );
 
@@ -89,7 +73,7 @@ public class ChurnAnalyzer extends CommitBasedAnalyzer implements AnalysisStep {
                 .orElseGet(() ->
                         WeeklyCommitStats.builder()
                                 .alias(alias)
-                                .repo(repo)
+                                .repo(ctx.getRepo())
                                 .from(weekStart(analyzed.getDate()))
                                 .to(weekEnd(analyzed.getDate()))
                                 .build()
@@ -99,23 +83,6 @@ public class ChurnAnalyzer extends CommitBasedAnalyzer implements AnalysisStep {
         stat.setLinesAdded(stat.getLinesAdded() + analyzed.getLinesAdded());
         stat.setCommitCount(stat.getCommitCount() + 1);
         commitStatsRepo.save(stat);
-    }
-
-    @Override
-    protected KieContainer container(GitRepo repo) {
-        var inclusion = inclusionRepo.findByRepoId(repo.getId());
-        var exclusion = exclusionRepo.findByRepoId(repo.getId());
-        KieServices services = KieServices.Factory.get();
-        KieFileSystem fileSystem = services.newKieFileSystem();
-
-        inclusion.forEach(it -> newByteArrayResource(it.getRule().getBytes(UTF_8)));
-        exclusion.forEach(it -> newByteArrayResource(it.getRule().getBytes(UTF_8)));
-
-        KieBuilder kb = services.newKieBuilder(fileSystem);
-        kb.buildAll();
-        KieModule kieModule = kb.getKieModule();
-
-        return services.newKieContainer(kieModule.getReleaseId());
     }
 
     @SneakyThrows
@@ -132,7 +99,7 @@ public class ChurnAnalyzer extends CommitBasedAnalyzer implements AnalysisStep {
             long linesAdded = 0;
 
             for (var diff : diffs) {
-                var context = new ChurnContext(diff.getNewPath(), ctx.getCommit().getAuthorIdent().getName(), ctx.getCommit().getAuthorIdent().getWhen().toInstant());
+                var context = new RuleContext(diff.getNewPath(), ctx.getCommit().getAuthorIdent().getName(), ctx.getCommit().getAuthorIdent().getWhen().toInstant());
                 stateless.execute(context);
 
                 if (context.isExclude() || !context.isInclude()) {
@@ -158,17 +125,6 @@ public class ChurnAnalyzer extends CommitBasedAnalyzer implements AnalysisStep {
             diffs = df.scan(new EmptyTreeIterator(), new CanonicalTreeParser(null, ctx.getWalk().getObjectReader(), ctx.getCommit().getTree()));
         }
         return diffs;
-    }
-
-    @Data
-    @RequiredArgsConstructor
-    public static class ChurnContext {
-        private final String path;
-        private final String author;
-        private final Instant commitDate;
-
-        private boolean exclude;
-        private boolean include = true;
     }
 
     @Data

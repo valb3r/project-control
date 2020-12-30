@@ -52,8 +52,7 @@ public class CloneRepoStep implements AnalysisStep {
         var clone = Git.cloneRepository()
                 .setURI(repo.getUrl())
                 .setDirectory(Paths.get(config.getReposPath()).resolve(repo.getUuid()).toFile())
-                .setBranchesToClone(Collections.singletonList(branchName))
-                .setNoCheckout(true);
+                .setBranchesToClone(Collections.singletonList(branchName));
 
         setCredentialsIfPossible(repo, clone);
         return clone.call();

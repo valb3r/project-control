@@ -64,8 +64,11 @@ public class GitRepo {
         CLONED,
         CHURN_COUNTING,
         CHURN_COUNTED,
+        LOC_OWNERSHIP_COUNTING,
         LOC_OWNERSHIP_COUNTED,
+        REFACTOR_COUNTING,
+        REFACTOR_COUNTED,
         FINISHED,
-        FAILED;
+        FAILED
     }
 }
