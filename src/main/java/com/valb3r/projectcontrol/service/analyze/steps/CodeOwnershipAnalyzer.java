@@ -51,9 +51,12 @@ public class CodeOwnershipAnalyzer extends CommitBasedAnalyzer implements Analys
         RevCommit target = ctx.getCommit();
         if (null != ctx.getPrevCommit()) {
             if (weekStart(ctx.getPrevCommit().getAuthorIdent().getWhen().toInstant()).equals(weekStart(ctx.getCommit().getAuthorIdent().getWhen().toInstant()))) {
-                target = ctx.getPrevCommit();
+                return;
             }
+
+            target = ctx.getPrevCommit();
         }
+
         var stateless = ctx.getContainer().newStatelessKieSession();
         Map<Alias, Long> owned = new HashMap<>();
         try (var treeWalk = new TreeWalk(ctx.getGit().getRepository())) {
