@@ -27,7 +27,7 @@ public class CloneRepoStep implements AnalysisStep {
 
     @Override
     public GitRepo.AnalysisState stateOnStart() {
-        return GitRepo.AnalysisState.CLONED;
+        return GitRepo.AnalysisState.CLONING;
     }
 
     @Override

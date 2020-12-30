@@ -6,8 +6,8 @@ import com.valb3r.projectcontrol.domain.stats.WeeklyCommitStats;
 import com.valb3r.projectcontrol.repository.AliasRepository;
 import com.valb3r.projectcontrol.repository.FileExclusionRuleRepository;
 import com.valb3r.projectcontrol.repository.FileInclusionRuleRepository;
-import com.valb3r.projectcontrol.repository.GitRepoRepository;
 import com.valb3r.projectcontrol.repository.WeeklyCommitStatsRepository;
+import com.valb3r.projectcontrol.service.analyze.StateUpdatingService;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -48,9 +48,9 @@ public class ChurnAnalyzer extends CommitBasedAnalyzer implements AnalysisStep {
     private final FileInclusionRuleRepository inclusionRepo;
     private final FileExclusionRuleRepository exclusionRepo;
 
-    public ChurnAnalyzer(GitRepoRepository gitRepoRepository, AliasRepository aliases, WeeklyCommitStatsRepository commitStatsRepo,
+    public ChurnAnalyzer(StateUpdatingService stateUpdatingService, AliasRepository aliases, WeeklyCommitStatsRepository commitStatsRepo,
                          FileInclusionRuleRepository inclusionRepo, FileExclusionRuleRepository exclusionRepo) {
-        super(gitRepoRepository);
+        super(stateUpdatingService);
         this.aliases = aliases;
         this.commitStatsRepo = commitStatsRepo;
         this.inclusionRepo = inclusionRepo;

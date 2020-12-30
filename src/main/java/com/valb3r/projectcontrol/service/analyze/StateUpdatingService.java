@@ -27,4 +27,8 @@ public class StateUpdatingService {
             gitRepoRepository.save(repo);
         });
     }
+
+    public void updateInternalData(GitRepo repo) {
+        operations.executeWithoutResult(transactionStatus -> gitRepoRepository.save(repo));
+    }
 }
