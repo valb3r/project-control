@@ -1,5 +1,6 @@
 package com.valb3r.projectcontrol.domain.stats;
 
+import com.valb3r.projectcontrol.config.annotation.OnSaveValidationGroup;
 import com.valb3r.projectcontrol.domain.Alias;
 import com.valb3r.projectcontrol.domain.GitRepo;
 import lombok.Builder;
@@ -23,6 +24,15 @@ public class WeeklyCommitStats extends CommitStats {
     @Id
     @GeneratedValue
     private Long id;
+
+    @Min(value = 0, groups = OnSaveValidationGroup.class)
+    protected long removedLinesOfOtherAuthors;
+
+    @Min(value = 0, groups = OnSaveValidationGroup.class)
+    protected long removedOwnLines;
+
+    @Min(value = 0, groups = OnSaveValidationGroup.class)
+    protected long linesRemovedByOtherAuthors;
 
     @Builder
     public WeeklyCommitStats(GitRepo repo, Alias alias, @NotNull Instant from, @NotNull Instant to, @Min(0) long commitCount, @Min(0) long linesAdded, @Min(0) long linesRemoved, @Min(0) long linesOwned, Long id) {
