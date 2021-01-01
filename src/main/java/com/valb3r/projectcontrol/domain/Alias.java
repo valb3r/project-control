@@ -9,8 +9,12 @@ import lombok.ToString;
 import org.neo4j.ogm.annotation.GeneratedValue;
 import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Relationship;
 
 import javax.validation.constraints.NotBlank;
+
+import static com.valb3r.projectcontrol.domain.User.ALIAS;
+import static org.neo4j.ogm.annotation.Relationship.INCOMING;
 
 @Getter
 @Setter
@@ -26,6 +30,7 @@ public class Alias extends LinkableToRepo {
     @NotBlank(groups = OnSaveValidationGroup.class)
     private String name;
 
+    @Relationship(value = ALIAS, direction = INCOMING)
     private User user;
 
     @Builder
