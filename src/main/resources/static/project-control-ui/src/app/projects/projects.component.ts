@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {CollectionModelGitRepo, GitRepoEntityControllerService} from "../api";
 
 @Component({
   selector: 'app-projects',
@@ -7,9 +8,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ProjectsComponent implements OnInit {
 
-  constructor() { }
+  repos: CollectionModelGitRepo;
+
+  constructor(private gitRepoes: GitRepoEntityControllerService) { }
 
   ngOnInit() {
+    this.gitRepoes.getCollectionResourceGitrepoGet1().subscribe(resp => {
+      this.repos = resp;
+    })
   }
 
 }
