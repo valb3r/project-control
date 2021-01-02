@@ -2,10 +2,12 @@ package com.valb3r.projectcontrol.service.analyze.steps;
 
 import com.valb3r.projectcontrol.domain.Alias;
 import com.valb3r.projectcontrol.domain.GitRepo;
+import com.valb3r.projectcontrol.domain.stats.RemovedLines;
 import com.valb3r.projectcontrol.domain.stats.WeeklyCommitStats;
 import com.valb3r.projectcontrol.repository.AliasRepository;
 import com.valb3r.projectcontrol.repository.FileExclusionRuleRepository;
 import com.valb3r.projectcontrol.repository.FileInclusionRuleRepository;
+import com.valb3r.projectcontrol.repository.RemovedLinesRepository;
 import com.valb3r.projectcontrol.repository.WeeklyCommitStatsRepository;
 import com.valb3r.projectcontrol.service.analyze.StateUpdatingService;
 import lombok.AllArgsConstructor;
@@ -40,10 +42,12 @@ import static com.valb3r.projectcontrol.service.analyze.DateUtil.weekStart;
 public class ChurnAnalyzer extends CommitBasedAnalyzer implements AnalysisStep {
 
     private final WeeklyCommitStatsRepository commitStatsRepo;
+    private final RemovedLinesRepository removedLinesRepo;
 
-    public ChurnAnalyzer(AliasRepository aliases, StateUpdatingService stateUpdatingService, FileInclusionRuleRepository inclusionRepo, FileExclusionRuleRepository exclusionRepo, WeeklyCommitStatsRepository commitStatsRepo) {
+    public ChurnAnalyzer(AliasRepository aliases, StateUpdatingService stateUpdatingService, FileInclusionRuleRepository inclusionRepo, FileExclusionRuleRepository exclusionRepo, WeeklyCommitStatsRepository commitStatsRepo, RemovedLinesRepository removedLinesRepo) {
         super(aliases, stateUpdatingService, inclusionRepo, exclusionRepo);
         this.commitStatsRepo = commitStatsRepo;
+        this.removedLinesRepo = removedLinesRepo;
     }
 
     @Override
@@ -76,14 +80,10 @@ public class ChurnAnalyzer extends CommitBasedAnalyzer implements AnalysisStep {
         stat.setLinesAdded(stat.getLinesAdded() + analyzed.getLinesAdded());
         stat.setCommitCount(stat.getCommitCount() + 1);
         analyzed.getOtherOwnersRemovedLines().forEach((removedAlias, linesRemoved) -> {
-            if (removedAlias.getId().equals(alias.getId())) {
-                stat.setRemovedOwnLines(stat.getRemovedOwnLines() + linesRemoved);
-            } else {
-                stat.setRemovedLinesOfOtherAuthors(stat.getRemovedLinesOfOtherAuthors() + linesRemoved);
-                var otherStat = weeklyStat(ctx, removedAlias, analyzed);
-                otherStat.setLinesRemovedByOtherAuthors(otherStat.getLinesRemovedByOtherAuthors() + linesRemoved);
-                commitStatsRepo.save(otherStat);
-            }
+            var removed = removedLinesRepo.findByWeeklyIdAndFromAuthorId(stat.getId(), removedAlias.getId())
+                    .orElseGet(() -> RemovedLines.builder().fromAuthor(removedAlias).weekly(stat).removedLines(0L).build());
+            removed.setRemovedLines(removed.getRemovedLines() + linesRemoved);
+            removedLinesRepo.save(removed);
         });
 
         commitStatsRepo.save(stat);
