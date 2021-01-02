@@ -1,0 +1,4036 @@
+openapi: 3.0.1
+info:
+  title: OpenAPI definition
+  version: v0
+servers:
+  - url: http://localhost:8080
+    description: Generated server url
+paths:
+  /v1/resources/aliases:
+    get:
+      tags:
+        - alias-entity-controller
+      description: get-alias
+      operationId: getCollectionResource-alias-get_1
+      parameters:
+        - name: page
+          in: query
+          description: Zero-based page index (0..N)
+          required: false
+          schema:
+            minimum: 0
+            type: integer
+            default: "0"
+        - name: size
+          in: query
+          description: The size of the page to be returned
+          required: false
+          schema:
+            minimum: 1
+            type: integer
+            default: "20"
+        - name: sort
+          in: query
+          description: "Sorting criteria in the format: property(,asc|desc). Default\
+          \ sort order is ascending. Multiple sort criteria are supported."
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/CollectionModelAlias'
+            application/x-spring-data-compact+json:
+              schema:
+                $ref: '#/components/schemas/CollectionModelAlias'
+            text/uri-list:
+              schema:
+                $ref: '#/components/schemas/CollectionModelAlias'
+    post:
+      tags:
+        - alias-entity-controller
+      description: create-alias
+      operationId: postCollectionResource-alias-post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Alias'
+      responses:
+        "201":
+          description: Created
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelAlias'
+  /v1/resources/aliases/search/findByNameAndRepoId:
+    get:
+      tags:
+        - alias-search-controller
+      operationId: executeSearch-alias-get
+      parameters:
+        - name: name
+          in: query
+          schema:
+            type: string
+        - name: repoId
+          in: query
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/EntityModelAlias'
+        "404":
+          description: Not Found
+  /v1/resources/aliases/search/findRelatedTo:
+    get:
+      tags:
+        - alias-search-controller
+      operationId: executeSearch-alias-get_1
+      parameters:
+        - name: aliasId
+          in: query
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/CollectionModelAlias'
+        "404":
+          description: Not Found
+  /v1/resources/aliases/{id}:
+    get:
+      tags:
+        - alias-entity-controller
+      description: get-alias
+      operationId: getItemResource-alias-get
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/EntityModelAlias'
+        "404":
+          description: Not Found
+    put:
+      tags:
+        - alias-entity-controller
+      description: update-alias
+      operationId: putItemResource-alias-put
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Alias'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelAlias'
+        "201":
+          description: Created
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelAlias'
+        "204":
+          description: No Content
+    delete:
+      tags:
+        - alias-entity-controller
+      description: delete-alias
+      operationId: deleteItemResource-alias-delete
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+    patch:
+      tags:
+        - alias-entity-controller
+      description: patch-alias
+      operationId: patchItemResource-alias-patch
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Alias'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelAlias'
+        "204":
+          description: No Content
+  /v1/resources/aliases/{id}/repo:
+    get:
+      tags:
+        - alias-property-reference-controller
+      description: get-alias
+      operationId: followPropertyReference-alias-get_1
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelAlias'
+            text/uri-list:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelAlias'
+        "404":
+          description: Not Found
+    put:
+      tags:
+        - alias-property-reference-controller
+      description: update-alias
+      operationId: createPropertyReference-alias-put
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CollectionModelObject'
+          application/x-spring-data-compact+json:
+            schema:
+              $ref: '#/components/schemas/CollectionModelObject'
+          text/uri-list:
+            schema:
+              $ref: '#/components/schemas/CollectionModelObject'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelAlias'
+        "201":
+          description: Created
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelAlias'
+        "204":
+          description: No Content
+    delete:
+      tags:
+        - alias-property-reference-controller
+      description: delete-alias
+      operationId: deletePropertyReference-alias-delete
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+    patch:
+      tags:
+        - alias-property-reference-controller
+      description: patch-alias
+      operationId: createPropertyReference-alias-patch
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CollectionModelObject'
+          application/x-spring-data-compact+json:
+            schema:
+              $ref: '#/components/schemas/CollectionModelObject'
+          text/uri-list:
+            schema:
+              $ref: '#/components/schemas/CollectionModelObject'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelAlias'
+        "204":
+          description: No Content
+  /v1/resources/aliases/{id}/repo/{propertyId}:
+    get:
+      tags:
+        - alias-property-reference-controller
+      description: get-alias
+      operationId: followPropertyReference-alias-get
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: propertyId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelAlias'
+        "404":
+          description: Not Found
+    delete:
+      tags:
+        - alias-property-reference-controller
+      description: delete-alias
+      operationId: deletePropertyReferenceId-alias-delete
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: propertyId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+  /v1/resources/aliases/{id}/user:
+    get:
+      tags:
+        - alias-property-reference-controller
+      description: get-alias
+      operationId: followPropertyReference-alias-get_2_1
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelAlias'
+            text/uri-list:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelAlias'
+        "404":
+          description: Not Found
+    put:
+      tags:
+        - alias-property-reference-controller
+      description: update-alias
+      operationId: createPropertyReference-alias-put_1
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CollectionModelObject'
+          application/x-spring-data-compact+json:
+            schema:
+              $ref: '#/components/schemas/CollectionModelObject'
+          text/uri-list:
+            schema:
+              $ref: '#/components/schemas/CollectionModelObject'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelAlias'
+        "201":
+          description: Created
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelAlias'
+        "204":
+          description: No Content
+    delete:
+      tags:
+        - alias-property-reference-controller
+      description: delete-alias
+      operationId: deletePropertyReference-alias-delete_1
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+    patch:
+      tags:
+        - alias-property-reference-controller
+      description: patch-alias
+      operationId: createPropertyReference-alias-patch_1
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CollectionModelObject'
+          application/x-spring-data-compact+json:
+            schema:
+              $ref: '#/components/schemas/CollectionModelObject'
+          text/uri-list:
+            schema:
+              $ref: '#/components/schemas/CollectionModelObject'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelAlias'
+        "204":
+          description: No Content
+  /v1/resources/aliases/{id}/user/{propertyId}:
+    get:
+      tags:
+        - alias-property-reference-controller
+      description: get-alias
+      operationId: followPropertyReference-alias-get_2
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: propertyId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelAlias'
+        "404":
+          description: Not Found
+    delete:
+      tags:
+        - alias-property-reference-controller
+      description: delete-alias
+      operationId: deletePropertyReferenceId-alias-delete_1
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: propertyId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+  /v1/resources/fileExclusionRules:
+    get:
+      tags:
+        - file-exclusion-rule-entity-controller
+      description: get-fileexclusionrule
+      operationId: getCollectionResource-fileexclusionrule-get_1
+      parameters:
+        - name: page
+          in: query
+          description: Zero-based page index (0..N)
+          required: false
+          schema:
+            minimum: 0
+            type: integer
+            default: "0"
+        - name: size
+          in: query
+          description: The size of the page to be returned
+          required: false
+          schema:
+            minimum: 1
+            type: integer
+            default: "20"
+        - name: sort
+          in: query
+          description: "Sorting criteria in the format: property(,asc|desc). Default\
+          \ sort order is ascending. Multiple sort criteria are supported."
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/CollectionModelFileExclusionRule'
+            application/x-spring-data-compact+json:
+              schema:
+                $ref: '#/components/schemas/CollectionModelFileExclusionRule'
+            text/uri-list:
+              schema:
+                $ref: '#/components/schemas/CollectionModelFileExclusionRule'
+    post:
+      tags:
+        - file-exclusion-rule-entity-controller
+      description: create-fileexclusionrule
+      operationId: postCollectionResource-fileexclusionrule-post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FileExclusionRule'
+      responses:
+        "201":
+          description: Created
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelFileExclusionRule'
+  /v1/resources/fileExclusionRules/search/findByRepoId:
+    get:
+      tags:
+        - file-exclusion-rule-search-controller
+      operationId: executeSearch-fileexclusionrule-get
+      parameters:
+        - name: repoId
+          in: query
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/CollectionModelFileExclusionRule'
+        "404":
+          description: Not Found
+  /v1/resources/fileExclusionRules/{id}:
+    get:
+      tags:
+        - file-exclusion-rule-entity-controller
+      description: get-fileexclusionrule
+      operationId: getItemResource-fileexclusionrule-get
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/EntityModelFileExclusionRule'
+        "404":
+          description: Not Found
+    put:
+      tags:
+        - file-exclusion-rule-entity-controller
+      description: update-fileexclusionrule
+      operationId: putItemResource-fileexclusionrule-put
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FileExclusionRule'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelFileExclusionRule'
+        "201":
+          description: Created
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelFileExclusionRule'
+        "204":
+          description: No Content
+    delete:
+      tags:
+        - file-exclusion-rule-entity-controller
+      description: delete-fileexclusionrule
+      operationId: deleteItemResource-fileexclusionrule-delete
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+    patch:
+      tags:
+        - file-exclusion-rule-entity-controller
+      description: patch-fileexclusionrule
+      operationId: patchItemResource-fileexclusionrule-patch
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FileExclusionRule'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelFileExclusionRule'
+        "204":
+          description: No Content
+  /v1/resources/fileExclusionRules/{id}/repo:
+    get:
+      tags:
+        - file-exclusion-rule-property-reference-controller
+      description: get-fileexclusionrule
+      operationId: followPropertyReference-fileexclusionrule-get_1
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelFileExclusionRule'
+            text/uri-list:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelFileExclusionRule'
+        "404":
+          description: Not Found
+    put:
+      tags:
+        - file-exclusion-rule-property-reference-controller
+      description: update-fileexclusionrule
+      operationId: createPropertyReference-fileexclusionrule-put
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CollectionModelObject'
+          application/x-spring-data-compact+json:
+            schema:
+              $ref: '#/components/schemas/CollectionModelObject'
+          text/uri-list:
+            schema:
+              $ref: '#/components/schemas/CollectionModelObject'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelFileExclusionRule'
+        "201":
+          description: Created
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelFileExclusionRule'
+        "204":
+          description: No Content
+    delete:
+      tags:
+        - file-exclusion-rule-property-reference-controller
+      description: delete-fileexclusionrule
+      operationId: deletePropertyReference-fileexclusionrule-delete
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+    patch:
+      tags:
+        - file-exclusion-rule-property-reference-controller
+      description: patch-fileexclusionrule
+      operationId: createPropertyReference-fileexclusionrule-patch
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CollectionModelObject'
+          application/x-spring-data-compact+json:
+            schema:
+              $ref: '#/components/schemas/CollectionModelObject'
+          text/uri-list:
+            schema:
+              $ref: '#/components/schemas/CollectionModelObject'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelFileExclusionRule'
+        "204":
+          description: No Content
+  /v1/resources/fileExclusionRules/{id}/repo/{propertyId}:
+    get:
+      tags:
+        - file-exclusion-rule-property-reference-controller
+      description: get-fileexclusionrule
+      operationId: followPropertyReference-fileexclusionrule-get
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: propertyId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelFileExclusionRule'
+        "404":
+          description: Not Found
+    delete:
+      tags:
+        - file-exclusion-rule-property-reference-controller
+      description: delete-fileexclusionrule
+      operationId: deletePropertyReferenceId-fileexclusionrule-delete
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: propertyId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+  /v1/resources/fileInclusionRules:
+    get:
+      tags:
+        - file-inclusion-rule-entity-controller
+      description: get-fileinclusionrule
+      operationId: getCollectionResource-fileinclusionrule-get_1
+      parameters:
+        - name: page
+          in: query
+          description: Zero-based page index (0..N)
+          required: false
+          schema:
+            minimum: 0
+            type: integer
+            default: "0"
+        - name: size
+          in: query
+          description: The size of the page to be returned
+          required: false
+          schema:
+            minimum: 1
+            type: integer
+            default: "20"
+        - name: sort
+          in: query
+          description: "Sorting criteria in the format: property(,asc|desc). Default\
+          \ sort order is ascending. Multiple sort criteria are supported."
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/CollectionModelFileInclusionRule'
+            application/x-spring-data-compact+json:
+              schema:
+                $ref: '#/components/schemas/CollectionModelFileInclusionRule'
+            text/uri-list:
+              schema:
+                $ref: '#/components/schemas/CollectionModelFileInclusionRule'
+    post:
+      tags:
+        - file-inclusion-rule-entity-controller
+      description: create-fileinclusionrule
+      operationId: postCollectionResource-fileinclusionrule-post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FileInclusionRule'
+      responses:
+        "201":
+          description: Created
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelFileInclusionRule'
+  /v1/resources/fileInclusionRules/search/findByRepoId:
+    get:
+      tags:
+        - file-inclusion-rule-search-controller
+      operationId: executeSearch-fileinclusionrule-get
+      parameters:
+        - name: repoId
+          in: query
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/CollectionModelFileInclusionRule'
+        "404":
+          description: Not Found
+  /v1/resources/fileInclusionRules/{id}:
+    get:
+      tags:
+        - file-inclusion-rule-entity-controller
+      description: get-fileinclusionrule
+      operationId: getItemResource-fileinclusionrule-get
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/EntityModelFileInclusionRule'
+        "404":
+          description: Not Found
+    put:
+      tags:
+        - file-inclusion-rule-entity-controller
+      description: update-fileinclusionrule
+      operationId: putItemResource-fileinclusionrule-put
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FileInclusionRule'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelFileInclusionRule'
+        "201":
+          description: Created
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelFileInclusionRule'
+        "204":
+          description: No Content
+    delete:
+      tags:
+        - file-inclusion-rule-entity-controller
+      description: delete-fileinclusionrule
+      operationId: deleteItemResource-fileinclusionrule-delete
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+    patch:
+      tags:
+        - file-inclusion-rule-entity-controller
+      description: patch-fileinclusionrule
+      operationId: patchItemResource-fileinclusionrule-patch
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FileInclusionRule'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelFileInclusionRule'
+        "204":
+          description: No Content
+  /v1/resources/fileInclusionRules/{id}/repo:
+    get:
+      tags:
+        - file-inclusion-rule-property-reference-controller
+      description: get-fileinclusionrule
+      operationId: followPropertyReference-fileinclusionrule-get_1
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelFileInclusionRule'
+            text/uri-list:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelFileInclusionRule'
+        "404":
+          description: Not Found
+    put:
+      tags:
+        - file-inclusion-rule-property-reference-controller
+      description: update-fileinclusionrule
+      operationId: createPropertyReference-fileinclusionrule-put
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CollectionModelObject'
+          application/x-spring-data-compact+json:
+            schema:
+              $ref: '#/components/schemas/CollectionModelObject'
+          text/uri-list:
+            schema:
+              $ref: '#/components/schemas/CollectionModelObject'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelFileInclusionRule'
+        "201":
+          description: Created
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelFileInclusionRule'
+        "204":
+          description: No Content
+    delete:
+      tags:
+        - file-inclusion-rule-property-reference-controller
+      description: delete-fileinclusionrule
+      operationId: deletePropertyReference-fileinclusionrule-delete
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+    patch:
+      tags:
+        - file-inclusion-rule-property-reference-controller
+      description: patch-fileinclusionrule
+      operationId: createPropertyReference-fileinclusionrule-patch
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CollectionModelObject'
+          application/x-spring-data-compact+json:
+            schema:
+              $ref: '#/components/schemas/CollectionModelObject'
+          text/uri-list:
+            schema:
+              $ref: '#/components/schemas/CollectionModelObject'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelFileInclusionRule'
+        "204":
+          description: No Content
+  /v1/resources/fileInclusionRules/{id}/repo/{propertyId}:
+    get:
+      tags:
+        - file-inclusion-rule-property-reference-controller
+      description: get-fileinclusionrule
+      operationId: followPropertyReference-fileinclusionrule-get
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: propertyId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelFileInclusionRule'
+        "404":
+          description: Not Found
+    delete:
+      tags:
+        - file-inclusion-rule-property-reference-controller
+      description: delete-fileinclusionrule
+      operationId: deletePropertyReferenceId-fileinclusionrule-delete
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: propertyId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+  /v1/resources/gitRepoes:
+    get:
+      tags:
+        - git-repo-entity-controller
+      description: get-gitrepo
+      operationId: getCollectionResource-gitrepo-get_1
+      parameters:
+        - name: page
+          in: query
+          description: Zero-based page index (0..N)
+          required: false
+          schema:
+            minimum: 0
+            type: integer
+            default: "0"
+        - name: size
+          in: query
+          description: The size of the page to be returned
+          required: false
+          schema:
+            minimum: 1
+            type: integer
+            default: "20"
+        - name: sort
+          in: query
+          description: "Sorting criteria in the format: property(,asc|desc). Default\
+          \ sort order is ascending. Multiple sort criteria are supported."
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/CollectionModelGitRepo'
+            application/x-spring-data-compact+json:
+              schema:
+                $ref: '#/components/schemas/CollectionModelGitRepo'
+            text/uri-list:
+              schema:
+                $ref: '#/components/schemas/CollectionModelGitRepo'
+    post:
+      tags:
+        - git-repo-entity-controller
+      description: create-gitrepo
+      operationId: postCollectionResource-gitrepo-post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GitRepo'
+      responses:
+        "201":
+          description: Created
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelGitRepo'
+  /v1/resources/gitRepoes/{id}:
+    get:
+      tags:
+        - git-repo-entity-controller
+      description: get-gitrepo
+      operationId: getItemResource-gitrepo-get
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/EntityModelGitRepo'
+        "404":
+          description: Not Found
+    put:
+      tags:
+        - git-repo-entity-controller
+      description: update-gitrepo
+      operationId: putItemResource-gitrepo-put
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GitRepo'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelGitRepo'
+        "201":
+          description: Created
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelGitRepo'
+        "204":
+          description: No Content
+    delete:
+      tags:
+        - git-repo-entity-controller
+      description: delete-gitrepo
+      operationId: deleteItemResource-gitrepo-delete
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+    patch:
+      tags:
+        - git-repo-entity-controller
+      description: patch-gitrepo
+      operationId: patchItemResource-gitrepo-patch
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GitRepo'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelGitRepo'
+        "204":
+          description: No Content
+  /v1/resources/profile:
+    get:
+      tags:
+        - profile-controller
+      operationId: listAllFormsOfMetadata_1
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelObject'
+  /v1/resources/profile/aliases:
+    get:
+      tags:
+        - profile-controller
+      operationId: descriptor_1
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+            application/alps+json:
+              schema:
+                type: string
+            application/schema+json:
+              schema:
+                $ref: '#/components/schemas/JsonSchema'
+  /v1/resources/profile/fileExclusionRules:
+    get:
+      tags:
+        - profile-controller
+      operationId: descriptor_2
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+            application/alps+json:
+              schema:
+                type: string
+            application/schema+json:
+              schema:
+                $ref: '#/components/schemas/JsonSchema'
+  /v1/resources/profile/fileInclusionRules:
+    get:
+      tags:
+        - profile-controller
+      operationId: descriptor_3
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+            application/alps+json:
+              schema:
+                type: string
+            application/schema+json:
+              schema:
+                $ref: '#/components/schemas/JsonSchema'
+  /v1/resources/profile/gitRepoes:
+    get:
+      tags:
+        - profile-controller
+      operationId: descriptor_4
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+            application/alps+json:
+              schema:
+                type: string
+            application/schema+json:
+              schema:
+                $ref: '#/components/schemas/JsonSchema'
+  /v1/resources/profile/removedLineses:
+    get:
+      tags:
+        - profile-controller
+      operationId: descriptor_5
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+            application/alps+json:
+              schema:
+                type: string
+            application/schema+json:
+              schema:
+                $ref: '#/components/schemas/JsonSchema'
+  /v1/resources/profile/totalOwnershipStatses:
+    get:
+      tags:
+        - profile-controller
+      operationId: descriptor_6
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+            application/alps+json:
+              schema:
+                type: string
+            application/schema+json:
+              schema:
+                $ref: '#/components/schemas/JsonSchema'
+  /v1/resources/profile/users:
+    get:
+      tags:
+        - profile-controller
+      operationId: descriptor_7
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+            application/alps+json:
+              schema:
+                type: string
+            application/schema+json:
+              schema:
+                $ref: '#/components/schemas/JsonSchema'
+  /v1/resources/profile/weeklyCommitStatses:
+    get:
+      tags:
+        - profile-controller
+      operationId: descriptor_8
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+            application/alps+json:
+              schema:
+                type: string
+            application/schema+json:
+              schema:
+                $ref: '#/components/schemas/JsonSchema'
+  /v1/resources/removedLineses:
+    get:
+      tags:
+        - removed-lines-entity-controller
+      description: get-removedlines
+      operationId: getCollectionResource-removedlines-get_1
+      parameters:
+        - name: page
+          in: query
+          description: Zero-based page index (0..N)
+          required: false
+          schema:
+            minimum: 0
+            type: integer
+            default: "0"
+        - name: size
+          in: query
+          description: The size of the page to be returned
+          required: false
+          schema:
+            minimum: 1
+            type: integer
+            default: "20"
+        - name: sort
+          in: query
+          description: "Sorting criteria in the format: property(,asc|desc). Default\
+          \ sort order is ascending. Multiple sort criteria are supported."
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/CollectionModelRemovedLines'
+            application/x-spring-data-compact+json:
+              schema:
+                $ref: '#/components/schemas/CollectionModelRemovedLines'
+            text/uri-list:
+              schema:
+                $ref: '#/components/schemas/CollectionModelRemovedLines'
+    post:
+      tags:
+        - removed-lines-entity-controller
+      description: create-removedlines
+      operationId: postCollectionResource-removedlines-post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RemovedLines'
+      responses:
+        "201":
+          description: Created
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelRemovedLines'
+  /v1/resources/removedLineses/search/findByWeeklyIdAndFromAuthorId:
+    get:
+      tags:
+        - removed-lines-search-controller
+      operationId: executeSearch-removedlines-get
+      parameters:
+        - name: weeklyId
+          in: query
+          schema:
+            type: integer
+            format: int64
+        - name: fromAuthorId
+          in: query
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/EntityModelRemovedLines'
+        "404":
+          description: Not Found
+  /v1/resources/removedLineses/{id}:
+    get:
+      tags:
+        - removed-lines-entity-controller
+      description: get-removedlines
+      operationId: getItemResource-removedlines-get
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/EntityModelRemovedLines'
+        "404":
+          description: Not Found
+    put:
+      tags:
+        - removed-lines-entity-controller
+      description: update-removedlines
+      operationId: putItemResource-removedlines-put
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RemovedLines'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelRemovedLines'
+        "201":
+          description: Created
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelRemovedLines'
+        "204":
+          description: No Content
+    delete:
+      tags:
+        - removed-lines-entity-controller
+      description: delete-removedlines
+      operationId: deleteItemResource-removedlines-delete
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+    patch:
+      tags:
+        - removed-lines-entity-controller
+      description: patch-removedlines
+      operationId: patchItemResource-removedlines-patch
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RemovedLines'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelRemovedLines'
+        "204":
+          description: No Content
+  /v1/resources/removedLineses/{id}/fromAuthor:
+    get:
+      tags:
+        - removed-lines-property-reference-controller
+      description: get-removedlines
+      operationId: followPropertyReference-removedlines-get_1
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelRemovedLines'
+            text/uri-list:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelRemovedLines'
+        "404":
+          description: Not Found
+    put:
+      tags:
+        - removed-lines-property-reference-controller
+      description: update-removedlines
+      operationId: createPropertyReference-removedlines-put
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CollectionModelObject'
+          application/x-spring-data-compact+json:
+            schema:
+              $ref: '#/components/schemas/CollectionModelObject'
+          text/uri-list:
+            schema:
+              $ref: '#/components/schemas/CollectionModelObject'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelRemovedLines'
+        "201":
+          description: Created
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelRemovedLines'
+        "204":
+          description: No Content
+    delete:
+      tags:
+        - removed-lines-property-reference-controller
+      description: delete-removedlines
+      operationId: deletePropertyReference-removedlines-delete
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+    patch:
+      tags:
+        - removed-lines-property-reference-controller
+      description: patch-removedlines
+      operationId: createPropertyReference-removedlines-patch
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CollectionModelObject'
+          application/x-spring-data-compact+json:
+            schema:
+              $ref: '#/components/schemas/CollectionModelObject'
+          text/uri-list:
+            schema:
+              $ref: '#/components/schemas/CollectionModelObject'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelRemovedLines'
+        "204":
+          description: No Content
+  /v1/resources/removedLineses/{id}/fromAuthor/{propertyId}:
+    get:
+      tags:
+        - removed-lines-property-reference-controller
+      description: get-removedlines
+      operationId: followPropertyReference-removedlines-get
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: propertyId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelRemovedLines'
+        "404":
+          description: Not Found
+    delete:
+      tags:
+        - removed-lines-property-reference-controller
+      description: delete-removedlines
+      operationId: deletePropertyReferenceId-removedlines-delete
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: propertyId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+  /v1/resources/removedLineses/{id}/weekly:
+    get:
+      tags:
+        - removed-lines-property-reference-controller
+      description: get-removedlines
+      operationId: followPropertyReference-removedlines-get_2_1
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelRemovedLines'
+            text/uri-list:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelRemovedLines'
+        "404":
+          description: Not Found
+    put:
+      tags:
+        - removed-lines-property-reference-controller
+      description: update-removedlines
+      operationId: createPropertyReference-removedlines-put_1
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CollectionModelObject'
+          application/x-spring-data-compact+json:
+            schema:
+              $ref: '#/components/schemas/CollectionModelObject'
+          text/uri-list:
+            schema:
+              $ref: '#/components/schemas/CollectionModelObject'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelRemovedLines'
+        "201":
+          description: Created
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelRemovedLines'
+        "204":
+          description: No Content
+    delete:
+      tags:
+        - removed-lines-property-reference-controller
+      description: delete-removedlines
+      operationId: deletePropertyReference-removedlines-delete_1
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+    patch:
+      tags:
+        - removed-lines-property-reference-controller
+      description: patch-removedlines
+      operationId: createPropertyReference-removedlines-patch_1
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CollectionModelObject'
+          application/x-spring-data-compact+json:
+            schema:
+              $ref: '#/components/schemas/CollectionModelObject'
+          text/uri-list:
+            schema:
+              $ref: '#/components/schemas/CollectionModelObject'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelRemovedLines'
+        "204":
+          description: No Content
+  /v1/resources/removedLineses/{id}/weekly/{propertyId}:
+    get:
+      tags:
+        - removed-lines-property-reference-controller
+      description: get-removedlines
+      operationId: followPropertyReference-removedlines-get_2
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: propertyId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelRemovedLines'
+        "404":
+          description: Not Found
+    delete:
+      tags:
+        - removed-lines-property-reference-controller
+      description: delete-removedlines
+      operationId: deletePropertyReferenceId-removedlines-delete_1
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: propertyId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+  /v1/resources/totalOwnershipStatses:
+    get:
+      tags:
+        - total-ownership-stats-entity-controller
+      description: get-totalownershipstats
+      operationId: getCollectionResource-totalownershipstats-get_1
+      parameters:
+        - name: page
+          in: query
+          description: Zero-based page index (0..N)
+          required: false
+          schema:
+            minimum: 0
+            type: integer
+            default: "0"
+        - name: size
+          in: query
+          description: The size of the page to be returned
+          required: false
+          schema:
+            minimum: 1
+            type: integer
+            default: "20"
+        - name: sort
+          in: query
+          description: "Sorting criteria in the format: property(,asc|desc). Default\
+          \ sort order is ascending. Multiple sort criteria are supported."
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/CollectionModelTotalOwnershipStats'
+            application/x-spring-data-compact+json:
+              schema:
+                $ref: '#/components/schemas/CollectionModelTotalOwnershipStats'
+            text/uri-list:
+              schema:
+                $ref: '#/components/schemas/CollectionModelTotalOwnershipStats'
+    post:
+      tags:
+        - total-ownership-stats-entity-controller
+      description: create-totalownershipstats
+      operationId: postCollectionResource-totalownershipstats-post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TotalOwnershipStats'
+      responses:
+        "201":
+          description: Created
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelTotalOwnershipStats'
+  /v1/resources/totalOwnershipStatses/search/findBy:
+    get:
+      tags:
+        - total-ownership-stats-search-controller
+      operationId: executeSearch-totalownershipstats-get
+      parameters:
+        - name: aliasId
+          in: query
+          schema:
+            type: integer
+            format: int64
+        - name: start
+          in: query
+          schema:
+            type: string
+            format: date-time
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/EntityModelTotalOwnershipStats'
+        "404":
+          description: Not Found
+  /v1/resources/totalOwnershipStatses/{id}:
+    get:
+      tags:
+        - total-ownership-stats-entity-controller
+      description: get-totalownershipstats
+      operationId: getItemResource-totalownershipstats-get
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/EntityModelTotalOwnershipStats'
+        "404":
+          description: Not Found
+    put:
+      tags:
+        - total-ownership-stats-entity-controller
+      description: update-totalownershipstats
+      operationId: putItemResource-totalownershipstats-put
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TotalOwnershipStats'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelTotalOwnershipStats'
+        "201":
+          description: Created
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelTotalOwnershipStats'
+        "204":
+          description: No Content
+    delete:
+      tags:
+        - total-ownership-stats-entity-controller
+      description: delete-totalownershipstats
+      operationId: deleteItemResource-totalownershipstats-delete
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+    patch:
+      tags:
+        - total-ownership-stats-entity-controller
+      description: patch-totalownershipstats
+      operationId: patchItemResource-totalownershipstats-patch
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TotalOwnershipStats'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelTotalOwnershipStats'
+        "204":
+          description: No Content
+  /v1/resources/totalOwnershipStatses/{id}/alias:
+    get:
+      tags:
+        - total-ownership-stats-property-reference-controller
+      description: get-totalownershipstats
+      operationId: followPropertyReference-totalownershipstats-get_1
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelTotalOwnershipStats'
+            text/uri-list:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelTotalOwnershipStats'
+        "404":
+          description: Not Found
+    put:
+      tags:
+        - total-ownership-stats-property-reference-controller
+      description: update-totalownershipstats
+      operationId: createPropertyReference-totalownershipstats-put
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CollectionModelObject'
+          application/x-spring-data-compact+json:
+            schema:
+              $ref: '#/components/schemas/CollectionModelObject'
+          text/uri-list:
+            schema:
+              $ref: '#/components/schemas/CollectionModelObject'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelTotalOwnershipStats'
+        "201":
+          description: Created
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelTotalOwnershipStats'
+        "204":
+          description: No Content
+    delete:
+      tags:
+        - total-ownership-stats-property-reference-controller
+      description: delete-totalownershipstats
+      operationId: deletePropertyReference-totalownershipstats-delete
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+    patch:
+      tags:
+        - total-ownership-stats-property-reference-controller
+      description: patch-totalownershipstats
+      operationId: createPropertyReference-totalownershipstats-patch
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CollectionModelObject'
+          application/x-spring-data-compact+json:
+            schema:
+              $ref: '#/components/schemas/CollectionModelObject'
+          text/uri-list:
+            schema:
+              $ref: '#/components/schemas/CollectionModelObject'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelTotalOwnershipStats'
+        "204":
+          description: No Content
+  /v1/resources/totalOwnershipStatses/{id}/alias/{propertyId}:
+    get:
+      tags:
+        - total-ownership-stats-property-reference-controller
+      description: get-totalownershipstats
+      operationId: followPropertyReference-totalownershipstats-get
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: propertyId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelTotalOwnershipStats'
+        "404":
+          description: Not Found
+    delete:
+      tags:
+        - total-ownership-stats-property-reference-controller
+      description: delete-totalownershipstats
+      operationId: deletePropertyReferenceId-totalownershipstats-delete
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: propertyId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+  /v1/resources/totalOwnershipStatses/{id}/repo:
+    get:
+      tags:
+        - total-ownership-stats-property-reference-controller
+      description: get-totalownershipstats
+      operationId: followPropertyReference-totalownershipstats-get_2_1
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelTotalOwnershipStats'
+            text/uri-list:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelTotalOwnershipStats'
+        "404":
+          description: Not Found
+    put:
+      tags:
+        - total-ownership-stats-property-reference-controller
+      description: update-totalownershipstats
+      operationId: createPropertyReference-totalownershipstats-put_1
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CollectionModelObject'
+          application/x-spring-data-compact+json:
+            schema:
+              $ref: '#/components/schemas/CollectionModelObject'
+          text/uri-list:
+            schema:
+              $ref: '#/components/schemas/CollectionModelObject'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelTotalOwnershipStats'
+        "201":
+          description: Created
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelTotalOwnershipStats'
+        "204":
+          description: No Content
+    delete:
+      tags:
+        - total-ownership-stats-property-reference-controller
+      description: delete-totalownershipstats
+      operationId: deletePropertyReference-totalownershipstats-delete_1
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+    patch:
+      tags:
+        - total-ownership-stats-property-reference-controller
+      description: patch-totalownershipstats
+      operationId: createPropertyReference-totalownershipstats-patch_1
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CollectionModelObject'
+          application/x-spring-data-compact+json:
+            schema:
+              $ref: '#/components/schemas/CollectionModelObject'
+          text/uri-list:
+            schema:
+              $ref: '#/components/schemas/CollectionModelObject'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelTotalOwnershipStats'
+        "204":
+          description: No Content
+  /v1/resources/totalOwnershipStatses/{id}/repo/{propertyId}:
+    get:
+      tags:
+        - total-ownership-stats-property-reference-controller
+      description: get-totalownershipstats
+      operationId: followPropertyReference-totalownershipstats-get_2
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: propertyId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelTotalOwnershipStats'
+        "404":
+          description: Not Found
+    delete:
+      tags:
+        - total-ownership-stats-property-reference-controller
+      description: delete-totalownershipstats
+      operationId: deletePropertyReferenceId-totalownershipstats-delete_1
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: propertyId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+  /v1/resources/users:
+    get:
+      tags:
+        - user-entity-controller
+      description: get-user
+      operationId: getCollectionResource-user-get_1
+      parameters:
+        - name: page
+          in: query
+          description: Zero-based page index (0..N)
+          required: false
+          schema:
+            minimum: 0
+            type: integer
+            default: "0"
+        - name: size
+          in: query
+          description: The size of the page to be returned
+          required: false
+          schema:
+            minimum: 1
+            type: integer
+            default: "20"
+        - name: sort
+          in: query
+          description: "Sorting criteria in the format: property(,asc|desc). Default\
+          \ sort order is ascending. Multiple sort criteria are supported."
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/CollectionModelUser'
+            application/x-spring-data-compact+json:
+              schema:
+                $ref: '#/components/schemas/CollectionModelUser'
+            text/uri-list:
+              schema:
+                $ref: '#/components/schemas/CollectionModelUser'
+    post:
+      tags:
+        - user-entity-controller
+      description: create-user
+      operationId: postCollectionResource-user-post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        "201":
+          description: Created
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelUser'
+  /v1/resources/users/{id}:
+    get:
+      tags:
+        - user-entity-controller
+      description: get-user
+      operationId: getItemResource-user-get
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/EntityModelUser'
+        "404":
+          description: Not Found
+    put:
+      tags:
+        - user-entity-controller
+      description: update-user
+      operationId: putItemResource-user-put
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelUser'
+        "201":
+          description: Created
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelUser'
+        "204":
+          description: No Content
+    delete:
+      tags:
+        - user-entity-controller
+      description: delete-user
+      operationId: deleteItemResource-user-delete
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+    patch:
+      tags:
+        - user-entity-controller
+      description: patch-user
+      operationId: patchItemResource-user-patch
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelUser'
+        "204":
+          description: No Content
+  /v1/resources/users/{id}/aliases:
+    get:
+      tags:
+        - user-property-reference-controller
+      description: get-user
+      operationId: followPropertyReference-user-get_1
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelUser'
+            text/uri-list:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelUser'
+        "404":
+          description: Not Found
+    put:
+      tags:
+        - user-property-reference-controller
+      description: update-user
+      operationId: createPropertyReference-user-put
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CollectionModelObject'
+          application/x-spring-data-compact+json:
+            schema:
+              $ref: '#/components/schemas/CollectionModelObject'
+          text/uri-list:
+            schema:
+              $ref: '#/components/schemas/CollectionModelObject'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelUser'
+        "201":
+          description: Created
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelUser'
+        "204":
+          description: No Content
+    delete:
+      tags:
+        - user-property-reference-controller
+      description: delete-user
+      operationId: deletePropertyReference-user-delete
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+    patch:
+      tags:
+        - user-property-reference-controller
+      description: patch-user
+      operationId: createPropertyReference-user-patch
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CollectionModelObject'
+          application/x-spring-data-compact+json:
+            schema:
+              $ref: '#/components/schemas/CollectionModelObject'
+          text/uri-list:
+            schema:
+              $ref: '#/components/schemas/CollectionModelObject'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelUser'
+        "204":
+          description: No Content
+  /v1/resources/users/{id}/aliases/{propertyId}:
+    get:
+      tags:
+        - user-property-reference-controller
+      description: get-user
+      operationId: followPropertyReference-user-get
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: propertyId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelUser'
+        "404":
+          description: Not Found
+    delete:
+      tags:
+        - user-property-reference-controller
+      description: delete-user
+      operationId: deletePropertyReferenceId-user-delete
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: propertyId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+  /v1/resources/weeklyCommitStatses:
+    get:
+      tags:
+        - weekly-commit-stats-entity-controller
+      description: get-weeklycommitstats
+      operationId: getCollectionResource-weeklycommitstats-get_1
+      parameters:
+        - name: page
+          in: query
+          description: Zero-based page index (0..N)
+          required: false
+          schema:
+            minimum: 0
+            type: integer
+            default: "0"
+        - name: size
+          in: query
+          description: The size of the page to be returned
+          required: false
+          schema:
+            minimum: 1
+            type: integer
+            default: "20"
+        - name: sort
+          in: query
+          description: "Sorting criteria in the format: property(,asc|desc). Default\
+          \ sort order is ascending. Multiple sort criteria are supported."
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/CollectionModelWeeklyCommitStats'
+            application/x-spring-data-compact+json:
+              schema:
+                $ref: '#/components/schemas/CollectionModelWeeklyCommitStats'
+            text/uri-list:
+              schema:
+                $ref: '#/components/schemas/CollectionModelWeeklyCommitStats'
+    post:
+      tags:
+        - weekly-commit-stats-entity-controller
+      description: create-weeklycommitstats
+      operationId: postCollectionResource-weeklycommitstats-post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WeeklyCommitStats'
+      responses:
+        "201":
+          description: Created
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelWeeklyCommitStats'
+  /v1/resources/weeklyCommitStatses/search/findBy:
+    get:
+      tags:
+        - weekly-commit-stats-search-controller
+      operationId: executeSearch-weeklycommitstats-get
+      parameters:
+        - name: aliasId
+          in: query
+          schema:
+            type: integer
+            format: int64
+        - name: start
+          in: query
+          schema:
+            type: string
+            format: date-time
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/EntityModelWeeklyCommitStats'
+        "404":
+          description: Not Found
+  /v1/resources/weeklyCommitStatses/{id}:
+    get:
+      tags:
+        - weekly-commit-stats-entity-controller
+      description: get-weeklycommitstats
+      operationId: getItemResource-weeklycommitstats-get
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/EntityModelWeeklyCommitStats'
+        "404":
+          description: Not Found
+    put:
+      tags:
+        - weekly-commit-stats-entity-controller
+      description: update-weeklycommitstats
+      operationId: putItemResource-weeklycommitstats-put
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WeeklyCommitStats'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelWeeklyCommitStats'
+        "201":
+          description: Created
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelWeeklyCommitStats'
+        "204":
+          description: No Content
+    delete:
+      tags:
+        - weekly-commit-stats-entity-controller
+      description: delete-weeklycommitstats
+      operationId: deleteItemResource-weeklycommitstats-delete
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+    patch:
+      tags:
+        - weekly-commit-stats-entity-controller
+      description: patch-weeklycommitstats
+      operationId: patchItemResource-weeklycommitstats-patch
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WeeklyCommitStats'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelWeeklyCommitStats'
+        "204":
+          description: No Content
+  /v1/resources/weeklyCommitStatses/{id}/alias:
+    get:
+      tags:
+        - weekly-commit-stats-property-reference-controller
+      description: get-weeklycommitstats
+      operationId: followPropertyReference-weeklycommitstats-get_1
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelWeeklyCommitStats'
+            text/uri-list:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelWeeklyCommitStats'
+        "404":
+          description: Not Found
+    put:
+      tags:
+        - weekly-commit-stats-property-reference-controller
+      description: update-weeklycommitstats
+      operationId: createPropertyReference-weeklycommitstats-put
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CollectionModelObject'
+          application/x-spring-data-compact+json:
+            schema:
+              $ref: '#/components/schemas/CollectionModelObject'
+          text/uri-list:
+            schema:
+              $ref: '#/components/schemas/CollectionModelObject'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelWeeklyCommitStats'
+        "201":
+          description: Created
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelWeeklyCommitStats'
+        "204":
+          description: No Content
+    delete:
+      tags:
+        - weekly-commit-stats-property-reference-controller
+      description: delete-weeklycommitstats
+      operationId: deletePropertyReference-weeklycommitstats-delete
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+    patch:
+      tags:
+        - weekly-commit-stats-property-reference-controller
+      description: patch-weeklycommitstats
+      operationId: createPropertyReference-weeklycommitstats-patch
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CollectionModelObject'
+          application/x-spring-data-compact+json:
+            schema:
+              $ref: '#/components/schemas/CollectionModelObject'
+          text/uri-list:
+            schema:
+              $ref: '#/components/schemas/CollectionModelObject'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelWeeklyCommitStats'
+        "204":
+          description: No Content
+  /v1/resources/weeklyCommitStatses/{id}/alias/{propertyId}:
+    get:
+      tags:
+        - weekly-commit-stats-property-reference-controller
+      description: get-weeklycommitstats
+      operationId: followPropertyReference-weeklycommitstats-get
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: propertyId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelWeeklyCommitStats'
+        "404":
+          description: Not Found
+    delete:
+      tags:
+        - weekly-commit-stats-property-reference-controller
+      description: delete-weeklycommitstats
+      operationId: deletePropertyReferenceId-weeklycommitstats-delete
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: propertyId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+  /v1/resources/weeklyCommitStatses/{id}/linesRemovedOf:
+    get:
+      tags:
+        - weekly-commit-stats-property-reference-controller
+      description: get-weeklycommitstats
+      operationId: followPropertyReference-weeklycommitstats-get_2_1
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelWeeklyCommitStats'
+            text/uri-list:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelWeeklyCommitStats'
+        "404":
+          description: Not Found
+    put:
+      tags:
+        - weekly-commit-stats-property-reference-controller
+      description: update-weeklycommitstats
+      operationId: createPropertyReference-weeklycommitstats-put_1
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CollectionModelObject'
+          application/x-spring-data-compact+json:
+            schema:
+              $ref: '#/components/schemas/CollectionModelObject'
+          text/uri-list:
+            schema:
+              $ref: '#/components/schemas/CollectionModelObject'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelWeeklyCommitStats'
+        "201":
+          description: Created
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelWeeklyCommitStats'
+        "204":
+          description: No Content
+    delete:
+      tags:
+        - weekly-commit-stats-property-reference-controller
+      description: delete-weeklycommitstats
+      operationId: deletePropertyReference-weeklycommitstats-delete_1
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+    patch:
+      tags:
+        - weekly-commit-stats-property-reference-controller
+      description: patch-weeklycommitstats
+      operationId: createPropertyReference-weeklycommitstats-patch_1
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CollectionModelObject'
+          application/x-spring-data-compact+json:
+            schema:
+              $ref: '#/components/schemas/CollectionModelObject'
+          text/uri-list:
+            schema:
+              $ref: '#/components/schemas/CollectionModelObject'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelWeeklyCommitStats'
+        "204":
+          description: No Content
+  /v1/resources/weeklyCommitStatses/{id}/linesRemovedOf/{propertyId}:
+    get:
+      tags:
+        - weekly-commit-stats-property-reference-controller
+      description: get-weeklycommitstats
+      operationId: followPropertyReference-weeklycommitstats-get_2
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: propertyId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelWeeklyCommitStats'
+        "404":
+          description: Not Found
+    delete:
+      tags:
+        - weekly-commit-stats-property-reference-controller
+      description: delete-weeklycommitstats
+      operationId: deletePropertyReferenceId-weeklycommitstats-delete_1
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: propertyId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+  /v1/resources/weeklyCommitStatses/{id}/repo:
+    get:
+      tags:
+        - weekly-commit-stats-property-reference-controller
+      description: get-weeklycommitstats
+      operationId: followPropertyReference-weeklycommitstats-get_3_1
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelWeeklyCommitStats'
+            text/uri-list:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelWeeklyCommitStats'
+        "404":
+          description: Not Found
+    put:
+      tags:
+        - weekly-commit-stats-property-reference-controller
+      description: update-weeklycommitstats
+      operationId: createPropertyReference-weeklycommitstats-put_2
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CollectionModelObject'
+          application/x-spring-data-compact+json:
+            schema:
+              $ref: '#/components/schemas/CollectionModelObject'
+          text/uri-list:
+            schema:
+              $ref: '#/components/schemas/CollectionModelObject'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelWeeklyCommitStats'
+        "201":
+          description: Created
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelWeeklyCommitStats'
+        "204":
+          description: No Content
+    delete:
+      tags:
+        - weekly-commit-stats-property-reference-controller
+      description: delete-weeklycommitstats
+      operationId: deletePropertyReference-weeklycommitstats-delete_2
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+    patch:
+      tags:
+        - weekly-commit-stats-property-reference-controller
+      description: patch-weeklycommitstats
+      operationId: createPropertyReference-weeklycommitstats-patch_2
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CollectionModelObject'
+          application/x-spring-data-compact+json:
+            schema:
+              $ref: '#/components/schemas/CollectionModelObject'
+          text/uri-list:
+            schema:
+              $ref: '#/components/schemas/CollectionModelObject'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelWeeklyCommitStats'
+        "204":
+          description: No Content
+  /v1/resources/weeklyCommitStatses/{id}/repo/{propertyId}:
+    get:
+      tags:
+        - weekly-commit-stats-property-reference-controller
+      description: get-weeklycommitstats
+      operationId: followPropertyReference-weeklycommitstats-get_3
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: propertyId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelWeeklyCommitStats'
+        "404":
+          description: Not Found
+    delete:
+      tags:
+        - weekly-commit-stats-property-reference-controller
+      description: delete-weeklycommitstats
+      operationId: deletePropertyReferenceId-weeklycommitstats-delete_2
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: propertyId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+components:
+  schemas:
+    AbstractJsonSchemaPropertyObject:
+      type: object
+      properties:
+        title:
+          type: string
+        readOnly:
+          type: boolean
+    Item:
+      type: object
+      properties:
+        type:
+          type: string
+        properties:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/AbstractJsonSchemaPropertyObject'
+        requiredProperties:
+          type: array
+          items:
+            type: string
+    JsonSchema:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        properties:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/AbstractJsonSchemaPropertyObject'
+        requiredProperties:
+          type: array
+          items:
+            type: string
+        definitions:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/Item'
+        type:
+          type: string
+        $schema:
+          type: string
+    RepresentationModelObject:
+      type: object
+      properties:
+        _links:
+          $ref: '#/components/schemas/Links'
+    FileInclusionRule:
+      required:
+        - name
+        - repo
+        - rule
+      type: object
+      properties:
+        repo:
+          $ref: '#/components/schemas/GitRepo'
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        rule:
+          type: string
+    GitRepo:
+      required:
+        - analysisState
+        - branchToAnalyze
+        - lastGoodState
+        - name
+        - url
+        - uuid
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        branchToAnalyze:
+          type: string
+        url:
+          type: string
+        uuid:
+          type: string
+        needsAuthentication:
+          type: boolean
+        lastAnalyzedCommit:
+          type: string
+        analysisState:
+          type: string
+          enum:
+            - NONE
+            - STARTED
+            - CLONING
+            - CLONED
+            - CHURN_COUNTING
+            - CHURN_COUNTED
+            - LOC_OWNERSHIP_COUNTING
+            - LOC_OWNERSHIP_COUNTED
+            - REFACTOR_COUNTING
+            - REFACTOR_COUNTED
+            - FINISHED
+            - FAILED
+        lastGoodState:
+          type: string
+          enum:
+            - NONE
+            - STARTED
+            - CLONING
+            - CLONED
+            - CHURN_COUNTING
+            - CHURN_COUNTED
+            - LOC_OWNERSHIP_COUNTING
+            - LOC_OWNERSHIP_COUNTED
+            - REFACTOR_COUNTING
+            - REFACTOR_COUNTED
+            - FINISHED
+            - FAILED
+        commitsProcessed:
+          type: integer
+          format: int64
+        errorMessage:
+          type: string
+    RepresentationModelFileInclusionRule:
+      type: object
+      properties:
+        _links:
+          $ref: '#/components/schemas/Links'
+    CollectionModelFileInclusionRule:
+      type: object
+      properties:
+        _embedded:
+          type: object
+          properties:
+            fileInclusionRules:
+              type: array
+              items:
+                $ref: '#/components/schemas/FileInclusionRule'
+        _links:
+          $ref: '#/components/schemas/Links'
+    Links:
+      type: object
+      additionalProperties:
+        $ref: '#/components/schemas/Link'
+    EntityModelFileInclusionRule:
+      type: object
+      properties:
+        repo:
+          $ref: '#/components/schemas/GitRepo'
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        rule:
+          type: string
+        _links:
+          $ref: '#/components/schemas/Links'
+    CollectionModelObject:
+      type: object
+      properties:
+        _embedded:
+          type: object
+          properties:
+            objects:
+              type: array
+              items:
+                type: object
+        _links:
+          $ref: '#/components/schemas/Links'
+    Alias:
+      required:
+        - name
+        - repo
+      type: object
+      properties:
+        repo:
+          $ref: '#/components/schemas/GitRepo'
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        user:
+          $ref: '#/components/schemas/User'
+    User:
+      required:
+        - name
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        aliases:
+          type: array
+          items:
+            $ref: '#/components/schemas/Alias'
+    RepresentationModelAlias:
+      type: object
+      properties:
+        _links:
+          $ref: '#/components/schemas/Links'
+    CollectionModelAlias:
+      type: object
+      properties:
+        _embedded:
+          type: object
+          properties:
+            aliases:
+              type: array
+              items:
+                $ref: '#/components/schemas/Alias'
+        _links:
+          $ref: '#/components/schemas/Links'
+    EntityModelAlias:
+      type: object
+      properties:
+        repo:
+          $ref: '#/components/schemas/GitRepo'
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        user:
+          $ref: '#/components/schemas/User'
+        _links:
+          $ref: '#/components/schemas/Links'
+    TotalOwnershipStats:
+      required:
+        - alias
+        - from
+        - repo
+        - to
+      type: object
+      properties:
+        repo:
+          $ref: '#/components/schemas/GitRepo'
+        alias:
+          $ref: '#/components/schemas/Alias'
+        id:
+          type: integer
+          format: int64
+        from:
+          type: string
+          format: date-time
+        to:
+          type: string
+          format: date-time
+        linesOwned:
+          minimum: 0
+          type: integer
+          format: int64
+    RepresentationModelTotalOwnershipStats:
+      type: object
+      properties:
+        _links:
+          $ref: '#/components/schemas/Links'
+    CollectionModelTotalOwnershipStats:
+      type: object
+      properties:
+        _embedded:
+          type: object
+          properties:
+            totalOwnershipStatses:
+              type: array
+              items:
+                $ref: '#/components/schemas/TotalOwnershipStats'
+        _links:
+          $ref: '#/components/schemas/Links'
+    EntityModelTotalOwnershipStats:
+      type: object
+      properties:
+        repo:
+          $ref: '#/components/schemas/GitRepo'
+        alias:
+          $ref: '#/components/schemas/Alias'
+        id:
+          type: integer
+          format: int64
+        from:
+          type: string
+          format: date-time
+        to:
+          type: string
+          format: date-time
+        linesOwned:
+          minimum: 0
+          type: integer
+          format: int64
+        _links:
+          $ref: '#/components/schemas/Links'
+    FileExclusionRule:
+      required:
+        - name
+        - repo
+        - rule
+      type: object
+      properties:
+        repo:
+          $ref: '#/components/schemas/GitRepo'
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        rule:
+          type: string
+    RepresentationModelFileExclusionRule:
+      type: object
+      properties:
+        _links:
+          $ref: '#/components/schemas/Links'
+    CollectionModelFileExclusionRule:
+      type: object
+      properties:
+        _embedded:
+          type: object
+          properties:
+            fileExclusionRules:
+              type: array
+              items:
+                $ref: '#/components/schemas/FileExclusionRule'
+        _links:
+          $ref: '#/components/schemas/Links'
+    EntityModelFileExclusionRule:
+      type: object
+      properties:
+        repo:
+          $ref: '#/components/schemas/GitRepo'
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        rule:
+          type: string
+        _links:
+          $ref: '#/components/schemas/Links'
+    RemovedLines:
+      required:
+        - fromAuthor
+        - weekly
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        removedLines:
+          minimum: 0
+          type: integer
+          format: int64
+        fromAuthor:
+          $ref: '#/components/schemas/Alias'
+        weekly:
+          $ref: '#/components/schemas/WeeklyCommitStats'
+    WeeklyCommitStats:
+      required:
+        - alias
+        - from
+        - linesRemovedOf
+        - repo
+        - to
+      type: object
+      properties:
+        repo:
+          $ref: '#/components/schemas/GitRepo'
+        alias:
+          $ref: '#/components/schemas/Alias'
+        from:
+          type: string
+          format: date-time
+        to:
+          type: string
+          format: date-time
+        commitCount:
+          minimum: 0
+          type: integer
+          format: int64
+        linesAdded:
+          minimum: 0
+          type: integer
+          format: int64
+        linesRemoved:
+          minimum: 0
+          type: integer
+          format: int64
+        linesOwned:
+          minimum: 0
+          type: integer
+          format: int64
+        id:
+          type: integer
+          format: int64
+        linesRemovedOf:
+          type: array
+          items:
+            $ref: '#/components/schemas/RemovedLines'
+    RepresentationModelWeeklyCommitStats:
+      type: object
+      properties:
+        _links:
+          $ref: '#/components/schemas/Links'
+    CollectionModelWeeklyCommitStats:
+      type: object
+      properties:
+        _embedded:
+          type: object
+          properties:
+            weeklyCommitStatses:
+              type: array
+              items:
+                $ref: '#/components/schemas/WeeklyCommitStats'
+        _links:
+          $ref: '#/components/schemas/Links'
+    EntityModelWeeklyCommitStats:
+      type: object
+      properties:
+        repo:
+          $ref: '#/components/schemas/GitRepo'
+        alias:
+          $ref: '#/components/schemas/Alias'
+        from:
+          type: string
+          format: date-time
+        to:
+          type: string
+          format: date-time
+        commitCount:
+          minimum: 0
+          type: integer
+          format: int64
+        linesAdded:
+          minimum: 0
+          type: integer
+          format: int64
+        linesRemoved:
+          minimum: 0
+          type: integer
+          format: int64
+        linesOwned:
+          minimum: 0
+          type: integer
+          format: int64
+        id:
+          type: integer
+          format: int64
+        linesRemovedOf:
+          type: array
+          items:
+            $ref: '#/components/schemas/RemovedLines'
+        _links:
+          $ref: '#/components/schemas/Links'
+    RepresentationModelGitRepo:
+      type: object
+      properties:
+        _links:
+          $ref: '#/components/schemas/Links'
+    CollectionModelGitRepo:
+      type: object
+      properties:
+        _embedded:
+          type: object
+          properties:
+            gitRepoes:
+              type: array
+              items:
+                $ref: '#/components/schemas/GitRepo'
+        _links:
+          $ref: '#/components/schemas/Links'
+    EntityModelGitRepo:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        branchToAnalyze:
+          type: string
+        url:
+          type: string
+        uuid:
+          type: string
+        needsAuthentication:
+          type: boolean
+        lastAnalyzedCommit:
+          type: string
+        analysisState:
+          type: string
+          enum:
+            - NONE
+            - STARTED
+            - CLONING
+            - CLONED
+            - CHURN_COUNTING
+            - CHURN_COUNTED
+            - LOC_OWNERSHIP_COUNTING
+            - LOC_OWNERSHIP_COUNTED
+            - REFACTOR_COUNTING
+            - REFACTOR_COUNTED
+            - FINISHED
+            - FAILED
+        lastGoodState:
+          type: string
+          enum:
+            - NONE
+            - STARTED
+            - CLONING
+            - CLONED
+            - CHURN_COUNTING
+            - CHURN_COUNTED
+            - LOC_OWNERSHIP_COUNTING
+            - LOC_OWNERSHIP_COUNTED
+            - REFACTOR_COUNTING
+            - REFACTOR_COUNTED
+            - FINISHED
+            - FAILED
+        commitsProcessed:
+          type: integer
+          format: int64
+        errorMessage:
+          type: string
+        _links:
+          $ref: '#/components/schemas/Links'
+    RepresentationModelRemovedLines:
+      type: object
+      properties:
+        _links:
+          $ref: '#/components/schemas/Links'
+    CollectionModelRemovedLines:
+      type: object
+      properties:
+        _embedded:
+          type: object
+          properties:
+            removedLineses:
+              type: array
+              items:
+                $ref: '#/components/schemas/RemovedLines'
+        _links:
+          $ref: '#/components/schemas/Links'
+    EntityModelRemovedLines:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        removedLines:
+          minimum: 0
+          type: integer
+          format: int64
+        fromAuthor:
+          $ref: '#/components/schemas/Alias'
+        weekly:
+          $ref: '#/components/schemas/WeeklyCommitStats'
+        _links:
+          $ref: '#/components/schemas/Links'
+    RepresentationModelUser:
+      type: object
+      properties:
+        _links:
+          $ref: '#/components/schemas/Links'
+    CollectionModelUser:
+      type: object
+      properties:
+        _embedded:
+          type: object
+          properties:
+            users:
+              type: array
+              items:
+                $ref: '#/components/schemas/User'
+        _links:
+          $ref: '#/components/schemas/Links'
+    EntityModelUser:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        aliases:
+          type: array
+          items:
+            $ref: '#/components/schemas/Alias'
+        _links:
+          $ref: '#/components/schemas/Links'
+    Link:
+      type: object
+      properties:
+        href:
+          type: string
+        hreflang:
+          type: string
+        title:
+          type: string
+        type:
+          type: string
+        deprecation:
+          type: string
+        profile:
+          type: string
+        name:
+          type: string
+        templated:
+          type: boolean

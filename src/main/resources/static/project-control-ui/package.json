@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "openapi-gen": "openapi-generator-cli generate -g typescript-angular -o src/app/api -i api-yaml/api-docs.yaml",
+    "start": "ng serve --proxy-config=proxy-conf-local-backend.json",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
@@ -16,6 +17,7 @@
     "@angular/common": "~8.2.14",
     "@angular/compiler": "~8.2.14",
     "@angular/core": "~8.2.14",
+    "@angular/flex-layout": "^11.0.0-beta.33",
     "@angular/forms": "~8.2.14",
     "@angular/material": "^8.2.3",
     "@angular/platform-browser": "~8.2.14",
