@@ -21,6 +21,10 @@ import {MatFormFieldModule} from "@angular/material/form-field";
 import {ReactiveFormsModule} from "@angular/forms";
 import {MatInputModule} from "@angular/material/input";
 import {FlexLayoutModule} from "@angular/flex-layout";
+import {MatPaginatorIntl, MatPaginatorModule} from '@angular/material/paginator';
+import {MatPaginatorIntlWithoutRange} from './components/paginator/paginator.component';
+import {MatTableModule} from "@angular/material/table";
+import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 
 export function apiConfigFactory(): Configuration {
   const params: ConfigurationParameters = {
@@ -52,12 +56,15 @@ export function apiConfigFactory(): Configuration {
     MatListModule,
     MatButtonModule,
     MatCardModule,
+    MatTableModule,
+    MatProgressSpinnerModule,
+    MatPaginatorModule,
     MatFormFieldModule,
     ReactiveFormsModule,
     FlexLayoutModule,
     MatInputModule
   ],
-  providers: [],
+  providers:[{provide: MatPaginatorIntl, useClass: MatPaginatorIntlWithoutRange}],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
