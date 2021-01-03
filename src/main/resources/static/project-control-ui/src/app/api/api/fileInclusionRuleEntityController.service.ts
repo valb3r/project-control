@@ -17,7 +17,7 @@ import { HttpClient, HttpHeaders, HttpParams,
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
-import { CollectionModelFileInclusionRule } from '../model/models';
+import { CollectionModelEntityModelFileInclusionRule } from '../model/models';
 import { EntityModelFileInclusionRule } from '../model/models';
 import { FileInclusionRule } from '../model/models';
 import { RepresentationModelFileInclusionRule } from '../model/models';
@@ -139,9 +139,9 @@ export class FileInclusionRuleEntityControllerService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getCollectionResourceFileinclusionruleGet1(page?: number, size?: number, sort?: Array<string>, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json' | 'application/x-spring-data-compact+json' | 'text/uri-list'}): Observable<CollectionModelFileInclusionRule>;
-    public getCollectionResourceFileinclusionruleGet1(page?: number, size?: number, sort?: Array<string>, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json' | 'application/x-spring-data-compact+json' | 'text/uri-list'}): Observable<HttpResponse<CollectionModelFileInclusionRule>>;
-    public getCollectionResourceFileinclusionruleGet1(page?: number, size?: number, sort?: Array<string>, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json' | 'application/x-spring-data-compact+json' | 'text/uri-list'}): Observable<HttpEvent<CollectionModelFileInclusionRule>>;
+    public getCollectionResourceFileinclusionruleGet1(page?: number, size?: number, sort?: Array<string>, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json' | 'application/x-spring-data-compact+json' | 'text/uri-list'}): Observable<CollectionModelEntityModelFileInclusionRule>;
+    public getCollectionResourceFileinclusionruleGet1(page?: number, size?: number, sort?: Array<string>, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json' | 'application/x-spring-data-compact+json' | 'text/uri-list'}): Observable<HttpResponse<CollectionModelEntityModelFileInclusionRule>>;
+    public getCollectionResourceFileinclusionruleGet1(page?: number, size?: number, sort?: Array<string>, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json' | 'application/x-spring-data-compact+json' | 'text/uri-list'}): Observable<HttpEvent<CollectionModelEntityModelFileInclusionRule>>;
     public getCollectionResourceFileinclusionruleGet1(page?: number, size?: number, sort?: Array<string>, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/hal+json' | 'application/x-spring-data-compact+json' | 'text/uri-list'}): Observable<any> {
 
         let queryParameters = new HttpParams({encoder: this.encoder});
@@ -182,7 +182,7 @@ export class FileInclusionRuleEntityControllerService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<CollectionModelFileInclusionRule>(`${this.configuration.basePath}/v1/resources/fileInclusionRules`,
+        return this.httpClient.get<CollectionModelEntityModelFileInclusionRule>(`${this.configuration.basePath}/v1/resources/fileInclusionRules`,
             {
                 params: queryParameters,
                 responseType: <any>responseType,

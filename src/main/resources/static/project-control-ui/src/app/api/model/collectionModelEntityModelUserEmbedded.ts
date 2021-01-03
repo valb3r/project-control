@@ -9,10 +9,10 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { RemovedLines } from './removedLines';
+import { EntityModelUser } from './entityModelUser';
 
 
-export interface CollectionModelRemovedLinesEmbedded { 
-    removedLineses?: Array<RemovedLines>;
+export interface CollectionModelEntityModelUserEmbedded { 
+    users?: Array<EntityModelUser>;
 }
 

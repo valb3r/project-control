@@ -1,0 +1,39 @@
+<h1 mat-dialog-title>Create new project to analyze</h1>
+
+<div mat-dialog-content>
+  <mat-form-field>
+    <mat-label>Repository name</mat-label>
+    <input id="name" matInput [formControl]="name">
+  </mat-form-field>
+  <ng-container *ngTemplateOutlet="errorValidation; context: {control: name}"></ng-container>
+  <br>
+  <mat-form-field>
+    <mat-label>Repository URL</mat-label>
+    <input matInput [formControl]="url">
+  </mat-form-field>
+  <ng-container *ngTemplateOutlet="errorValidation; context: {control: url}"></ng-container>
+  <br>
+  <mat-form-field>
+    <mat-label>Branch</mat-label>
+    <input matInput [formControl]="branch">
+  </mat-form-field>
+  <ng-container *ngTemplateOutlet="errorValidation; context: {control: branch}"></ng-container>
+  <br>
+  <mat-checkbox [formControl]="isPublic">Public repository</mat-checkbox>
+
+  <ng-template #errorValidation let-control="control">
+    <div *ngIf="control.invalid && (control.dirty || control.touched)">
+      <mat-error *ngIf="control.errors.required">
+        Required field
+      </mat-error>
+      <mat-error *ngIf="control.errors.minlength">
+        At least 3 symbols
+      </mat-error>
+    </div>
+  </ng-template>
+</div>
+
+<div mat-dialog-actions>
+  <button mat-button cdkFocusInitial (click)="onAddClick()">Add</button>
+  <button mat-button (click)="onCancelClick()">Cancel</button>
+</div>

@@ -17,7 +17,7 @@ import { HttpClient, HttpHeaders, HttpParams,
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
-import { CollectionModelRemovedLines } from '../model/models';
+import { CollectionModelEntityModelRemovedLines } from '../model/models';
 import { EntityModelRemovedLines } from '../model/models';
 import { RemovedLines } from '../model/models';
 import { RepresentationModelRemovedLines } from '../model/models';
@@ -139,9 +139,9 @@ export class RemovedLinesEntityControllerService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getCollectionResourceRemovedlinesGet1(page?: number, size?: number, sort?: Array<string>, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json' | 'application/x-spring-data-compact+json' | 'text/uri-list'}): Observable<CollectionModelRemovedLines>;
-    public getCollectionResourceRemovedlinesGet1(page?: number, size?: number, sort?: Array<string>, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json' | 'application/x-spring-data-compact+json' | 'text/uri-list'}): Observable<HttpResponse<CollectionModelRemovedLines>>;
-    public getCollectionResourceRemovedlinesGet1(page?: number, size?: number, sort?: Array<string>, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json' | 'application/x-spring-data-compact+json' | 'text/uri-list'}): Observable<HttpEvent<CollectionModelRemovedLines>>;
+    public getCollectionResourceRemovedlinesGet1(page?: number, size?: number, sort?: Array<string>, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json' | 'application/x-spring-data-compact+json' | 'text/uri-list'}): Observable<CollectionModelEntityModelRemovedLines>;
+    public getCollectionResourceRemovedlinesGet1(page?: number, size?: number, sort?: Array<string>, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json' | 'application/x-spring-data-compact+json' | 'text/uri-list'}): Observable<HttpResponse<CollectionModelEntityModelRemovedLines>>;
+    public getCollectionResourceRemovedlinesGet1(page?: number, size?: number, sort?: Array<string>, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json' | 'application/x-spring-data-compact+json' | 'text/uri-list'}): Observable<HttpEvent<CollectionModelEntityModelRemovedLines>>;
     public getCollectionResourceRemovedlinesGet1(page?: number, size?: number, sort?: Array<string>, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/hal+json' | 'application/x-spring-data-compact+json' | 'text/uri-list'}): Observable<any> {
 
         let queryParameters = new HttpParams({encoder: this.encoder});
@@ -182,7 +182,7 @@ export class RemovedLinesEntityControllerService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<CollectionModelRemovedLines>(`${this.configuration.basePath}/v1/resources/removedLineses`,
+        return this.httpClient.get<CollectionModelEntityModelRemovedLines>(`${this.configuration.basePath}/v1/resources/removedLineses`,
             {
                 params: queryParameters,
                 responseType: <any>responseType,

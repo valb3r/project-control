@@ -9,12 +9,10 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { CollectionModelRemovedLinesEmbedded } from './collectionModelRemovedLinesEmbedded';
-import { Link } from './link';
+import { EntityModelTotalOwnershipStats } from './entityModelTotalOwnershipStats';
 
 
-export interface CollectionModelRemovedLines { 
-    _embedded?: CollectionModelRemovedLinesEmbedded;
-    _links?: { [key: string]: Link; };
+export interface CollectionModelEntityModelTotalOwnershipStatsEmbedded { 
+    totalOwnershipStatses?: Array<EntityModelTotalOwnershipStats>;
 }
 

@@ -9,10 +9,10 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { User } from './user';
+import { EntityModelFileExclusionRule } from './entityModelFileExclusionRule';
 
 
-export interface CollectionModelUserEmbedded { 
-    users?: Array<User>;
+export interface CollectionModelEntityModelFileExclusionRuleEmbedded { 
+    fileExclusionRules?: Array<EntityModelFileExclusionRule>;
 }
 

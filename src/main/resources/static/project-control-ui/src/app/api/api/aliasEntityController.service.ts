@@ -18,7 +18,7 @@ import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
 import { Alias } from '../model/models';
-import { CollectionModelAlias } from '../model/models';
+import { CollectionModelEntityModelAlias } from '../model/models';
 import { EntityModelAlias } from '../model/models';
 import { RepresentationModelAlias } from '../model/models';
 
@@ -139,9 +139,9 @@ export class AliasEntityControllerService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getCollectionResourceAliasGet1(page?: number, size?: number, sort?: Array<string>, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json' | 'application/x-spring-data-compact+json' | 'text/uri-list'}): Observable<CollectionModelAlias>;
-    public getCollectionResourceAliasGet1(page?: number, size?: number, sort?: Array<string>, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json' | 'application/x-spring-data-compact+json' | 'text/uri-list'}): Observable<HttpResponse<CollectionModelAlias>>;
-    public getCollectionResourceAliasGet1(page?: number, size?: number, sort?: Array<string>, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json' | 'application/x-spring-data-compact+json' | 'text/uri-list'}): Observable<HttpEvent<CollectionModelAlias>>;
+    public getCollectionResourceAliasGet1(page?: number, size?: number, sort?: Array<string>, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json' | 'application/x-spring-data-compact+json' | 'text/uri-list'}): Observable<CollectionModelEntityModelAlias>;
+    public getCollectionResourceAliasGet1(page?: number, size?: number, sort?: Array<string>, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json' | 'application/x-spring-data-compact+json' | 'text/uri-list'}): Observable<HttpResponse<CollectionModelEntityModelAlias>>;
+    public getCollectionResourceAliasGet1(page?: number, size?: number, sort?: Array<string>, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json' | 'application/x-spring-data-compact+json' | 'text/uri-list'}): Observable<HttpEvent<CollectionModelEntityModelAlias>>;
     public getCollectionResourceAliasGet1(page?: number, size?: number, sort?: Array<string>, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/hal+json' | 'application/x-spring-data-compact+json' | 'text/uri-list'}): Observable<any> {
 
         let queryParameters = new HttpParams({encoder: this.encoder});
@@ -182,7 +182,7 @@ export class AliasEntityControllerService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<CollectionModelAlias>(`${this.configuration.basePath}/v1/resources/aliases`,
+        return this.httpClient.get<CollectionModelEntityModelAlias>(`${this.configuration.basePath}/v1/resources/aliases`,
             {
                 params: queryParameters,
                 responseType: <any>responseType,

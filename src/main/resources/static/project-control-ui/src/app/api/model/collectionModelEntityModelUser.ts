@@ -9,12 +9,12 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { CollectionModelFileExclusionRuleEmbedded } from './collectionModelFileExclusionRuleEmbedded';
+import { CollectionModelEntityModelUserEmbedded } from './collectionModelEntityModelUserEmbedded';
 import { Link } from './link';
 
 
-export interface CollectionModelFileExclusionRule { 
-    _embedded?: CollectionModelFileExclusionRuleEmbedded;
+export interface CollectionModelEntityModelUser { 
+    _embedded?: CollectionModelEntityModelUserEmbedded;
     _links?: { [key: string]: Link; };
 }
 

@@ -9,10 +9,12 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { WeeklyCommitStats } from './weeklyCommitStats';
+import { CollectionModelEntityModelRemovedLinesEmbedded } from './collectionModelEntityModelRemovedLinesEmbedded';
+import { Link } from './link';
 
 
-export interface CollectionModelWeeklyCommitStatsEmbedded { 
-    weeklyCommitStatses?: Array<WeeklyCommitStats>;
+export interface CollectionModelEntityModelRemovedLines { 
+    _embedded?: CollectionModelEntityModelRemovedLinesEmbedded;
+    _links?: { [key: string]: Link; };
 }
 

@@ -9,12 +9,12 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { CollectionModelAliasEmbedded } from './collectionModelAliasEmbedded';
 import { Link } from './link';
+import { CollectionModelEntityModelAliasEmbedded } from './collectionModelEntityModelAliasEmbedded';
 
 
-export interface CollectionModelAlias { 
-    _embedded?: CollectionModelAliasEmbedded;
+export interface CollectionModelEntityModelAlias { 
+    _embedded?: CollectionModelEntityModelAliasEmbedded;
     _links?: { [key: string]: Link; };
 }
 

@@ -9,12 +9,10 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { CollectionModelGitRepoEmbedded } from './collectionModelGitRepoEmbedded';
-import { Link } from './link';
+import { EntityModelAlias } from './entityModelAlias';
 
 
-export interface CollectionModelGitRepo { 
-    _embedded?: CollectionModelGitRepoEmbedded;
-    _links?: { [key: string]: Link; };
+export interface CollectionModelEntityModelAliasEmbedded { 
+    aliases?: Array<EntityModelAlias>;
 }
 

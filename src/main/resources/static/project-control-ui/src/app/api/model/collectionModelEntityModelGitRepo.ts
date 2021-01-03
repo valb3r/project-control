@@ -9,12 +9,12 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { CollectionModelWeeklyCommitStatsEmbedded } from './collectionModelWeeklyCommitStatsEmbedded';
+import { CollectionModelEntityModelGitRepoEmbedded } from './collectionModelEntityModelGitRepoEmbedded';
 import { Link } from './link';
 
 
-export interface CollectionModelWeeklyCommitStats { 
-    _embedded?: CollectionModelWeeklyCommitStatsEmbedded;
+export interface CollectionModelEntityModelGitRepo { 
+    _embedded?: CollectionModelEntityModelGitRepoEmbedded;
     _links?: { [key: string]: Link; };
 }
 

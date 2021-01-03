@@ -17,7 +17,7 @@ import { HttpClient, HttpHeaders, HttpParams,
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
-import { CollectionModelFileExclusionRule } from '../model/models';
+import { CollectionModelEntityModelFileExclusionRule } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
@@ -89,9 +89,9 @@ export class FileExclusionRuleSearchControllerService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public executeSearchFileexclusionruleGet(repoId?: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json'}): Observable<CollectionModelFileExclusionRule>;
-    public executeSearchFileexclusionruleGet(repoId?: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json'}): Observable<HttpResponse<CollectionModelFileExclusionRule>>;
-    public executeSearchFileexclusionruleGet(repoId?: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json'}): Observable<HttpEvent<CollectionModelFileExclusionRule>>;
+    public executeSearchFileexclusionruleGet(repoId?: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json'}): Observable<CollectionModelEntityModelFileExclusionRule>;
+    public executeSearchFileexclusionruleGet(repoId?: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json'}): Observable<HttpResponse<CollectionModelEntityModelFileExclusionRule>>;
+    public executeSearchFileexclusionruleGet(repoId?: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json'}): Observable<HttpEvent<CollectionModelEntityModelFileExclusionRule>>;
     public executeSearchFileexclusionruleGet(repoId?: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/hal+json'}): Observable<any> {
 
         let queryParameters = new HttpParams({encoder: this.encoder});
@@ -120,7 +120,7 @@ export class FileExclusionRuleSearchControllerService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<CollectionModelFileExclusionRule>(`${this.configuration.basePath}/v1/resources/fileExclusionRules/search/findByRepoId`,
+        return this.httpClient.get<CollectionModelEntityModelFileExclusionRule>(`${this.configuration.basePath}/v1/resources/fileExclusionRules/search/findByRepoId`,
             {
                 params: queryParameters,
                 responseType: <any>responseType,

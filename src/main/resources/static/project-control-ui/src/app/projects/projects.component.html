@@ -4,13 +4,16 @@
   </mat-card-header>
 
   <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
-  <div class="example-table-container">
-
+  <button mat-raised-button aria-label="Add Project" color="primary" (click)="newRepo()">
+    <mat-icon>add</mat-icon>
+    Add Project
+  </button>
+  <div>
     <table mat-table [dataSource]="repos">
       <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef>Actions</th>
         <td mat-cell *matCellDef="let row">
-          <button mat-icon-button aria-label="Restart analysis">
+          <button mat-icon-button aria-label="Restart analysis" (click)="runAnalysis(row)">
             <mat-icon>refresh</mat-icon>
           </button>
           <button mat-icon-button aria-label="Duplicate project">
@@ -54,7 +57,7 @@
 
       <ng-container matColumnDef="errorMessage">
         <th mat-header-cell *matHeaderCellDef>Error Message</th>
-        <td mat-cell *matCellDef="let row">{{repo(row).errorMessage}}</td>
+        <td mat-cell *matCellDef="let row">{{repo(row).errorMessage?.substr(0, 50)}}</td>
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

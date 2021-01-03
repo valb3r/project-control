@@ -18,13 +18,16 @@ import {ApiModule, Configuration, ConfigurationParameters} from "./api";
 import { LoginComponent } from './login/login.component';
 import {MatCardModule} from "@angular/material/card";
 import {MatFormFieldModule} from "@angular/material/form-field";
-import {ReactiveFormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatInputModule} from "@angular/material/input";
 import {FlexLayoutModule} from "@angular/flex-layout";
 import {MatPaginatorIntl, MatPaginatorModule} from '@angular/material/paginator';
 import {MatPaginatorIntlWithoutRange} from './components/paginator/paginator.component';
 import {MatTableModule} from "@angular/material/table";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+import { AddProjectDialogComponent } from './dialogs/add-project-dialog/add-project-dialog.component';
+import {MatDialogModule} from "@angular/material/dialog";
+import {MatCheckboxModule} from "@angular/material/checkbox";
 
 export function apiConfigFactory(): Configuration {
   const params: ConfigurationParameters = {
@@ -42,7 +45,8 @@ export function apiConfigFactory(): Configuration {
     ProjectsComponent,
     ReportsComponent,
     UserMappingsComponent,
-    LoginComponent
+    LoginComponent,
+    AddProjectDialogComponent
   ],
   imports: [
     ApiModule.forRoot(apiConfigFactory),
@@ -57,12 +61,15 @@ export function apiConfigFactory(): Configuration {
     MatButtonModule,
     MatCardModule,
     MatTableModule,
+    MatCheckboxModule,
+    MatDialogModule,
     MatProgressSpinnerModule,
     MatPaginatorModule,
     MatFormFieldModule,
     ReactiveFormsModule,
     FlexLayoutModule,
-    MatInputModule
+    MatInputModule,
+    FormsModule
   ],
   providers:[{provide: MatPaginatorIntl, useClass: MatPaginatorIntlWithoutRange}],
   bootstrap: [AppComponent]

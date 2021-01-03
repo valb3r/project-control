@@ -17,7 +17,7 @@ import { HttpClient, HttpHeaders, HttpParams,
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
-import { CollectionModelAlias } from '../model/models';
+import { CollectionModelEntityModelAlias } from '../model/models';
 import { EntityModelAlias } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
@@ -143,9 +143,9 @@ export class AliasSearchControllerService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public executeSearchAliasGet1(aliasId?: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json'}): Observable<CollectionModelAlias>;
-    public executeSearchAliasGet1(aliasId?: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json'}): Observable<HttpResponse<CollectionModelAlias>>;
-    public executeSearchAliasGet1(aliasId?: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json'}): Observable<HttpEvent<CollectionModelAlias>>;
+    public executeSearchAliasGet1(aliasId?: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json'}): Observable<CollectionModelEntityModelAlias>;
+    public executeSearchAliasGet1(aliasId?: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json'}): Observable<HttpResponse<CollectionModelEntityModelAlias>>;
+    public executeSearchAliasGet1(aliasId?: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json'}): Observable<HttpEvent<CollectionModelEntityModelAlias>>;
     public executeSearchAliasGet1(aliasId?: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/hal+json'}): Observable<any> {
 
         let queryParameters = new HttpParams({encoder: this.encoder});
@@ -174,7 +174,7 @@ export class AliasSearchControllerService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<CollectionModelAlias>(`${this.configuration.basePath}/v1/resources/aliases/search/findRelatedTo`,
+        return this.httpClient.get<CollectionModelEntityModelAlias>(`${this.configuration.basePath}/v1/resources/aliases/search/findRelatedTo`,
             {
                 params: queryParameters,
                 responseType: <any>responseType,

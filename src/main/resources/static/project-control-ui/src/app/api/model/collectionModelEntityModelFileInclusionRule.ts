@@ -9,10 +9,12 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { GitRepo } from './gitRepo';
+import { CollectionModelEntityModelFileInclusionRuleEmbedded } from './collectionModelEntityModelFileInclusionRuleEmbedded';
+import { Link } from './link';
 
 
-export interface CollectionModelGitRepoEmbedded { 
-    gitRepoes?: Array<GitRepo>;
+export interface CollectionModelEntityModelFileInclusionRule { 
+    _embedded?: CollectionModelEntityModelFileInclusionRuleEmbedded;
+    _links?: { [key: string]: Link; };
 }
 

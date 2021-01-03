@@ -9,10 +9,12 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { FileInclusionRule } from './fileInclusionRule';
+import { CollectionModelEntityModelWeeklyCommitStatsEmbedded } from './collectionModelEntityModelWeeklyCommitStatsEmbedded';
+import { Link } from './link';
 
 
-export interface CollectionModelFileInclusionRuleEmbedded { 
-    fileInclusionRules?: Array<FileInclusionRule>;
+export interface CollectionModelEntityModelWeeklyCommitStats { 
+    _embedded?: CollectionModelEntityModelWeeklyCommitStatsEmbedded;
+    _links?: { [key: string]: Link; };
 }
 

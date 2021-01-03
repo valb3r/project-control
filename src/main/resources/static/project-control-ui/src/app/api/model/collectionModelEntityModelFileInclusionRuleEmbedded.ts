@@ -9,12 +9,10 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { CollectionModelTotalOwnershipStatsEmbedded } from './collectionModelTotalOwnershipStatsEmbedded';
-import { Link } from './link';
+import { EntityModelFileInclusionRule } from './entityModelFileInclusionRule';
 
 
-export interface CollectionModelTotalOwnershipStats { 
-    _embedded?: CollectionModelTotalOwnershipStatsEmbedded;
-    _links?: { [key: string]: Link; };
+export interface CollectionModelEntityModelFileInclusionRuleEmbedded { 
+    fileInclusionRules?: Array<EntityModelFileInclusionRule>;
 }
 

@@ -9,10 +9,10 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { Alias } from './alias';
+import { EntityModelRemovedLines } from './entityModelRemovedLines';
 
 
-export interface CollectionModelAliasEmbedded { 
-    aliases?: Array<Alias>;
+export interface CollectionModelEntityModelRemovedLinesEmbedded { 
+    removedLineses?: Array<EntityModelRemovedLines>;
 }
 

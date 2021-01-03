@@ -17,7 +17,7 @@ import { HttpClient, HttpHeaders, HttpParams,
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
-import { CollectionModelWeeklyCommitStats } from '../model/models';
+import { CollectionModelEntityModelWeeklyCommitStats } from '../model/models';
 import { EntityModelWeeklyCommitStats } from '../model/models';
 import { RepresentationModelWeeklyCommitStats } from '../model/models';
 import { WeeklyCommitStats } from '../model/models';
@@ -139,9 +139,9 @@ export class WeeklyCommitStatsEntityControllerService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getCollectionResourceWeeklycommitstatsGet1(page?: number, size?: number, sort?: Array<string>, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json' | 'application/x-spring-data-compact+json' | 'text/uri-list'}): Observable<CollectionModelWeeklyCommitStats>;
-    public getCollectionResourceWeeklycommitstatsGet1(page?: number, size?: number, sort?: Array<string>, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json' | 'application/x-spring-data-compact+json' | 'text/uri-list'}): Observable<HttpResponse<CollectionModelWeeklyCommitStats>>;
-    public getCollectionResourceWeeklycommitstatsGet1(page?: number, size?: number, sort?: Array<string>, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json' | 'application/x-spring-data-compact+json' | 'text/uri-list'}): Observable<HttpEvent<CollectionModelWeeklyCommitStats>>;
+    public getCollectionResourceWeeklycommitstatsGet1(page?: number, size?: number, sort?: Array<string>, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json' | 'application/x-spring-data-compact+json' | 'text/uri-list'}): Observable<CollectionModelEntityModelWeeklyCommitStats>;
+    public getCollectionResourceWeeklycommitstatsGet1(page?: number, size?: number, sort?: Array<string>, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json' | 'application/x-spring-data-compact+json' | 'text/uri-list'}): Observable<HttpResponse<CollectionModelEntityModelWeeklyCommitStats>>;
+    public getCollectionResourceWeeklycommitstatsGet1(page?: number, size?: number, sort?: Array<string>, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json' | 'application/x-spring-data-compact+json' | 'text/uri-list'}): Observable<HttpEvent<CollectionModelEntityModelWeeklyCommitStats>>;
     public getCollectionResourceWeeklycommitstatsGet1(page?: number, size?: number, sort?: Array<string>, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/hal+json' | 'application/x-spring-data-compact+json' | 'text/uri-list'}): Observable<any> {
 
         let queryParameters = new HttpParams({encoder: this.encoder});
@@ -182,7 +182,7 @@ export class WeeklyCommitStatsEntityControllerService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<CollectionModelWeeklyCommitStats>(`${this.configuration.basePath}/v1/resources/weeklyCommitStatses`,
+        return this.httpClient.get<CollectionModelEntityModelWeeklyCommitStats>(`${this.configuration.basePath}/v1/resources/weeklyCommitStatses`,
             {
                 params: queryParameters,
                 responseType: <any>responseType,

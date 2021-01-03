@@ -17,7 +17,7 @@ import { HttpClient, HttpHeaders, HttpParams,
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
-import { CollectionModelTotalOwnershipStats } from '../model/models';
+import { CollectionModelEntityModelTotalOwnershipStats } from '../model/models';
 import { EntityModelTotalOwnershipStats } from '../model/models';
 import { RepresentationModelTotalOwnershipStats } from '../model/models';
 import { TotalOwnershipStats } from '../model/models';
@@ -139,9 +139,9 @@ export class TotalOwnershipStatsEntityControllerService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getCollectionResourceTotalownershipstatsGet1(page?: number, size?: number, sort?: Array<string>, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json' | 'application/x-spring-data-compact+json' | 'text/uri-list'}): Observable<CollectionModelTotalOwnershipStats>;
-    public getCollectionResourceTotalownershipstatsGet1(page?: number, size?: number, sort?: Array<string>, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json' | 'application/x-spring-data-compact+json' | 'text/uri-list'}): Observable<HttpResponse<CollectionModelTotalOwnershipStats>>;
-    public getCollectionResourceTotalownershipstatsGet1(page?: number, size?: number, sort?: Array<string>, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json' | 'application/x-spring-data-compact+json' | 'text/uri-list'}): Observable<HttpEvent<CollectionModelTotalOwnershipStats>>;
+    public getCollectionResourceTotalownershipstatsGet1(page?: number, size?: number, sort?: Array<string>, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json' | 'application/x-spring-data-compact+json' | 'text/uri-list'}): Observable<CollectionModelEntityModelTotalOwnershipStats>;
+    public getCollectionResourceTotalownershipstatsGet1(page?: number, size?: number, sort?: Array<string>, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json' | 'application/x-spring-data-compact+json' | 'text/uri-list'}): Observable<HttpResponse<CollectionModelEntityModelTotalOwnershipStats>>;
+    public getCollectionResourceTotalownershipstatsGet1(page?: number, size?: number, sort?: Array<string>, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json' | 'application/x-spring-data-compact+json' | 'text/uri-list'}): Observable<HttpEvent<CollectionModelEntityModelTotalOwnershipStats>>;
     public getCollectionResourceTotalownershipstatsGet1(page?: number, size?: number, sort?: Array<string>, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/hal+json' | 'application/x-spring-data-compact+json' | 'text/uri-list'}): Observable<any> {
 
         let queryParameters = new HttpParams({encoder: this.encoder});
@@ -182,7 +182,7 @@ export class TotalOwnershipStatsEntityControllerService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<CollectionModelTotalOwnershipStats>(`${this.configuration.basePath}/v1/resources/totalOwnershipStatses`,
+        return this.httpClient.get<CollectionModelEntityModelTotalOwnershipStats>(`${this.configuration.basePath}/v1/resources/totalOwnershipStatses`,
             {
                 params: queryParameters,
                 responseType: <any>responseType,

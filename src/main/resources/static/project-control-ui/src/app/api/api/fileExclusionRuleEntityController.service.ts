@@ -17,7 +17,7 @@ import { HttpClient, HttpHeaders, HttpParams,
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
-import { CollectionModelFileExclusionRule } from '../model/models';
+import { CollectionModelEntityModelFileExclusionRule } from '../model/models';
 import { EntityModelFileExclusionRule } from '../model/models';
 import { FileExclusionRule } from '../model/models';
 import { RepresentationModelFileExclusionRule } from '../model/models';
@@ -139,9 +139,9 @@ export class FileExclusionRuleEntityControllerService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getCollectionResourceFileexclusionruleGet1(page?: number, size?: number, sort?: Array<string>, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json' | 'application/x-spring-data-compact+json' | 'text/uri-list'}): Observable<CollectionModelFileExclusionRule>;
-    public getCollectionResourceFileexclusionruleGet1(page?: number, size?: number, sort?: Array<string>, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json' | 'application/x-spring-data-compact+json' | 'text/uri-list'}): Observable<HttpResponse<CollectionModelFileExclusionRule>>;
-    public getCollectionResourceFileexclusionruleGet1(page?: number, size?: number, sort?: Array<string>, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json' | 'application/x-spring-data-compact+json' | 'text/uri-list'}): Observable<HttpEvent<CollectionModelFileExclusionRule>>;
+    public getCollectionResourceFileexclusionruleGet1(page?: number, size?: number, sort?: Array<string>, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json' | 'application/x-spring-data-compact+json' | 'text/uri-list'}): Observable<CollectionModelEntityModelFileExclusionRule>;
+    public getCollectionResourceFileexclusionruleGet1(page?: number, size?: number, sort?: Array<string>, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json' | 'application/x-spring-data-compact+json' | 'text/uri-list'}): Observable<HttpResponse<CollectionModelEntityModelFileExclusionRule>>;
+    public getCollectionResourceFileexclusionruleGet1(page?: number, size?: number, sort?: Array<string>, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json' | 'application/x-spring-data-compact+json' | 'text/uri-list'}): Observable<HttpEvent<CollectionModelEntityModelFileExclusionRule>>;
     public getCollectionResourceFileexclusionruleGet1(page?: number, size?: number, sort?: Array<string>, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/hal+json' | 'application/x-spring-data-compact+json' | 'text/uri-list'}): Observable<any> {
 
         let queryParameters = new HttpParams({encoder: this.encoder});
@@ -182,7 +182,7 @@ export class FileExclusionRuleEntityControllerService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<CollectionModelFileExclusionRule>(`${this.configuration.basePath}/v1/resources/fileExclusionRules`,
+        return this.httpClient.get<CollectionModelEntityModelFileExclusionRule>(`${this.configuration.basePath}/v1/resources/fileExclusionRules`,
             {
                 params: queryParameters,
                 responseType: <any>responseType,

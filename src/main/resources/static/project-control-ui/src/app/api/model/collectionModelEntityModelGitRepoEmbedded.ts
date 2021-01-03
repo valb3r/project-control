@@ -9,10 +9,10 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { TotalOwnershipStats } from './totalOwnershipStats';
+import { EntityModelGitRepo } from './entityModelGitRepo';
 
 
-export interface CollectionModelTotalOwnershipStatsEmbedded { 
-    totalOwnershipStatses?: Array<TotalOwnershipStats>;
+export interface CollectionModelEntityModelGitRepoEmbedded { 
+    gitRepoes?: Array<EntityModelGitRepo>;
 }
 

@@ -1,8 +1,11 @@
-import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
-import {GitRepo, GitRepoEntityControllerService} from "../api";
+import {AfterViewInit, Component, ViewChild} from '@angular/core';
 import {MatPaginator} from "@angular/material/paginator";
 import {catchError, map, startWith, switchMap} from "rxjs/operators";
 import {EMPTY} from "rxjs";
+import {MatDialog} from "@angular/material/dialog";
+import {AddProjectDialogComponent} from "../dialogs/add-project-dialog/add-project-dialog.component";
+import {EntityModelGitRepo, GitRepo, GitRepoEntityControllerService} from "../api";
+import {Id} from "../id";
 
 @Component({
   selector: 'app-projects',
@@ -12,13 +15,13 @@ import {EMPTY} from "rxjs";
 export class ProjectsComponent implements AfterViewInit {
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
-  repos: GitRepo[];
+  repos: EntityModelGitRepo[];
 
   displayedColumns: string[] = ['actions', 'name', 'status', 'branch', 'lastAnalyzedCommit', 'url', 'needsAuthentication', 'errorMessage'];
   resultsLength = 0;
   isLoadingResults = true;
 
-  constructor(private gitRepoes: GitRepoEntityControllerService) { }
+  constructor(private gitRepoes: GitRepoEntityControllerService, public dialog: MatDialog) { }
 
   ngAfterViewInit() {
     this.paginator.page.pipe(
@@ -40,7 +43,19 @@ export class ProjectsComponent implements AfterViewInit {
       ).subscribe(data => this.repos = data);
   }
 
-  repo(item: GitRepo): GitRepo {
+  repo(item: EntityModelGitRepo): EntityModelGitRepo {
     return item;
+  }
+
+  runAnalysis(repo: EntityModelGitRepo) {
+    this.gitRepoes.patchItemResourceGitrepoPatch(Id.read(repo._links.self.href), {analysisState: "STARTED"} as GitRepo)
+      .subscribe(res => {this.paginator.page.emit()}, error => {console.log("Error", error)});
+  }
+  newRepo() {
+    this.dialog.open(AddProjectDialogComponent, {width: "70%"}).afterClosed().subscribe(res => {
+      if (res) {
+        this.paginator.page.emit();
+      }
+    });
   }
 }

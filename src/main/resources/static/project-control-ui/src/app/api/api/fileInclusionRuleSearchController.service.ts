@@ -17,7 +17,7 @@ import { HttpClient, HttpHeaders, HttpParams,
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
-import { CollectionModelFileInclusionRule } from '../model/models';
+import { CollectionModelEntityModelFileInclusionRule } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
@@ -89,9 +89,9 @@ export class FileInclusionRuleSearchControllerService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public executeSearchFileinclusionruleGet(repoId?: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json'}): Observable<CollectionModelFileInclusionRule>;
-    public executeSearchFileinclusionruleGet(repoId?: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json'}): Observable<HttpResponse<CollectionModelFileInclusionRule>>;
-    public executeSearchFileinclusionruleGet(repoId?: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json'}): Observable<HttpEvent<CollectionModelFileInclusionRule>>;
+    public executeSearchFileinclusionruleGet(repoId?: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json'}): Observable<CollectionModelEntityModelFileInclusionRule>;
+    public executeSearchFileinclusionruleGet(repoId?: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json'}): Observable<HttpResponse<CollectionModelEntityModelFileInclusionRule>>;
+    public executeSearchFileinclusionruleGet(repoId?: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json'}): Observable<HttpEvent<CollectionModelEntityModelFileInclusionRule>>;
     public executeSearchFileinclusionruleGet(repoId?: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/hal+json'}): Observable<any> {
 
         let queryParameters = new HttpParams({encoder: this.encoder});
@@ -120,7 +120,7 @@ export class FileInclusionRuleSearchControllerService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<CollectionModelFileInclusionRule>(`${this.configuration.basePath}/v1/resources/fileInclusionRules/search/findByRepoId`,
+        return this.httpClient.get<CollectionModelEntityModelFileInclusionRule>(`${this.configuration.basePath}/v1/resources/fileInclusionRules/search/findByRepoId`,
             {
                 params: queryParameters,
                 responseType: <any>responseType,
