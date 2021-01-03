@@ -6,6 +6,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {AddProjectDialogComponent} from "../dialogs/add-project-dialog/add-project-dialog.component";
 import {EntityModelGitRepo, GitRepo, GitRepoEntityControllerService} from "../api";
 import {Id} from "../id";
+import AnalysisStateEnum = EntityModelGitRepo.AnalysisStateEnum;
 
 @Component({
   selector: 'app-projects',
@@ -48,7 +49,7 @@ export class ProjectsComponent implements AfterViewInit {
   }
 
   runAnalysis(repo: EntityModelGitRepo) {
-    this.gitRepoes.patchItemResourceGitrepoPatch(Id.read(repo._links.self.href), {analysisState: "STARTED"} as GitRepo)
+    this.gitRepoes.patchItemResourceGitrepoPatch(Id.read(repo._links.self.href), {analysisState: AnalysisStateEnum.Started} as GitRepo)
       .subscribe(res => {this.paginator.page.emit()}, error => {console.log("Error", error)});
   }
   newRepo() {
