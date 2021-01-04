@@ -1,21 +1,21 @@
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import {BrowserModule} from '@angular/platform-browser';
+import {NgModule} from '@angular/core';
 
-import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MainScreenComponent } from './main-screen/main-screen.component';
+import {AppRoutingModule} from './app-routing.module';
+import {AppComponent} from './app.component';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {MainScreenComponent} from './main-screen/main-screen.component';
 import {MatToolbarModule} from "@angular/material/toolbar";
 import {MatIconModule} from "@angular/material/icon";
 import {MatSidenavModule} from "@angular/material/sidenav";
 import {MatListModule} from "@angular/material/list";
 import {MatButtonModule} from "@angular/material/button";
-import { ProjectsComponent } from './projects/projects.component';
-import { ReportsComponent } from './reports/reports.component';
-import { UserMappingsComponent } from './user-mappings/user-mappings.component';
+import {ProjectsComponent} from './projects/projects.component';
+import {ReportsComponent} from './reports/reports.component';
+import {UserMappingsComponent} from './user-mappings/user-mappings.component';
 import {HttpClientModule} from "@angular/common/http";
 import {ApiModule, Configuration, ConfigurationParameters} from "./api";
-import { LoginComponent } from './login/login.component';
+import {LoginComponent} from './login/login.component';
 import {MatCardModule} from "@angular/material/card";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
@@ -24,10 +24,10 @@ import {FlexLayoutModule} from "@angular/flex-layout";
 import {MatPaginatorIntl, MatPaginatorModule} from '@angular/material/paginator';
 import {MatPaginatorIntlWithoutRange} from './components/paginator/paginator.component';
 import {MatTableModule} from "@angular/material/table";
-import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
-import { AddProjectDialogComponent } from './dialogs/add-project-dialog/add-project-dialog.component';
+import {AddProjectDialogComponent} from './dialogs/add-project-dialog/add-project-dialog.component';
 import {MatDialogModule} from "@angular/material/dialog";
 import {MatCheckboxModule} from "@angular/material/checkbox";
+import {MatProgressBarModule} from "@angular/material/progress-bar";
 
 export function apiConfigFactory(): Configuration {
   const params: ConfigurationParameters = {
@@ -63,7 +63,7 @@ export function apiConfigFactory(): Configuration {
     MatTableModule,
     MatCheckboxModule,
     MatDialogModule,
-    MatProgressSpinnerModule,
+    MatProgressBarModule,
     MatPaginatorModule,
     MatFormFieldModule,
     ReactiveFormsModule,

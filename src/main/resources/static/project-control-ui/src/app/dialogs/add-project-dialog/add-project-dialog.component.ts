@@ -36,7 +36,7 @@ export class AddProjectDialogComponent implements OnInit {
         name: this.name.value,
         url: this.url.value,
         branchToAnalyze: this.branch.value,
-        needsAuthentication: this.isPublic.value
+        needsAuthentication: !this.isPublic.value
       } as GitRepo
     ).subscribe(resp => {
       this.dialogRef.close(resp);

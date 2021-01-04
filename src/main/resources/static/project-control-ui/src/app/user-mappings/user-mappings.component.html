@@ -3,7 +3,7 @@
     <mat-card-title>User alias mappings</mat-card-title>
   </mat-card-header>
 
-  <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
+  <mat-progress-bar *ngIf="isLoadingResults"></mat-progress-bar>
   <div class="example-table-container">
 
     <table mat-table [dataSource]="repos" multiTemplateDataRows>
