@@ -16,6 +16,8 @@ public interface AliasRepository extends Neo4jRepository<Alias, Long> {
 
     Optional<Alias> findByNameAndRepoId(String name, long repoId);
 
+    List<Alias> findByRepoId(long repoId);
+
     @Query("MATCH (a:Alias)<-[:ALIAS]-(u:User)-[:ALIAS]->(o:Alias) WHERE id(a) = $aliasId RETURN a")
     List<Alias> findRelatedTo(@Param("aliasId") long aliasId);
 }

@@ -21,6 +21,7 @@ import { TotalOwnershipStatsPropertyReferenceControllerService } from './api/tot
 import { TotalOwnershipStatsSearchControllerService } from './api/totalOwnershipStatsSearchController.service';
 import { UserEntityControllerService } from './api/userEntityController.service';
 import { UserPropertyReferenceControllerService } from './api/userPropertyReferenceController.service';
+import { UserSearchControllerService } from './api/userSearchController.service';
 import { WeeklyCommitStatsEntityControllerService } from './api/weeklyCommitStatsEntityController.service';
 import { WeeklyCommitStatsPropertyReferenceControllerService } from './api/weeklyCommitStatsPropertyReferenceController.service';
 import { WeeklyCommitStatsSearchControllerService } from './api/weeklyCommitStatsSearchController.service';

@@ -1,6 +1,6 @@
 import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {MatPaginator} from "@angular/material/paginator";
-import {Alias, GitRepo, GitRepoEntityControllerService, User} from "../api";
+import {Alias, EntityModelGitRepo, GitRepo, GitRepoEntityControllerService, User} from "../api";
 import {catchError, map, startWith, switchMap} from "rxjs/operators";
 import {EMPTY} from "rxjs";
 import {animate, state, style, transition, trigger} from "@angular/animations";
@@ -20,12 +20,12 @@ import {animate, state, style, transition, trigger} from "@angular/animations";
 export class UserMappingsComponent implements AfterViewInit {
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
-  repos: RepoWithAliases[];
+  repos: EntityModelGitRepo[];
 
   displayedColumns: string[] = ['actions', 'name', 'branch', 'url'];
   resultsLength = 0;
   isLoadingResults = true;
-  expandedElement: RepoWithAliases | null;
+  expandedElement: EntityModelGitRepo | null;
 
   constructor(private gitRepoes: GitRepoEntityControllerService) { }
 
@@ -40,7 +40,7 @@ export class UserMappingsComponent implements AfterViewInit {
         this.isLoadingResults = false;
         this.resultsLength = data._embedded.gitRepoes.length;
 
-        return data._embedded.gitRepoes.map(it => {return {repo: it} as RepoWithAliases})
+        return data._embedded.gitRepoes
       }),
       catchError(() => {
         this.isLoadingResults = false;
@@ -49,23 +49,16 @@ export class UserMappingsComponent implements AfterViewInit {
     ).subscribe(data => this.repos = data);
   }
 
-  repo(item: RepoWithAliases): RepoWithAliases {
+  repo(item: GitRepo): EntityModelGitRepo {
     return item;
   }
 
-  expandOrCollapseRow(item: RepoWithAliases) {
-    if (this.expandedElement) {
+  expandOrCollapseRow(item: EntityModelGitRepo) {
+    if (this.expandedElement === item) {
       this.expandedElement = null;
       return;
     }
+
     this.expandedElement = item;
   }
-}
-
-class RepoWithAliases {
-  repo: GitRepo;
-  expanded = false;
-  aliases: Alias[];
-  users: User[];
-  unmappedAliases: Alias[];
 }

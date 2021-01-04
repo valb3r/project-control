@@ -1,5 +1,4 @@
 .gitignore
-.openapi-generator-ignore
 README.md
 api.module.ts
 api/aliasEntityController.service.ts
@@ -22,6 +21,7 @@ api/totalOwnershipStatsPropertyReferenceController.service.ts
 api/totalOwnershipStatsSearchController.service.ts
 api/userEntityController.service.ts
 api/userPropertyReferenceController.service.ts
+api/userSearchController.service.ts
 api/weeklyCommitStatsEntityController.service.ts
 api/weeklyCommitStatsPropertyReferenceController.service.ts
 api/weeklyCommitStatsSearchController.service.ts

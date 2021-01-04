@@ -28,6 +28,8 @@ import {AddProjectDialogComponent} from './dialogs/add-project-dialog/add-projec
 import {MatDialogModule} from "@angular/material/dialog";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {MatProgressBarModule} from "@angular/material/progress-bar";
+import { UserToAliasComponent } from './components/alias-list/user-to-alias.component';
+import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 
 export function apiConfigFactory(): Configuration {
   const params: ConfigurationParameters = {
@@ -46,7 +48,8 @@ export function apiConfigFactory(): Configuration {
     ReportsComponent,
     UserMappingsComponent,
     LoginComponent,
-    AddProjectDialogComponent
+    AddProjectDialogComponent,
+    UserToAliasComponent
   ],
   imports: [
     ApiModule.forRoot(apiConfigFactory),
@@ -69,7 +72,8 @@ export function apiConfigFactory(): Configuration {
     ReactiveFormsModule,
     FlexLayoutModule,
     MatInputModule,
-    FormsModule
+    FormsModule,
+    MatProgressSpinnerModule
   ],
   providers:[{provide: MatPaginatorIntl, useClass: MatPaginatorIntlWithoutRange}],
   bootstrap: [AppComponent]

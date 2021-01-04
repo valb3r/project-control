@@ -22,3 +22,10 @@ git:
   username:
   password:
   repos-path: ./repos
+
+
+pcontrol:
+  neo4j:
+    full-text:
+      indexes:
+        USER: CALL db.index.fulltext.createNodeIndex("%", ["User"],["name"])

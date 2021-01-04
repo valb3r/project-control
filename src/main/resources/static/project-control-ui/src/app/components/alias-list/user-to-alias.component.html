@@ -1,0 +1,34 @@
+<mat-spinner *ngIf="isLoadingResults"></mat-spinner>
+
+<ng-container *ngIf="!isLoadingResults">
+  <div id="container">
+    <div>
+      <h3>Aliases</h3>
+      <mat-selection-list [multiple]="true">
+        <mat-list-option *ngFor="let alias of aliases" [value]="alias">
+          {{alias.name}}
+        </mat-list-option>
+      </mat-selection-list>
+    </div>
+    <div>
+      <h3>Users</h3>
+      <mat-selection-list [multiple]="false">
+        <mat-list-option *ngFor="let user of users" [value]="user">
+          {{user.name}}
+        </mat-list-option>
+        <mat-list-option>
+          <button mat-icon-button aria-label="Find user">
+            <mat-icon>person_search</mat-icon>
+            Find user
+          </button>
+        </mat-list-option>
+        <mat-list-option>
+          <button mat-icon-button aria-label="Add user">
+            <mat-icon>person_add</mat-icon>
+            New user
+          </button>
+        </mat-list-option>
+      </mat-selection-list>
+    </div>
+  </div>
+</ng-container>
