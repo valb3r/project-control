@@ -30,6 +30,8 @@ import {MatCheckboxModule} from "@angular/material/checkbox";
 import {MatProgressBarModule} from "@angular/material/progress-bar";
 import { UserToAliasComponent } from './components/alias-list/user-to-alias.component';
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+import {MatOptionModule} from "@angular/material/core";
+import {MatAutocompleteModule} from "@angular/material/autocomplete";
 
 export function apiConfigFactory(): Configuration {
   const params: ConfigurationParameters = {
@@ -51,30 +53,32 @@ export function apiConfigFactory(): Configuration {
     AddProjectDialogComponent,
     UserToAliasComponent
   ],
-  imports: [
-    ApiModule.forRoot(apiConfigFactory),
-    BrowserModule,
-    HttpClientModule,
-    AppRoutingModule,
-    BrowserAnimationsModule,
-    MatToolbarModule,
-    MatIconModule,
-    MatSidenavModule,
-    MatListModule,
-    MatButtonModule,
-    MatCardModule,
-    MatTableModule,
-    MatCheckboxModule,
-    MatDialogModule,
-    MatProgressBarModule,
-    MatPaginatorModule,
-    MatFormFieldModule,
-    ReactiveFormsModule,
-    FlexLayoutModule,
-    MatInputModule,
-    FormsModule,
-    MatProgressSpinnerModule
-  ],
+    imports: [
+        ApiModule.forRoot(apiConfigFactory),
+        BrowserModule,
+        HttpClientModule,
+        AppRoutingModule,
+        BrowserAnimationsModule,
+        MatToolbarModule,
+        MatIconModule,
+        MatSidenavModule,
+        MatListModule,
+        MatButtonModule,
+        MatCardModule,
+        MatTableModule,
+        MatCheckboxModule,
+        MatDialogModule,
+        MatProgressBarModule,
+        MatPaginatorModule,
+        MatFormFieldModule,
+        MatAutocompleteModule,
+        ReactiveFormsModule,
+        FlexLayoutModule,
+        MatInputModule,
+        FormsModule,
+        MatProgressSpinnerModule,
+        MatOptionModule
+    ],
   providers:[{provide: MatPaginatorIntl, useClass: MatPaginatorIntlWithoutRange}],
   bootstrap: [AppComponent]
 })

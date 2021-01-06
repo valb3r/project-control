@@ -4,7 +4,7 @@
   <div id="container">
     <div>
       <h3>Aliases</h3>
-      <mat-selection-list [multiple]="true">
+      <mat-selection-list [multiple]="true" #aliasesSelected>
         <mat-list-option *ngFor="let alias of aliases" [value]="alias">
           {{alias.name}}
         </mat-list-option>
@@ -13,20 +13,60 @@
     <div>
       <h3>Users</h3>
       <mat-selection-list [multiple]="false">
-        <mat-list-option *ngFor="let user of users" [value]="user">
-          {{user.name}}
+        <ng-container *ngFor="let user of users">
+          <mat-list-option [value]="user" (click)="assignAliasesToUser(user)">
+            {{user.name}}
+          </mat-list-option>
+          <mat-list style="margin-left:30px;">
+            <div *ngFor="let alias of user.aliases">
+              <mat-list-item>{{ alias.name }}</mat-list-item>
+            </div>
+          </mat-list>
+        </ng-container>
+        <mat-list-option *ngIf="findSelectedUser" (click)="assignAliasesToUser(findSelectedUser)">
+          {{findSelectedUser.name}}
         </mat-list-option>
-        <mat-list-option>
+        <mat-list-option (click)="toggleSearchUserMode()">
           <button mat-icon-button aria-label="Find user">
             <mat-icon>person_search</mat-icon>
             Find user
           </button>
         </mat-list-option>
-        <mat-list-option>
+        <mat-list-option *ngIf="mode === modes.SEARCH_USER">
+          <mat-form-field>
+            <input type="text" placeholder="Type existing user name (i.e. Jack)" aria-label="Number" matInput [formControl]="existingUserName" [matAutocomplete]="auto">
+            <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="findUserSelected($event.option.value)">
+              <mat-option *ngFor="let user of filteredSearchUsers | async" [value]="user">
+                {{user.name}}
+              </mat-option>
+            </mat-autocomplete>
+            <button mat-button mat-stroked-button aria-label="Select user" matSuffix>
+              <mat-icon>portrait</mat-icon>
+            </button>
+          </mat-form-field>
+        </mat-list-option>
+        <mat-list-option (click)="toggleAddUserMode()">
           <button mat-icon-button aria-label="Add user">
             <mat-icon>person_add</mat-icon>
             New user
           </button>
+        </mat-list-option>
+        <mat-list-option *ngIf="mode === modes.ADD_USER">
+          <mat-form-field>
+            <mat-label>Add new user</mat-label>
+            <input matInput [formControl]="newUserName">
+            <div *ngIf="newUserName.invalid && (newUserName.dirty || newUserName.touched)">
+              <mat-error *ngIf="newUserName.hasError('required')">
+                User name is <strong>required</strong>
+              </mat-error>
+              <mat-error *ngIf="newUserName.hasError('length')">
+                User name must be at least 3 symbols
+              </mat-error>
+            </div>
+            <button mat-button mat-stroked-button aria-label="Add user" matSuffix (click)="createNewUser()">
+              <mat-icon>person_add</mat-icon>
+            </button>
+          </mat-form-field>
         </mat-list-option>
       </mat-selection-list>
     </div>

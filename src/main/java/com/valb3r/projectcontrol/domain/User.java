@@ -23,7 +23,7 @@ import java.util.List;
 @NodeEntity
 public class User {
 
-    public static final String ALIAS = "alias";
+    public static final String ALIAS = "ALIAS";
 
     @Id
     @GeneratedValue

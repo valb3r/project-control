@@ -1,6 +1,6 @@
-import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ViewChild} from '@angular/core';
 import {MatPaginator} from "@angular/material/paginator";
-import {Alias, EntityModelGitRepo, GitRepo, GitRepoEntityControllerService, User} from "../api";
+import {EntityModelGitRepo, GitRepo, GitRepoEntityControllerService} from "../api";
 import {catchError, map, startWith, switchMap} from "rxjs/operators";
 import {EMPTY} from "rxjs";
 import {animate, state, style, transition, trigger} from "@angular/animations";
