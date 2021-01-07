@@ -14,18 +14,32 @@
       <h3>Users</h3>
       <mat-selection-list [multiple]="false">
         <ng-container *ngFor="let user of users">
-          <mat-list-option [value]="user" (click)="assignAliasesToUser(user)">
-            {{user.name}}
-          </mat-list-option>
+          <ng-container *ngTemplateOutlet="userNameAndActions; context: {user: user}"></ng-container>
           <mat-list style="margin-left:30px;">
             <div *ngFor="let alias of user.aliases">
-              <mat-list-item>{{ alias.name }}</mat-list-item>
+              <mat-list-item>
+                {{ alias.name }}
+                <button mat-icon-button aria-label="Remove alias" (click)="removeAlias(user, alias)">
+                  <mat-icon>person_remove</mat-icon>
+                </button>
+              </mat-list-item>
             </div>
           </mat-list>
         </ng-container>
-        <mat-list-option *ngIf="findSelectedUser" (click)="assignAliasesToUser(findSelectedUser)">
-          {{findSelectedUser.name}}
+        <mat-list-option *ngIf="inMemorySelectedUser" (click)="assignAliasesToUser(inMemorySelectedUser)">
+          <ng-container *ngTemplateOutlet="userNameAndActions; context: {user: inMemorySelectedUser}"></ng-container>
         </mat-list-option>
+        <ng-template #userNameAndActions let-user="user">
+          <mat-list-item>
+            {{user.name}}
+            <button mat-icon-button aria-label="Add aliases to user" (click)="assignAliasesToUser(user)" *ngIf="!aliasesSelected.selectedOptions.isEmpty()">
+              <mat-icon>people_alt</mat-icon>
+            </button>
+            <button mat-icon-button aria-label="Remove user" (click)="removeUser(user)" *ngIf="aliasesSelected.selectedOptions.isEmpty()">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </mat-list-item>
+        </ng-template>
         <mat-list-option (click)="toggleSearchUserMode()">
           <button mat-icon-button aria-label="Find user">
             <mat-icon>person_search</mat-icon>

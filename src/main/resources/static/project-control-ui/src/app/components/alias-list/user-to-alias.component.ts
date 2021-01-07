@@ -3,15 +3,16 @@ import {
   AliasSearchControllerService,
   EntityModelAlias,
   EntityModelGitRepo,
-  EntityModelUser, User,
-  UserEntityControllerService,
+  EntityModelUser,
+  User,
+  UserEntityControllerService, UserPropertyReferenceControllerService,
   UserSearchControllerService
 } from "../../api";
 import {Id} from "../../id";
-import {Observable, zip} from "rxjs";
+import {Observable, zip, merge} from "rxjs";
 import {FormControl, Validators} from "@angular/forms";
-import {debounceTime, distinctUntilChanged, flatMap, map, mergeMap, startWith, switchMap} from "rxjs/operators";
-import {MatListOption, MatSelectionList} from "@angular/material/list";
+import {debounceTime, distinctUntilChanged, map, mergeMap, startWith, switchMap} from "rxjs/operators";
+import {MatSelectionList} from "@angular/material/list";
 
 @Component({
   selector: 'app-alias-to-user-list',
@@ -23,7 +24,7 @@ export class UserToAliasComponent implements AfterViewInit {
 
   @ViewChild("aliasesSelected") aliasesSelected: MatSelectionList;
 
-  findSelectedUser: EntityModelUser;
+  inMemorySelectedUser: EntityModelUser;
   aliases: EntityModelAlias[];
   users: EntityModelUser[];
   filteredSearchUsers: Observable<EntityModelUser[]>;
@@ -36,7 +37,12 @@ export class UserToAliasComponent implements AfterViewInit {
 
   private repoId: number;
 
-  constructor(private aliasSearch: AliasSearchControllerService, private userSearch: UserSearchControllerService, private usersController: UserEntityControllerService) {
+  constructor(
+    private aliasSearch: AliasSearchControllerService,
+    private userSearch: UserSearchControllerService,
+    private usersController: UserEntityControllerService,
+    private userToAlias: UserPropertyReferenceControllerService
+  ) {
   }
 
   ngAfterViewInit(): void {
@@ -81,13 +87,27 @@ export class UserToAliasComponent implements AfterViewInit {
       return
     }
 
-    this.usersController.postCollectionResourceUserPost({name: this.newUserName.value} as User).pipe(
-      mergeMap(_ => this.userSearch.executeSearchUserGet1(this.repoId))
-    ).subscribe(res => this.users = res._embedded.users);
+    zip(
+      this.usersController.postCollectionResourceUserPost({name: this.newUserName.value} as User),
+      this.userSearch.executeSearchUserGet1(this.repoId)
+    ).subscribe(res => {
+      this.users = res[1]._embedded.users;
+      this.inMemorySelectedUser = res[0];
+    });
   }
 
   findUserSelected(user: EntityModelUser) {
-    this.findSelectedUser = user;
+    this.inMemorySelectedUser = user;
+  }
+
+  removeUser(user: EntityModelUser) {
+    this.usersController.deleteItemResourceUserDelete(Id.read(user._links.self.href))
+      .subscribe(_ => this.readUsersAndAliases());
+  }
+
+  removeAlias(user: EntityModelUser, alias: EntityModelAlias) {
+    this.userToAlias.deletePropertyReferenceIdUserDelete(Id.read(user._links.self.href), "" + alias.id)
+      .subscribe(_ => this.readUsersAndAliases());
   }
 
   assignAliasesToUser(user: EntityModelUser) {
@@ -99,7 +119,7 @@ export class UserToAliasComponent implements AfterViewInit {
       Id.read(user._links.self.href),
       {aliases: this.aliasesSelected.selectedOptions.selected.map(it => it.value as EntityModelAlias).map(it => it._links.self.href)} as any
     ).subscribe(res => {
-      this.findSelectedUser = undefined;
+      this.inMemorySelectedUser = undefined;
       this.readUsersAndAliases();
     })
   }
