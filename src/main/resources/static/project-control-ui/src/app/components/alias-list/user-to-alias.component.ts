@@ -31,7 +31,8 @@ export class UserToAliasComponent implements AfterViewInit {
   filteredSearchUsers: Observable<EntityModelUser[]>;
   isLoadingResults = true;
   modes = Mode;
-  mode = Mode.NONE
+  mode = Mode.NONE;
+  expandedElement: EntityModelUser;
 
   existingUserName = new FormControl('');
   newUserName = new FormControl('', [Validators.required, Validators.minLength(3)]);
@@ -116,13 +117,24 @@ export class UserToAliasComponent implements AfterViewInit {
       return;
     }
 
+    let aliases = this.aliasesSelected.selectedOptions.selected.map(it => it.value as EntityModelAlias).map(it => it._links.self.href);
+    aliases = aliases.concat(user.aliases ? user.aliases.map(it => it as any).map(it => it?._links?.self?.href) : []);
     this.usersController.patchItemResourceUserPatch(
       Id.read(user._links.self.href),
-      {aliases: this.aliasesSelected.selectedOptions.selected.map(it => it.value as EntityModelAlias).map(it => it._links.self.href)} as any
+      {aliases: aliases} as any
     ).subscribe(res => {
       this.inMemorySelectedUser = undefined;
       this.readUsersAndAliases();
     })
+  }
+
+  expandOrCollapseRow(item: EntityModelUser) {
+    if (this.expandedElement === item) {
+      this.expandedElement = null;
+      return;
+    }
+
+    this.expandedElement = item;
   }
 
   private filter(name: string): Observable<EntityModelUser[]> {

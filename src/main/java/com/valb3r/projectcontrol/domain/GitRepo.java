@@ -1,5 +1,6 @@
 package com.valb3r.projectcontrol.domain;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -62,6 +63,15 @@ public class GitRepo {
     private Long commitsProcessed;
 
     private String errorMessage;
+
+    @JsonProperty("lastAnalyzedCommit")
+    public String getLastAnalyzedCommit() {
+        if (!workDoneBySteps.isEmpty()) {
+            return workDoneBySteps.get(workDoneBySteps.size() - 1).split(":")[2];
+        }
+
+        return null;
+    }
 
     public AnalyzedRange beginEndOfStep(AnalysisState start) {
         Map<String, AnalyzedRange> ranges = ranges();

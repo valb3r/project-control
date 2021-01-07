@@ -12,10 +12,12 @@
     </div>
     <div>
       <h3>Users</h3>
-      <mat-selection-list [multiple]="false">
+      <mat-list>
         <ng-container *ngFor="let user of users">
+          <mat-list-item>
           <ng-container *ngTemplateOutlet="userNameAndActions; context: {user: user}"></ng-container>
-          <mat-list style="margin-left:30px;">
+          </mat-list-item>
+          <mat-list style="margin-left:30px;" *ngIf="user === expandedElement">
             <div *ngFor="let alias of user.aliases">
               <mat-list-item>
                 {{ alias.name }}
@@ -26,27 +28,29 @@
             </div>
           </mat-list>
         </ng-container>
-        <mat-list-option *ngIf="inMemorySelectedUser" (click)="assignAliasesToUser(inMemorySelectedUser)">
+        <mat-list-item *ngIf="inMemorySelectedUser" (click)="assignAliasesToUser(inMemorySelectedUser)">
           <ng-container *ngTemplateOutlet="userNameAndActions; context: {user: inMemorySelectedUser}"></ng-container>
-        </mat-list-option>
+        </mat-list-item>
         <ng-template #userNameAndActions let-user="user">
-          <mat-list-item>
-            {{user.name}}
-            <button mat-icon-button aria-label="Add aliases to user" (click)="assignAliasesToUser(user)" *ngIf="!aliasesSelected.selectedOptions.isEmpty()">
-              <mat-icon>people_alt</mat-icon>
-            </button>
-            <button mat-icon-button aria-label="Remove user" (click)="removeUser(user)" *ngIf="aliasesSelected.selectedOptions.isEmpty()">
-              <mat-icon>delete</mat-icon>
-            </button>
-          </mat-list-item>
+          <button mat-icon-button aria-label="Assign aliases" (click)="expandOrCollapseRow(user)">
+            <mat-icon *ngIf="user === expandedElement">expand_less</mat-icon>
+            <mat-icon *ngIf="user !== expandedElement">expand_more</mat-icon>
+          </button>
+          {{user.name}}
+          <button mat-icon-button aria-label="Add aliases to user" (click)="assignAliasesToUser(user)" *ngIf="!aliasesSelected.selectedOptions.isEmpty()">
+            <mat-icon>people_alt</mat-icon>
+          </button>
+          <button mat-icon-button aria-label="Remove user" (click)="removeUser(user)" *ngIf="aliasesSelected.selectedOptions.isEmpty()">
+            <mat-icon>delete</mat-icon>
+          </button>
         </ng-template>
-        <mat-list-option (click)="toggleSearchUserMode()">
+        <mat-list-item (click)="toggleSearchUserMode()">
           <button mat-icon-button aria-label="Find user">
             <mat-icon>person_search</mat-icon>
             Find user
           </button>
-        </mat-list-option>
-        <mat-list-option *ngIf="mode === modes.SEARCH_USER">
+        </mat-list-item>
+        <mat-list-item *ngIf="mode === modes.SEARCH_USER">
           <mat-form-field>
             <input type="text" placeholder="Type existing user name (i.e. Jack)" aria-label="Number" matInput [formControl]="existingUserName" [matAutocomplete]="auto">
             <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="findUserSelected($event.option.value)">
@@ -58,14 +62,14 @@
               <mat-icon>portrait</mat-icon>
             </button>
           </mat-form-field>
-        </mat-list-option>
-        <mat-list-option (click)="toggleAddUserMode()">
+        </mat-list-item>
+        <mat-list-item (click)="toggleAddUserMode()">
           <button mat-icon-button aria-label="Add user">
             <mat-icon>person_add</mat-icon>
             New user
           </button>
-        </mat-list-option>
-        <mat-list-option *ngIf="mode === modes.ADD_USER">
+        </mat-list-item>
+        <mat-list-item *ngIf="mode === modes.ADD_USER">
           <mat-form-field>
             <mat-label>Add new user</mat-label>
             <input matInput [formControl]="newUserName">
@@ -81,8 +85,8 @@
               <mat-icon>person_add</mat-icon>
             </button>
           </mat-form-field>
-        </mat-list-option>
-      </mat-selection-list>
+        </mat-list-item>
+      </mat-list>
     </div>
   </div>
 </ng-container>

@@ -18,11 +18,12 @@ export interface GitRepo {
     url: string;
     uuid: string;
     needsAuthentication?: boolean;
-    lastAnalyzedCommit?: string;
+    startFromCommit?: string;
+    workDoneBySteps?: Array<string>;
     analysisState: GitRepo.AnalysisStateEnum;
-    lastGoodState: GitRepo.LastGoodStateEnum;
     commitsProcessed?: number;
     errorMessage?: string;
+    lastAnalyzedCommit?: string;
 }
 export namespace GitRepo {
     export type AnalysisStateEnum = 'NONE' | 'STARTED' | 'CLONING' | 'CLONED' | 'CHURN_COUNTING' | 'CHURN_COUNTED' | 'LOC_OWNERSHIP_COUNTING' | 'LOC_OWNERSHIP_COUNTED' | 'REFACTOR_COUNTING' | 'REFACTOR_COUNTED' | 'FINISHED' | 'FAILED';
@@ -39,21 +40,6 @@ export namespace GitRepo {
         RefactorCounted: 'REFACTOR_COUNTED' as AnalysisStateEnum,
         Finished: 'FINISHED' as AnalysisStateEnum,
         Failed: 'FAILED' as AnalysisStateEnum
-    };
-    export type LastGoodStateEnum = 'NONE' | 'STARTED' | 'CLONING' | 'CLONED' | 'CHURN_COUNTING' | 'CHURN_COUNTED' | 'LOC_OWNERSHIP_COUNTING' | 'LOC_OWNERSHIP_COUNTED' | 'REFACTOR_COUNTING' | 'REFACTOR_COUNTED' | 'FINISHED' | 'FAILED';
-    export const LastGoodStateEnum = {
-        None: 'NONE' as LastGoodStateEnum,
-        Started: 'STARTED' as LastGoodStateEnum,
-        Cloning: 'CLONING' as LastGoodStateEnum,
-        Cloned: 'CLONED' as LastGoodStateEnum,
-        ChurnCounting: 'CHURN_COUNTING' as LastGoodStateEnum,
-        ChurnCounted: 'CHURN_COUNTED' as LastGoodStateEnum,
-        LocOwnershipCounting: 'LOC_OWNERSHIP_COUNTING' as LastGoodStateEnum,
-        LocOwnershipCounted: 'LOC_OWNERSHIP_COUNTED' as LastGoodStateEnum,
-        RefactorCounting: 'REFACTOR_COUNTING' as LastGoodStateEnum,
-        RefactorCounted: 'REFACTOR_COUNTED' as LastGoodStateEnum,
-        Finished: 'FINISHED' as LastGoodStateEnum,
-        Failed: 'FAILED' as LastGoodStateEnum
     };
 }
 

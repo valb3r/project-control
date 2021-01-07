@@ -6,9 +6,8 @@ import org.springframework.data.rest.core.config.Projection;
 
 import java.util.List;
 
-@Projection(name = "userExcerpt", types = { User.class })
-public interface UserExcerpt {
+@Projection(name = "aliasExcerpt", types = { Alias.class })
+public interface AliasExcerpt {
 
     String getName();
-    List<AliasExcerpt> getAliases();
 }

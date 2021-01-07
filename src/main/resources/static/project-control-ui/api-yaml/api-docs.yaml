@@ -3549,7 +3549,6 @@ components:
       required:
         - analysisState
         - branchToAnalyze
-        - lastGoodState
         - name
         - url
         - uuid
@@ -3568,24 +3567,13 @@ components:
           type: string
         needsAuthentication:
           type: boolean
-        lastAnalyzedCommit:
+        startFromCommit:
           type: string
+        workDoneBySteps:
+          type: array
+          items:
+            type: string
         analysisState:
-          type: string
-          enum:
-            - NONE
-            - STARTED
-            - CLONING
-            - CLONED
-            - CHURN_COUNTING
-            - CHURN_COUNTED
-            - LOC_OWNERSHIP_COUNTING
-            - LOC_OWNERSHIP_COUNTED
-            - REFACTOR_COUNTING
-            - REFACTOR_COUNTED
-            - FINISHED
-            - FAILED
-        lastGoodState:
           type: string
           enum:
             - NONE
@@ -3605,328 +3593,8 @@ components:
           format: int64
         errorMessage:
           type: string
-    TotalOwnershipStats:
-      required:
-        - alias
-        - from
-        - repo
-        - to
-      type: object
-      properties:
-        repo:
-          $ref: '#/components/schemas/GitRepo'
-        alias:
-          $ref: '#/components/schemas/Alias'
-        id:
-          type: integer
-          format: int64
-        from:
-          type: string
-          format: date-time
-        to:
-          type: string
-          format: date-time
-        linesOwned:
-          minimum: 0
-          type: integer
-          format: int64
-    User:
-      required:
-        - name
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-        name:
-          type: string
-        aliases:
-          type: array
-          items:
-            $ref: '#/components/schemas/Alias'
-    RepresentationModelTotalOwnershipStats:
-      type: object
-      properties:
-        _links:
-          $ref: '#/components/schemas/Links'
-    EntityModelTotalOwnershipStats:
-      type: object
-      properties:
-        repo:
-          $ref: '#/components/schemas/GitRepo'
-        alias:
-          $ref: '#/components/schemas/Alias'
-        id:
-          type: integer
-          format: int64
-        from:
-          type: string
-          format: date-time
-        to:
-          type: string
-          format: date-time
-        linesOwned:
-          minimum: 0
-          type: integer
-          format: int64
-        _links:
-          $ref: '#/components/schemas/Links'
-    Links:
-      type: object
-      additionalProperties:
-        $ref: '#/components/schemas/Link'
-    CollectionModelEntityModelTotalOwnershipStats:
-      type: object
-      properties:
-        _embedded:
-          type: object
-          properties:
-            totalOwnershipStatses:
-              type: array
-              items:
-                $ref: '#/components/schemas/EntityModelTotalOwnershipStats'
-        _links:
-          $ref: '#/components/schemas/Links'
-    CollectionModelObject:
-      type: object
-      properties:
-        _embedded:
-          type: object
-          properties:
-            objects:
-              type: array
-              items:
-                type: object
-        _links:
-          $ref: '#/components/schemas/Links'
-    RepresentationModelAlias:
-      type: object
-      properties:
-        _links:
-          $ref: '#/components/schemas/Links'
-    EntityModelAlias:
-      type: object
-      properties:
-        repo:
-          $ref: '#/components/schemas/GitRepo'
-        id:
-          type: integer
-          format: int64
-        name:
-          type: string
-        user:
-          $ref: '#/components/schemas/User'
-        _links:
-          $ref: '#/components/schemas/Links'
-    CollectionModelEntityModelAlias:
-      type: object
-      properties:
-        _embedded:
-          type: object
-          properties:
-            aliases:
-              type: array
-              items:
-                $ref: '#/components/schemas/EntityModelAlias'
-        _links:
-          $ref: '#/components/schemas/Links'
-    RepresentationModelGitRepo:
-      type: object
-      properties:
-        _links:
-          $ref: '#/components/schemas/Links'
-    EntityModelGitRepo:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-        name:
-          type: string
-        branchToAnalyze:
-          type: string
-        url:
-          type: string
-        uuid:
-          type: string
-        needsAuthentication:
-          type: boolean
         lastAnalyzedCommit:
           type: string
-        analysisState:
-          type: string
-          enum:
-            - NONE
-            - STARTED
-            - CLONING
-            - CLONED
-            - CHURN_COUNTING
-            - CHURN_COUNTED
-            - LOC_OWNERSHIP_COUNTING
-            - LOC_OWNERSHIP_COUNTED
-            - REFACTOR_COUNTING
-            - REFACTOR_COUNTED
-            - FINISHED
-            - FAILED
-        lastGoodState:
-          type: string
-          enum:
-            - NONE
-            - STARTED
-            - CLONING
-            - CLONED
-            - CHURN_COUNTING
-            - CHURN_COUNTED
-            - LOC_OWNERSHIP_COUNTING
-            - LOC_OWNERSHIP_COUNTED
-            - REFACTOR_COUNTING
-            - REFACTOR_COUNTED
-            - FINISHED
-            - FAILED
-        commitsProcessed:
-          type: integer
-          format: int64
-        errorMessage:
-          type: string
-        _links:
-          $ref: '#/components/schemas/Links'
-    CollectionModelEntityModelGitRepo:
-      type: object
-      properties:
-        _embedded:
-          type: object
-          properties:
-            gitRepoes:
-              type: array
-              items:
-                $ref: '#/components/schemas/EntityModelGitRepo'
-        _links:
-          $ref: '#/components/schemas/Links'
-    FileExclusionRule:
-      required:
-        - name
-        - repo
-        - rule
-      type: object
-      properties:
-        repo:
-          $ref: '#/components/schemas/GitRepo'
-        id:
-          type: integer
-          format: int64
-        name:
-          type: string
-        rule:
-          type: string
-    RepresentationModelFileExclusionRule:
-      type: object
-      properties:
-        _links:
-          $ref: '#/components/schemas/Links'
-    EntityModelFileExclusionRule:
-      type: object
-      properties:
-        repo:
-          $ref: '#/components/schemas/GitRepo'
-        id:
-          type: integer
-          format: int64
-        name:
-          type: string
-        rule:
-          type: string
-        _links:
-          $ref: '#/components/schemas/Links'
-    CollectionModelEntityModelFileExclusionRule:
-      type: object
-      properties:
-        _embedded:
-          type: object
-          properties:
-            fileExclusionRules:
-              type: array
-              items:
-                $ref: '#/components/schemas/EntityModelFileExclusionRule'
-        _links:
-          $ref: '#/components/schemas/Links'
-    RepresentationModelUser:
-      type: object
-      properties:
-        _links:
-          $ref: '#/components/schemas/Links'
-    EntityModelUser:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-        name:
-          type: string
-        aliases:
-          type: array
-          items:
-            $ref: '#/components/schemas/Alias'
-        _links:
-          $ref: '#/components/schemas/Links'
-    CollectionModelEntityModelUser:
-      type: object
-      properties:
-        _embedded:
-          type: object
-          properties:
-            users:
-              type: array
-              items:
-                $ref: '#/components/schemas/EntityModelUser'
-        _links:
-          $ref: '#/components/schemas/Links'
-    FileInclusionRule:
-      required:
-        - name
-        - repo
-        - rule
-      type: object
-      properties:
-        repo:
-          $ref: '#/components/schemas/GitRepo'
-        id:
-          type: integer
-          format: int64
-        name:
-          type: string
-        rule:
-          type: string
-    RepresentationModelFileInclusionRule:
-      type: object
-      properties:
-        _links:
-          $ref: '#/components/schemas/Links'
-    EntityModelFileInclusionRule:
-      type: object
-      properties:
-        repo:
-          $ref: '#/components/schemas/GitRepo'
-        id:
-          type: integer
-          format: int64
-        name:
-          type: string
-        rule:
-          type: string
-        _links:
-          $ref: '#/components/schemas/Links'
-    CollectionModelEntityModelFileInclusionRule:
-      type: object
-      properties:
-        _embedded:
-          type: object
-          properties:
-            fileInclusionRules:
-              type: array
-              items:
-                $ref: '#/components/schemas/EntityModelFileInclusionRule'
-        _links:
-          $ref: '#/components/schemas/Links'
     RemovedLines:
       required:
         - fromAuthor
@@ -3944,6 +3612,20 @@ components:
           $ref: '#/components/schemas/Alias'
         weekly:
           $ref: '#/components/schemas/WeeklyCommitStats'
+    User:
+      required:
+        - name
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        aliases:
+          type: array
+          items:
+            $ref: '#/components/schemas/Alias'
     WeeklyCommitStats:
       required:
         - alias
@@ -3991,6 +3673,18 @@ components:
       properties:
         _links:
           $ref: '#/components/schemas/Links'
+    CollectionModelEntityModelRemovedLines:
+      type: object
+      properties:
+        _embedded:
+          type: object
+          properties:
+            removedLineses:
+              type: array
+              items:
+                $ref: '#/components/schemas/EntityModelRemovedLines'
+        _links:
+          $ref: '#/components/schemas/Links'
     EntityModelRemovedLines:
       type: object
       properties:
@@ -4007,21 +3701,242 @@ components:
           $ref: '#/components/schemas/WeeklyCommitStats'
         _links:
           $ref: '#/components/schemas/Links'
-    CollectionModelEntityModelRemovedLines:
+    Links:
+      type: object
+      additionalProperties:
+        $ref: '#/components/schemas/Link'
+    CollectionModelObject:
       type: object
       properties:
         _embedded:
           type: object
           properties:
-            removedLineses:
+            objects:
               type: array
               items:
-                $ref: '#/components/schemas/EntityModelRemovedLines'
+                type: object
+        _links:
+          $ref: '#/components/schemas/Links'
+    FileExclusionRule:
+      required:
+        - name
+        - repo
+        - rule
+      type: object
+      properties:
+        repo:
+          $ref: '#/components/schemas/GitRepo'
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        rule:
+          type: string
+    RepresentationModelFileExclusionRule:
+      type: object
+      properties:
+        _links:
+          $ref: '#/components/schemas/Links'
+    CollectionModelEntityModelFileExclusionRule:
+      type: object
+      properties:
+        _embedded:
+          type: object
+          properties:
+            fileExclusionRules:
+              type: array
+              items:
+                $ref: '#/components/schemas/EntityModelFileExclusionRule'
+        _links:
+          $ref: '#/components/schemas/Links'
+    EntityModelFileExclusionRule:
+      type: object
+      properties:
+        repo:
+          $ref: '#/components/schemas/GitRepo'
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        rule:
+          type: string
+        _links:
+          $ref: '#/components/schemas/Links'
+    RepresentationModelGitRepo:
+      type: object
+      properties:
+        _links:
+          $ref: '#/components/schemas/Links'
+    CollectionModelEntityModelGitRepo:
+      type: object
+      properties:
+        _embedded:
+          type: object
+          properties:
+            gitRepoes:
+              type: array
+              items:
+                $ref: '#/components/schemas/EntityModelGitRepo'
+        _links:
+          $ref: '#/components/schemas/Links'
+    EntityModelGitRepo:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        branchToAnalyze:
+          type: string
+        url:
+          type: string
+        uuid:
+          type: string
+        needsAuthentication:
+          type: boolean
+        startFromCommit:
+          type: string
+        workDoneBySteps:
+          type: array
+          items:
+            type: string
+        analysisState:
+          type: string
+          enum:
+            - NONE
+            - STARTED
+            - CLONING
+            - CLONED
+            - CHURN_COUNTING
+            - CHURN_COUNTED
+            - LOC_OWNERSHIP_COUNTING
+            - LOC_OWNERSHIP_COUNTED
+            - REFACTOR_COUNTING
+            - REFACTOR_COUNTED
+            - FINISHED
+            - FAILED
+        commitsProcessed:
+          type: integer
+          format: int64
+        errorMessage:
+          type: string
+        lastAnalyzedCommit:
+          type: string
+        _links:
+          $ref: '#/components/schemas/Links'
+    RepresentationModelUser:
+      type: object
+      properties:
+        _links:
+          $ref: '#/components/schemas/Links'
+    CollectionModelEntityModelUser:
+      type: object
+      properties:
+        _embedded:
+          type: object
+          properties:
+            users:
+              type: array
+              items:
+                $ref: '#/components/schemas/EntityModelUser'
+        _links:
+          $ref: '#/components/schemas/Links'
+    EntityModelUser:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        aliases:
+          type: array
+          items:
+            $ref: '#/components/schemas/Alias'
+        _links:
+          $ref: '#/components/schemas/Links'
+    TotalOwnershipStats:
+      required:
+        - alias
+        - from
+        - repo
+        - to
+      type: object
+      properties:
+        repo:
+          $ref: '#/components/schemas/GitRepo'
+        alias:
+          $ref: '#/components/schemas/Alias'
+        id:
+          type: integer
+          format: int64
+        from:
+          type: string
+          format: date-time
+        to:
+          type: string
+          format: date-time
+        linesOwned:
+          minimum: 0
+          type: integer
+          format: int64
+    RepresentationModelTotalOwnershipStats:
+      type: object
+      properties:
+        _links:
+          $ref: '#/components/schemas/Links'
+    CollectionModelEntityModelTotalOwnershipStats:
+      type: object
+      properties:
+        _embedded:
+          type: object
+          properties:
+            totalOwnershipStatses:
+              type: array
+              items:
+                $ref: '#/components/schemas/EntityModelTotalOwnershipStats'
+        _links:
+          $ref: '#/components/schemas/Links'
+    EntityModelTotalOwnershipStats:
+      type: object
+      properties:
+        repo:
+          $ref: '#/components/schemas/GitRepo'
+        alias:
+          $ref: '#/components/schemas/Alias'
+        id:
+          type: integer
+          format: int64
+        from:
+          type: string
+          format: date-time
+        to:
+          type: string
+          format: date-time
+        linesOwned:
+          minimum: 0
+          type: integer
+          format: int64
         _links:
           $ref: '#/components/schemas/Links'
     RepresentationModelWeeklyCommitStats:
       type: object
       properties:
+        _links:
+          $ref: '#/components/schemas/Links'
+    CollectionModelEntityModelWeeklyCommitStats:
+      type: object
+      properties:
+        _embedded:
+          type: object
+          properties:
+            weeklyCommitStatses:
+              type: array
+              items:
+                $ref: '#/components/schemas/EntityModelWeeklyCommitStats'
         _links:
           $ref: '#/components/schemas/Links'
     EntityModelWeeklyCommitStats:
@@ -4062,16 +3977,82 @@ components:
             $ref: '#/components/schemas/RemovedLines'
         _links:
           $ref: '#/components/schemas/Links'
-    CollectionModelEntityModelWeeklyCommitStats:
+    RepresentationModelAlias:
+      type: object
+      properties:
+        _links:
+          $ref: '#/components/schemas/Links'
+    CollectionModelEntityModelAlias:
       type: object
       properties:
         _embedded:
           type: object
           properties:
-            weeklyCommitStatses:
+            aliases:
               type: array
               items:
-                $ref: '#/components/schemas/EntityModelWeeklyCommitStats'
+                $ref: '#/components/schemas/EntityModelAlias'
+        _links:
+          $ref: '#/components/schemas/Links'
+    EntityModelAlias:
+      type: object
+      properties:
+        repo:
+          $ref: '#/components/schemas/GitRepo'
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        user:
+          $ref: '#/components/schemas/User'
+        _links:
+          $ref: '#/components/schemas/Links'
+    FileInclusionRule:
+      required:
+        - name
+        - repo
+        - rule
+      type: object
+      properties:
+        repo:
+          $ref: '#/components/schemas/GitRepo'
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        rule:
+          type: string
+    RepresentationModelFileInclusionRule:
+      type: object
+      properties:
+        _links:
+          $ref: '#/components/schemas/Links'
+    CollectionModelEntityModelFileInclusionRule:
+      type: object
+      properties:
+        _embedded:
+          type: object
+          properties:
+            fileInclusionRules:
+              type: array
+              items:
+                $ref: '#/components/schemas/EntityModelFileInclusionRule'
+        _links:
+          $ref: '#/components/schemas/Links'
+    EntityModelFileInclusionRule:
+      type: object
+      properties:
+        repo:
+          $ref: '#/components/schemas/GitRepo'
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        rule:
+          type: string
         _links:
           $ref: '#/components/schemas/Links'
     Link:
