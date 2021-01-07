@@ -12,6 +12,7 @@ api/fileInclusionRuleEntityController.service.ts
 api/fileInclusionRulePropertyReferenceController.service.ts
 api/fileInclusionRuleSearchController.service.ts
 api/gitRepoEntityController.service.ts
+api/gitRepoSearchController.service.ts
 api/profileController.service.ts
 api/removedLinesEntityController.service.ts
 api/removedLinesPropertyReferenceController.service.ts

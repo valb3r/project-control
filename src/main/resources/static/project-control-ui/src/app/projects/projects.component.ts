@@ -50,13 +50,18 @@ export class ProjectsComponent implements AfterViewInit {
 
   runAnalysis(repo: EntityModelGitRepo) {
     this.gitRepoes.patchItemResourceGitrepoPatch(Id.read(repo._links.self.href), {analysisState: AnalysisStateEnum.Started} as GitRepo)
-      .subscribe(res => {this.paginator.page.emit()}, error => {console.log("Error", error)});
+      .subscribe(_ => {this.paginator.page.emit()}, error => {console.log("Error", error)});
   }
+
   newRepo() {
     this.dialog.open(AddProjectDialogComponent, {width: "70%"}).afterClosed().subscribe(res => {
       if (res) {
         this.paginator.page.emit();
       }
     });
+  }
+
+  deleteRepo(repo: EntityModelGitRepo) {
+    this.gitRepoes.deleteItemResourceGitrepoDelete(Id.read(repo._links.self.href)).subscribe(_ => {this.paginator.page.emit()});
   }
 }

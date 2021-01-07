@@ -32,6 +32,8 @@ import { UserToAliasComponent } from './components/alias-list/user-to-alias.comp
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {MatOptionModule} from "@angular/material/core";
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
+import { RulesComponent } from './rules/rules.component';
+import { ProjectRulesComponent } from './components/project-rules/project-rules.component';
 
 export function apiConfigFactory(): Configuration {
   const params: ConfigurationParameters = {
@@ -51,7 +53,9 @@ export function apiConfigFactory(): Configuration {
     UserMappingsComponent,
     LoginComponent,
     AddProjectDialogComponent,
-    UserToAliasComponent
+    UserToAliasComponent,
+    RulesComponent,
+    ProjectRulesComponent
   ],
     imports: [
         ApiModule.forRoot(apiConfigFactory),

@@ -13,6 +13,7 @@ export class MainScreenComponent implements OnInit {
   fillerNav: Nav[] = [
     new Nav("Projects", "projects"),
     new Nav("Reports", "reports"),
+    new Nav("File inclusion/exclusion rules", "rules"),
     new Nav("User mappings", "user-mappings")
   ];
 

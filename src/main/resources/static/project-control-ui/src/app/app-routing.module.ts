@@ -5,6 +5,7 @@ import {ProjectsComponent} from "./projects/projects.component";
 import {ReportsComponent} from "./reports/reports.component";
 import {UserMappingsComponent} from "./user-mappings/user-mappings.component";
 import {LoginComponent} from "./login/login.component";
+import {RulesComponent} from "./rules/rules.component";
 
 
 const routes: Routes = [
@@ -12,6 +13,7 @@ const routes: Routes = [
   {path: 'login', component: LoginComponent},
   {path: 'control', component: MainScreenComponent, children: [
       {path: 'projects', component: ProjectsComponent},
+      {path: 'rules', component: RulesComponent},
       {path: 'reports', component: ReportsComponent},
       {path: 'user-mappings', component: UserMappingsComponent},
     ]}

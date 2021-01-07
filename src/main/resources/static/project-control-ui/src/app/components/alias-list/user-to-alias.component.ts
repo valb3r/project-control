@@ -12,7 +12,7 @@ import {
 import {Id} from "../../id";
 import {Observable, zip} from "rxjs";
 import {FormControl, Validators} from "@angular/forms";
-import {debounceTime, distinctUntilChanged, map, startWith, switchMap} from "rxjs/operators";
+import {catchError, debounceTime, distinctUntilChanged, map, startWith, switchMap} from "rxjs/operators";
 import {MatSelectionList} from "@angular/material/list";
 
 @Component({
@@ -138,6 +138,10 @@ export class UserToAliasComponent implements AfterViewInit {
   }
 
   private filter(name: string): Observable<EntityModelUser[]> {
+    if (typeof name !== "string") {
+      name = '';
+    }
+
     return this.userSearch.executeSearchUserGet(name ? name + "*" : "*")
       .pipe(
         map(response => response._embedded.users.filter(option => {
@@ -158,6 +162,8 @@ export class UserToAliasComponent implements AfterViewInit {
       this.aliases = pair[0]._embedded.aliases.filter(it => !definedAliases.has(it.name));
       this.isLoadingResults = false;
     });
+
+    this.existingUserName.setValue('');
   }
 }
 

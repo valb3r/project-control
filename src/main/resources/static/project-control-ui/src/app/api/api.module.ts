@@ -12,6 +12,7 @@ import { FileInclusionRuleEntityControllerService } from './api/fileInclusionRul
 import { FileInclusionRulePropertyReferenceControllerService } from './api/fileInclusionRulePropertyReferenceController.service';
 import { FileInclusionRuleSearchControllerService } from './api/fileInclusionRuleSearchController.service';
 import { GitRepoEntityControllerService } from './api/gitRepoEntityController.service';
+import { GitRepoSearchControllerService } from './api/gitRepoSearchController.service';
 import { ProfileControllerService } from './api/profileController.service';
 import { RemovedLinesEntityControllerService } from './api/removedLinesEntityController.service';
 import { RemovedLinesPropertyReferenceControllerService } from './api/removedLinesPropertyReferenceController.service';
