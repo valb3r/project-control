@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.eclipse.jgit.lib.Constants.HEAD;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -27,25 +29,37 @@ public class RepoAnalyzer {
         Git git = null;
         try {
             var initialState = repo.getLastGoodState();
-            boolean failedOnStepEnd = false;
+            if (initialState == GitRepo.AnalysisState.NONE || initialState == GitRepo.AnalysisState.FINISHED) {
+                repo.setLastOkAnalysedCommit(null);
+                repo.setStartFromCommit(HEAD);
+            }
+
+            boolean hasCloneErrors = initialState == GitRepo.AnalysisState.CLONING || initialState == GitRepo.AnalysisState.CLONED;
+            boolean hasAnalysisErrors = initialState != GitRepo.AnalysisState.NONE && initialState != GitRepo.AnalysisState.FINISHED && !hasCloneErrors;
             for (var step : steps) {
-                if (initialState == GitRepo.AnalysisState.NONE || initialState == GitRepo.AnalysisState.FINISHED) {
-                    repo.setLastAnalyzedCommit(null);
+                if (null == git) {
+                    stateUpdatingService.updateStatus(repo, step.stateOnStart());
+                    git = step.execute(git, repo);
+                    stateUpdatingService.updateStatus(repo, step.stateOnSuccess());
+                    continue;
                 }
 
-                if (hasErrorsAndGitInitialized(git, initialState, failedOnStepEnd)) {
-                    if (initialState == step.stateOnSuccess()) {
-                        failedOnStepEnd = true;
-                        continue;
+                if (hasAnalysisErrors) {
+                    if (initialState != step.stateOnStart() && initialState != step.stateOnSuccess()) {
+                       continue;
                     }
 
-                    if (initialState != step.stateOnStart()) {
+                    if (initialState == step.stateOnSuccess()) {
+                        hasAnalysisErrors = false;
+                        repo.setLastOkAnalysedCommit(null);
                         continue;
                     }
+                    hasAnalysisErrors = false;
                 }
 
                 stateUpdatingService.updateStatus(repo, step.stateOnStart());
                 git = step.execute(git, repo);
+                repo.setLastOkAnalysedCommit(null);
                 stateUpdatingService.updateStatus(repo, step.stateOnSuccess());
             }
             stateUpdatingService.updateStatus(repo, GitRepo.AnalysisState.FINISHED);
@@ -54,10 +68,5 @@ public class RepoAnalyzer {
             repo.setErrorMessage(ex.getMessage() + " : " + ex.getCause() + "\n" + Arrays.toString(ex.getStackTrace()));
             stateUpdatingService.updateStatus(repo, GitRepo.AnalysisState.FAILED);
         }
-
-    }
-
-    private boolean hasErrorsAndGitInitialized(Git git, GitRepo.AnalysisState initialState, boolean failedOnStepEnd) {
-        return null != git && initialState != GitRepo.AnalysisState.NONE && initialState != GitRepo.AnalysisState.FINISHED && !failedOnStepEnd;
     }
 }

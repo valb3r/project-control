@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.revwalk.RevCommit;
-import org.eclipse.jgit.revwalk.RevSort;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.revwalk.filter.RevFilter;
 import org.kie.api.KieServices;
@@ -18,13 +17,11 @@ import org.kie.api.builder.KieBuilder;
 import org.kie.api.builder.KieFileSystem;
 import org.kie.api.builder.KieModule;
 import org.kie.api.runtime.KieContainer;
-import org.neo4j.driver.internal.shaded.io.netty.util.internal.StringUtil;
 
 import java.io.IOException;
 import java.util.HashMap;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static org.eclipse.jgit.lib.Constants.HEAD;
 import static org.kie.internal.io.ResourceFactory.newByteArrayResource;
 
 @RequiredArgsConstructor
@@ -45,21 +42,24 @@ public abstract class CommitBasedAnalyzer {
 
     protected void analyzeRepo(Git git, GitRepo repo) throws IOException {
         var aliasCache = new HashMap<String, Alias>();
+        var counter = 0L;
+        RevCommit commit = null;
+        RevCommit prevCommit = null;
+
         try (var walk = new RevWalk(git.getRepository())) {
             walk.setRevFilter(RevFilter.NO_MERGES);
-            if (StringUtil.isNullOrEmpty(repo.getLastAnalyzedCommit())) {
-                walk.sort(RevSort.COMMIT_TIME_DESC, true);
-                walk.sort(RevSort.REVERSE, true);
-            }
+            var startCommit = walk.parseCommit(git.getRepository().resolve(repo.getStartFromCommit()));
+            walk.markStart(startCommit);
+            updateStartCommit(repo, startCommit);
 
-            walk.markStart(walk.parseCommit(git.getRepository().resolve(HEAD)));
             var container = container(repo);
-            var counter = 0L;
-            RevCommit commit;
-            RevCommit prevCommit = null;
+            boolean needSkip = null != repo.getLastOkAnalysedCommit();
             while ((commit = walk.next()) != null) {
-                if (commit.getId().getName().equals(repo.getLastAnalyzedCommit())) {
-                    break;
+                if (needSkip) {
+                    if (!commit.getId().getName().equals(repo.getLastOkAnalysedCommit())) {
+                        continue;
+                    }
+                    needSkip = false;
                 }
 
                 var ctx = CommitCtx.builder()
@@ -76,19 +76,13 @@ public abstract class CommitBasedAnalyzer {
                 counter++;
 
                 prevCommit = commit;
-
-                if (counter % SAVE_EACH_N_COMMIT == 0) {
-                    repo.setCommitsProcessed(counter);
-                    repo.setLastAnalyzedCommit(commit.getName());
-                    stateUpdatingService.updateInternalData(repo);
-                }
+                updateRepoLastCommit(repo, counter, commit, counter % SAVE_EACH_N_COMMIT == 0);
             }
 
-            if (prevCommit != null) {
-                repo.setCommitsProcessed(counter);
-                repo.setLastAnalyzedCommit(prevCommit.getName());
-                stateUpdatingService.updateInternalData(repo);
-            }
+            updateRepoLastCommit(repo, counter, prevCommit, prevCommit != null);
+        } catch (Exception ex) {
+            updateRepoLastCommit(repo, counter, commit, commit != null);
+            throw ex;
         }
     }
 
@@ -117,4 +111,19 @@ public abstract class CommitBasedAnalyzer {
     }
 
     protected abstract void processCommit(CommitCtx ctx);
+
+    private void updateRepoLastCommit(GitRepo repo, long counter, RevCommit prevCommit, boolean needUpdate) {
+        if (needUpdate) {
+            repo.setCommitsProcessed(counter);
+            repo.setLastOkAnalysedCommit(prevCommit.getName());
+            stateUpdatingService.updateInternalData(repo);
+        }
+    }
+
+    private void updateStartCommit(GitRepo repo, RevCommit startCommit) {
+        if (null == repo.getStartFromCommit()) {
+            repo.setStartFromCommit(startCommit.getName());
+            stateUpdatingService.updateInternalData(repo);
+        }
+    }
 }

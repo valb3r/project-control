@@ -5,13 +5,14 @@ import {
   EntityModelGitRepo,
   EntityModelUser,
   User,
-  UserEntityControllerService, UserPropertyReferenceControllerService,
+  UserEntityControllerService,
+  UserPropertyReferenceControllerService,
   UserSearchControllerService
 } from "../../api";
 import {Id} from "../../id";
-import {Observable, zip, merge} from "rxjs";
+import {Observable, zip} from "rxjs";
 import {FormControl, Validators} from "@angular/forms";
-import {debounceTime, distinctUntilChanged, map, mergeMap, startWith, switchMap} from "rxjs/operators";
+import {debounceTime, distinctUntilChanged, map, startWith, switchMap} from "rxjs/operators";
 import {MatSelectionList} from "@angular/material/list";
 
 @Component({

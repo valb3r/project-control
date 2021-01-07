@@ -43,7 +43,8 @@ public class GitRepo {
 
     private boolean needsAuthentication;
 
-    private String lastAnalyzedCommit;
+    private String lastOkAnalysedCommit;
+    private String startFromCommit;
 
     @NotNull
     @Builder.Default
