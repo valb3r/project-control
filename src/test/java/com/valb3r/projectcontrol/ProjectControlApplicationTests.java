@@ -9,5 +9,4 @@ class ProjectControlApplicationTests {
 	@Test
 	void contextLoads() {
 	}
-
 }

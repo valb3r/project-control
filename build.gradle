@@ -37,9 +37,11 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testCompileOnly 'org.projectlombok:lombok'
 	testAnnotationProcessor 'org.projectlombok:lombok'
-	testCompile 'org.mockito:mockito-all:2.0.2-beta'
-	testCompile 'org.assertj:assertj-core:3.18.1'
-	testCompile 'net.lingala.zip4j:zip4j:2.6.4'
+	testImplementation 'org.mockito:mockito-all:2.0.2-beta'
+	testImplementation 'org.assertj:assertj-core:3.18.1'
+	testImplementation 'net.lingala.zip4j:zip4j:2.6.4'
+	testImplementation "org.neo4j.test:neo4j-harness:4.1.4"
+	testImplementation 'ch.qos.logback:logback-classic:1.2.3'
 }
 
 test {
