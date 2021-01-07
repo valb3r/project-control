@@ -39,7 +39,7 @@ import static com.valb3r.projectcontrol.service.analyze.DateUtil.weekStart;
 
 @Order(1)
 @Service
-public class ChurnAnalyzer extends CommitBasedAnalyzer implements AnalysisStep {
+public class ChurnAnalyzer extends CommitBasedAnalyzer {
 
     private final WeeklyCommitStatsRepository commitStatsRepo;
     private final RemovedLinesRepository removedLinesRepo;

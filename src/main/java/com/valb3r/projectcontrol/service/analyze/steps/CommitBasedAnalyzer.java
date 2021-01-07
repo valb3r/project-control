@@ -20,12 +20,14 @@ import org.kie.api.runtime.KieContainer;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Objects;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.eclipse.jgit.lib.Constants.HEAD;
 import static org.kie.internal.io.ResourceFactory.newByteArrayResource;
 
 @RequiredArgsConstructor
-public abstract class CommitBasedAnalyzer {
+public abstract class CommitBasedAnalyzer implements AnalysisStep {
 
     private static final int SAVE_EACH_N_COMMIT = 10;
 
@@ -43,23 +45,30 @@ public abstract class CommitBasedAnalyzer {
     protected void analyzeRepo(Git git, GitRepo repo) throws IOException {
         var aliasCache = new HashMap<String, Alias>();
         var counter = 0L;
-        RevCommit commit = null;
+        RevCommit commit;
         RevCommit prevCommit = null;
+        RevCommit startCommit = null;
 
+        var range = repo.beginEndOfStep(stateOnStart());
         try (var walk = new RevWalk(git.getRepository())) {
             walk.setRevFilter(RevFilter.NO_MERGES);
-            var startCommit = walk.parseCommit(git.getRepository().resolve(repo.getStartFromCommit()));
+            startCommit = walk.parseCommit(git.getRepository().resolve(HEAD));
             walk.markStart(startCommit);
-            updateStartCommit(repo, startCommit);
 
             var container = container(repo);
-            boolean needSkip = null != repo.getLastOkAnalysedCommit();
+
+            boolean inExcludeRange = false;
             while ((commit = walk.next()) != null) {
-                if (needSkip) {
-                    if (!commit.getId().getName().equals(repo.getLastOkAnalysedCommit())) {
-                        continue;
-                    }
-                    needSkip = false;
+                if (commit.getName().equals(range.getStart())) {
+                    inExcludeRange = !Objects.equals(range.getStart(), range.getEnd());
+                    continue;
+                }
+                if (commit.getName().equals(range.getEnd())) {
+                    inExcludeRange = false;
+                    continue;
+                }
+                if (inExcludeRange) {
+                    continue;
                 }
 
                 var ctx = CommitCtx.builder()
@@ -76,12 +85,12 @@ public abstract class CommitBasedAnalyzer {
                 counter++;
 
                 prevCommit = commit;
-                updateRepoLastCommit(repo, counter, commit, counter % SAVE_EACH_N_COMMIT == 0);
+                updateRepoLastCommit(repo, counter, startCommit, commit, counter % SAVE_EACH_N_COMMIT == 0);
             }
 
-            updateRepoLastCommit(repo, counter, prevCommit, prevCommit != null);
+            updateRepoLastCommit(repo, counter, startCommit, prevCommit, prevCommit != null);
         } catch (Exception ex) {
-            updateRepoLastCommit(repo, counter, commit, commit != null);
+            updateRepoLastCommit(repo, counter, startCommit, prevCommit, prevCommit != null);
             throw ex;
         }
     }
@@ -112,17 +121,10 @@ public abstract class CommitBasedAnalyzer {
 
     protected abstract void processCommit(CommitCtx ctx);
 
-    private void updateRepoLastCommit(GitRepo repo, long counter, RevCommit prevCommit, boolean needUpdate) {
+    private void updateRepoLastCommit(GitRepo repo, long counter, RevCommit startCommit, RevCommit endCommit, boolean needUpdate) {
         if (needUpdate) {
             repo.setCommitsProcessed(counter);
-            repo.setLastOkAnalysedCommit(prevCommit.getName());
-            stateUpdatingService.updateInternalData(repo);
-        }
-    }
-
-    private void updateStartCommit(GitRepo repo, RevCommit startCommit) {
-        if (null == repo.getStartFromCommit()) {
-            repo.setStartFromCommit(startCommit.getName());
+            repo.reportAnalyzedRange(stateOnStart(), new GitRepo.AnalyzedRange(startCommit.getName(), endCommit.getName()));
             stateUpdatingService.updateInternalData(repo);
         }
     }

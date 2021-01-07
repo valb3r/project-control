@@ -15,14 +15,6 @@ public class StateUpdatingService {
 
     public void updateStatus(GitRepo repo, GitRepo.AnalysisState analysisState) {
         operations.executeWithoutResult(transactionStatus -> {
-            if (repo.getAnalysisState() != GitRepo.AnalysisState.FAILED) {
-                repo.setLastGoodState(repo.getAnalysisState());
-            }
-
-            if (analysisState == GitRepo.AnalysisState.FINISHED) {
-                repo.setLastGoodState(GitRepo.AnalysisState.FINISHED);
-            }
-
             repo.setAnalysisState(analysisState);
             gitRepoRepository.save(repo);
         });

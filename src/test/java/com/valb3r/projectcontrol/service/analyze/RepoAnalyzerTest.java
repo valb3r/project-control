@@ -27,6 +27,8 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.transaction.support.TransactionOperations;
 
 import java.io.File;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
@@ -204,6 +206,48 @@ class RepoAnalyzerTest {
 
     @Test
     void testAnalysisRestartOnNoCommitsOnRepository() {
+        tested.analyze(repo.get());
+
+        verify(cloneRepoStep).execute(any(), any());
+        var order = inOrder(commitAnalyzer, codeOwnershipAnalyzer);
+        order.verify(commitAnalyzer, times(4)).processCommit(commitAnalyzerCaptor.capture());
+        assertThat(commitAnalyzerCaptor.getAllValues()).map(commitMessageStart()).containsExactly("4", "3", "2", "1");
+        order.verify(codeOwnershipAnalyzer, times(4)).processCommit(ownershipAnalyzerCaptor.capture());
+        assertThat(ownershipAnalyzerCaptor.getAllValues()).map(commitMessageStart()).containsExactly("4", "3", "2", "1");
+
+        commitAnalyzerCaptor = ArgumentCaptor.forClass(CommitCtx.class);
+        ownershipAnalyzerCaptor = ArgumentCaptor.forClass(CommitCtx.class);
+        tested.analyze(repo.get());
+        verify(cloneRepoStep, times(2)).execute(any(), any());
+        order.verify(commitAnalyzer, never()).processCommit(commitAnalyzerCaptor.capture());
+        order.verify(codeOwnershipAnalyzer, never()).processCommit(ownershipAnalyzerCaptor.capture());
+    }
+
+    @Test
+    @SneakyThrows
+    void testAnalysisRestartOnNewCommitOnRepository() {
+        tested.analyze(repo.get());
+        verify(cloneRepoStep).execute(any(), any());
+        var order = inOrder(commitAnalyzer, codeOwnershipAnalyzer);
+        order.verify(commitAnalyzer, times(4)).processCommit(commitAnalyzerCaptor.capture());
+        assertThat(commitAnalyzerCaptor.getAllValues()).map(commitMessageStart()).containsExactly("4", "3", "2", "1");
+        order.verify(codeOwnershipAnalyzer, times(4)).processCommit(ownershipAnalyzerCaptor.capture());
+        assertThat(ownershipAnalyzerCaptor.getAllValues()).map(commitMessageStart()).containsExactly("4", "3", "2", "1");
+
+        var git = Git.open(repoToAnalyze);
+        Files.write(repoToAnalyze.toPath().resolve("new-commit.txt"), "".getBytes(StandardCharsets.UTF_8));
+        git.add().addFilepattern("*").call();
+        git.commit().setMessage("5. New code-based commit").call();
+
+        commitAnalyzerCaptor = ArgumentCaptor.forClass(CommitCtx.class);
+        ownershipAnalyzerCaptor = ArgumentCaptor.forClass(CommitCtx.class);
+        tested.analyze(repo.get());
+        verify(cloneRepoStep, times(2)).execute(any(), any());
+        order.verify(commitAnalyzer, times(1)).processCommit(commitAnalyzerCaptor.capture());
+        assertThat(commitAnalyzerCaptor.getAllValues()).map(commitMessageStart()).containsExactly("5");
+        order.verify(codeOwnershipAnalyzer, times(1)).processCommit(ownershipAnalyzerCaptor.capture());
+        assertThat(ownershipAnalyzerCaptor.getAllValues()).map(commitMessageStart()).containsExactly("5");
+
     }
 
     private ThrowingExtractor<CommitCtx, String, RuntimeException> commitMessageStart() {
