@@ -22,7 +22,7 @@ export class UserMappingsComponent implements AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   repos: EntityModelGitRepo[];
 
-  displayedColumns: string[] = ['actions', 'name', 'branch', 'url'];
+  displayedColumns: string[] = ['actions', 'name', 'branch', 'lastAnalyzedCommit', 'url'];
   resultsLength = 0;
   isLoadingResults = true;
   expandedElement: EntityModelGitRepo | null;

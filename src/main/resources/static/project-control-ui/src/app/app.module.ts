@@ -34,6 +34,7 @@ import {MatOptionModule} from "@angular/material/core";
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
 import { RulesComponent } from './rules/rules.component';
 import { ProjectRulesComponent } from './components/project-rules/project-rules.component';
+import { ProjectActivityComponent } from './components/project-activity/project-activity.component';
 
 export function apiConfigFactory(): Configuration {
   const params: ConfigurationParameters = {
@@ -55,7 +56,8 @@ export function apiConfigFactory(): Configuration {
     AddProjectDialogComponent,
     UserToAliasComponent,
     RulesComponent,
-    ProjectRulesComponent
+    ProjectRulesComponent,
+    ProjectActivityComponent
   ],
     imports: [
         ApiModule.forRoot(apiConfigFactory),

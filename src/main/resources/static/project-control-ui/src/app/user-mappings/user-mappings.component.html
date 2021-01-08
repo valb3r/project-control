@@ -46,11 +46,6 @@
         <td mat-cell *matCellDef="let row">{{repo(row).needsAuthentication}}</td>
       </ng-container>
 
-      <ng-container matColumnDef="errorMessage">
-        <th mat-header-cell *matHeaderCellDef>Error Message</th>
-        <td mat-cell *matCellDef="let row">{{repo(row).errorMessage}}</td>
-      </ng-container>
-
       <ng-container matColumnDef="expandedDetail">
         <td mat-cell *matCellDef="let row" [attr.colspan]="displayedColumns.length">
           <div class="detailed-element" [@detailExpand]="row == expandedElement ? 'expanded' : 'collapsed'" *ngIf="row == expandedElement">

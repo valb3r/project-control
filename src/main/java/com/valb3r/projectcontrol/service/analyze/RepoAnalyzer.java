@@ -12,8 +12,6 @@ import org.springframework.stereotype.Service;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.eclipse.jgit.lib.Constants.HEAD;
-
 @Slf4j
 @Service
 @RequiredArgsConstructor
