@@ -52,13 +52,16 @@ public abstract class CommitBasedAnalyzer implements AnalysisStep {
         var range = repo.beginEndOfStep(stateOnStart());
         try (var walk = new RevWalk(git.getRepository())) {
             walk.setRevFilter(RevFilter.NO_MERGES);
-            startCommit = walk.parseCommit(git.getRepository().resolve(HEAD));
-            walk.markStart(startCommit);
+            walk.markStart(walk.parseCommit(git.getRepository().resolve(HEAD)));
 
             var container = container(repo);
 
             boolean inExcludeRange = false;
             while ((commit = walk.next()) != null) {
+                if (null == startCommit) {
+                    startCommit = commit;
+                }
+
                 if (commit.getName().equals(range.getStart())) {
                     inExcludeRange = !Objects.equals(range.getStart(), range.getEnd());
                     continue;
