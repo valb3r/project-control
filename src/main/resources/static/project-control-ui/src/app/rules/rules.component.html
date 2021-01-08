@@ -28,7 +28,7 @@
 
       <ng-container matColumnDef="expandedDetail">
         <td mat-cell *matCellDef="let row" [attr.colspan]="displayedColumns.length">
-          1111
+          <app-project-rules [project]="row"></app-project-rules>
         </td>
       </ng-container>
 

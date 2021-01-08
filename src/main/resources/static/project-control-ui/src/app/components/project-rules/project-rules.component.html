@@ -1,1 +1,9 @@
-<p>project-rules works!</p>
+<mat-spinner *ngIf="isLoadingResults"></mat-spinner>
+
+<ng-container *ngIf="!isLoadingResults">
+  <mat-list>
+    <mat-list-item  *ngFor="let rule of rules">
+      {{ rule.name }}
+    </mat-list-item>
+  </mat-list>
+</ng-container>
