@@ -35,6 +35,7 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.neo4j.driver:neo4j-java-driver-test-harness-spring-boot-autoconfigure:4.1.1.0'
 	testCompileOnly 'org.projectlombok:lombok'
 	testAnnotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.mockito:mockito-all:2.0.2-beta'
