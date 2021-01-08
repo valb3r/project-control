@@ -12,7 +12,7 @@ import {
 import {Id} from "../../id";
 import {Observable, zip} from "rxjs";
 import {FormControl, Validators} from "@angular/forms";
-import {catchError, debounceTime, distinctUntilChanged, map, startWith, switchMap} from "rxjs/operators";
+import {debounceTime, distinctUntilChanged, map, startWith, switchMap} from "rxjs/operators";
 import {MatSelectionList} from "@angular/material/list";
 
 @Component({

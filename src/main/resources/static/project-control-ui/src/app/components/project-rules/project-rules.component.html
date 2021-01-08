@@ -1,9 +1,66 @@
 <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
 
 <ng-container *ngIf="!isLoadingResults">
-  <mat-list>
-    <mat-list-item  *ngFor="let rule of rules">
-      {{ rule.name }}
-    </mat-list-item>
-  </mat-list>
+  <div id="container">
+    <div>
+      <h3>Inclusion rules (selects files to analyze)</h3>
+      <mat-list>
+        <mat-list-item>
+          <button mat-raised-button aria-label="Add Regex-Inclusion rule" color="primary" (click)="addInclusionRule()">
+            <mat-icon>add</mat-icon>
+            Regex-Inclusion rule
+          </button>
+          <button mat-raised-button aria-label="Add Inclusion rule" color="primary" (click)="addInclusionRule()">
+            <mat-icon>add</mat-icon>
+            Inclusion rule
+          </button>
+        </mat-list-item>
+        <mat-list-item  *ngFor="let rule of inclusionRules">
+          <button mat-icon-button aria-label="Inclusion rule details" (click)="toggleExpandInclusionRule(rule)">
+            <mat-icon *ngIf="rule === expandedInclusionRule">expand_less</mat-icon>
+            <mat-icon *ngIf="rule !== expandedInclusionRule">expand_more</mat-icon>
+          </button>
+          {{ rule.name }}
+          <button mat-icon-button aria-label="Remove inclusion rule" (click)="removeInclusionRule(rule)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </mat-list-item>
+      </mat-list>
+    </div>
+    <div>
+      <h3>Exclusion rules (selects files to skip from analysis)</h3>
+      <mat-list>
+        <mat-list-item>
+          <button mat-raised-button aria-label="Add Regex-Exclusion rule" color="primary" (click)="addInclusionRule()">
+            <mat-icon>add</mat-icon>
+            Regex-Exclusion rule
+          </button>
+          <button mat-raised-button aria-label="Add Exclusion rule" color="primary" (click)="addExclusionRule()">
+            <mat-icon>add</mat-icon>
+            Exclusion rule
+          </button>
+        </mat-list-item>
+        <mat-list-item  *ngFor="let rule of exclusionRules">
+          <button mat-icon-button aria-label="Exclusion rule details" (click)="toggleExpandExclusionRule(rule)">
+            <mat-icon *ngIf="rule === expandedExclusionRule">expand_less</mat-icon>
+            <mat-icon *ngIf="rule !== expandedExclusionRule">expand_more</mat-icon>
+          </button>
+          {{ rule.name }}
+          <button mat-icon-button aria-label="Remove exclusion rule" (click)="removeExclusionRule(rule)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </mat-list-item>
+      </mat-list>
+    </div>
+    <ng-template #ruleDetails>
+      <mat-form-field>
+        <mat-label>Rule definition</mat-label>
+        <textarea matInput
+                  cdkTextareaAutosize
+                  #autosize="cdkTextareaAutosize"
+                  cdkAutosizeMinRows="5"
+                  cdkAutosizeMaxRows="50"></textarea>
+      </mat-form-field>
+    </ng-template>
+  </div>
 </ng-container>

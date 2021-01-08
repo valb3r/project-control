@@ -1,10 +1,14 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, NgZone, OnInit, ViewChild} from '@angular/core';
 import {
+  EntityModelFileExclusionRule,
+  EntityModelFileInclusionRule,
   EntityModelGitRepo,
   FileExclusionRuleEntityControllerService,
   FileInclusionRuleEntityControllerService
 } from "../../api";
 import {zip} from "rxjs";
+import {CdkTextareaAutosize} from "@angular/cdk/text-field";
+import {take} from "rxjs/operators";
 
 @Component({
   selector: 'app-project-rules',
@@ -14,11 +18,17 @@ import {zip} from "rxjs";
 export class ProjectRulesComponent implements OnInit {
 
   @Input() project: EntityModelGitRepo;
+  @ViewChild('autosizeInclusion') autosizeInclusion: CdkTextareaAutosize;
+  @ViewChild('autosizeExclusion') autosizeExclusion: CdkTextareaAutosize;
 
   isLoadingResults = true;
-  rules: Rule[];
+  inclusionRules: EntityModelFileInclusionRule[];
+  exclusionRules: EntityModelFileExclusionRule[];
+  expandedInclusionRule: EntityModelFileInclusionRule;
+  expandedExclusionRule: EntityModelFileExclusionRule;
 
   constructor(
+    private ngZone: NgZone,
     private fileInclusionRules: FileInclusionRuleEntityControllerService,
     private fileExclusionRules: FileExclusionRuleEntityControllerService
   ) { }
@@ -27,19 +37,49 @@ export class ProjectRulesComponent implements OnInit {
     this.loadRules();
   }
 
-  private loadRules() {
-    zip(
-    ).subscribe();
+  addInclusionRule() {
   }
-}
 
-class Rule {
-  name: string;
-  url: string;
-  type: RuleType;
-}
+  addExclusionRule() {
+  }
 
-enum RuleType {
-  FILE_INCLUDE = "FILE_INCLUDE",
-  FILE_EXCLUDE = "FILE_EXCLUDE"
+  updateInclusionRule(rule: EntityModelFileInclusionRule) {
+  }
+
+  updateExclusionRule(rule: EntityModelFileExclusionRule) {
+  }
+
+  removeInclusionRule(rule: EntityModelFileInclusionRule) {
+  }
+
+  removeExclusionRule(rule: EntityModelFileExclusionRule) {
+  }
+
+  toggleExpandInclusionRule(rule: EntityModelFileInclusionRule) {
+  }
+
+  toggleExpandExclusionRule(rule: EntityModelFileExclusionRule) {
+  }
+
+  private loadRules() {
+    this.isLoadingResults = true;
+    zip(
+      this.fileInclusionRules.getCollectionResourceFileinclusionruleGet1(),
+      this.fileExclusionRules.getCollectionResourceFileexclusionruleGet1()
+    ).subscribe(res => {
+      this.isLoadingResults = false;
+      this.inclusionRules = res[0]._embedded.fileInclusionRules;
+      this.exclusionRules = res[1]._embedded.fileExclusionRules;
+    });
+  }
+
+  triggerResizeInclusion() {
+    this.ngZone.onStable.pipe(take(1))
+      .subscribe(() => this.autosizeInclusion.resizeToFitContent(true));
+  }
+
+  triggerResizeExclusion() {
+    this.ngZone.onStable.pipe(take(1))
+      .subscribe(() => this.autosizeExclusion.resizeToFitContent(true));
+  }
 }
