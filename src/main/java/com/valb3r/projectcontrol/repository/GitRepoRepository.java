@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 @RepositoryRestResource
 public interface GitRepoRepository extends Neo4jRepository<GitRepo, Long> {
 
+    @Override
     @Query("MATCH (r:GitRepo)<-[:OF*0..5]-(n) WHERE id(r) = $repoId DETACH DELETE n")
-    long deleteGitRepoAndRelated(@Param("repoId") long repoId);
+    void deleteById(@Param("repoId") Long repoId);
 }

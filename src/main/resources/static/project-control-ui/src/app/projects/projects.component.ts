@@ -4,7 +4,7 @@ import {catchError, map, startWith, switchMap} from "rxjs/operators";
 import {EMPTY} from "rxjs";
 import {MatDialog} from "@angular/material/dialog";
 import {AddProjectDialogComponent} from "../dialogs/add-project-dialog/add-project-dialog.component";
-import {EntityModelGitRepo, GitRepo, GitRepoEntityControllerService} from "../api";
+import {EntityModelGitRepo, GitRepo, GitRepoEntityControllerService, GitRepoSearchControllerService} from "../api";
 import {Id} from "../id";
 import AnalysisStateEnum = EntityModelGitRepo.AnalysisStateEnum;
 
