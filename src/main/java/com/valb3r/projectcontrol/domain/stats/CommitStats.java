@@ -31,16 +31,12 @@ public abstract class CommitStats extends Accountable {
     @Min(value = 0, groups = OnSaveValidationGroup.class)
     protected long linesRemoved;
 
-    @Min(value = 0, groups = OnSaveValidationGroup.class)
-    protected long linesOwned;
-
-    public CommitStats(GitRepo repo, Alias alias, @NotNull Instant from, @NotNull Instant to, @Min(0) long commitCount, @Min(0) long linesAdded, @Min(0) long linesRemoved, @Min(0) long linesOwned) {
+    public CommitStats(GitRepo repo, Alias alias, @NotNull Instant from, @NotNull Instant to, @Min(0) long commitCount, @Min(0) long linesAdded, @Min(0) long linesRemoved) {
         super(repo, alias);
         this.from = from;
         this.to = to;
         this.commitCount = commitCount;
         this.linesAdded = linesAdded;
         this.linesRemoved = linesRemoved;
-        this.linesOwned = linesOwned;
     }
 }

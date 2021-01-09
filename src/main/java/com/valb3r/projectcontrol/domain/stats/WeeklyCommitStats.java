@@ -34,8 +34,8 @@ public class WeeklyCommitStats extends CommitStats {
     private List<RemovedLines> linesRemovedOf = new ArrayList<>();
 
     @Builder
-    public WeeklyCommitStats(GitRepo repo, Alias alias, @NotNull Instant from, @NotNull Instant to, @Min(0) long commitCount, @Min(0) long linesAdded, @Min(0) long linesRemoved, @Min(0) long linesOwned, Long id) {
-        super(repo, alias, from, to, commitCount, linesAdded, linesRemoved, linesOwned);
+    public WeeklyCommitStats(GitRepo repo, Alias alias, @NotNull Instant from, @NotNull Instant to, @Min(0) long commitCount, @Min(0) long linesAdded, @Min(0) long linesRemoved, Long id) {
+        super(repo, alias, from, to, commitCount, linesAdded, linesRemoved);
         this.id = id;
     }
 }
