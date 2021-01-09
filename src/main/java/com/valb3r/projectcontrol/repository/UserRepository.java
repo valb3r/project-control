@@ -27,6 +27,6 @@ public interface UserRepository extends Neo4jRepository<User, Long> {
 
     @Query("MATCH (u:User)-[:ALIAS]->(a:Alias)-[:OF]->(r:GitRepo) WHERE id(r) = $repoId AND id(u) = $userId " +
         "WITH a,r MATCH (a)<-[:OF]-(w:WeeklyCommitStats)-[:OF]->(r:GitRepo) WHERE w.from = $from " +
-        "RETURN [sum(w.commitCount)]")
+        "RETURN sum(w.commitCount) AS totalCommits")
     Optional<WeeklyWorkStats> getWeeklyWorkStats(@Param("userId") Long userId, @Param("repoId") Long repoId, @Param("from") Instant start);
 }
