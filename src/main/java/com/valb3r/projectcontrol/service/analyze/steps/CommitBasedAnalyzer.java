@@ -6,6 +6,7 @@ import com.valb3r.projectcontrol.repository.AliasRepository;
 import com.valb3r.projectcontrol.repository.FileExclusionRuleRepository;
 import com.valb3r.projectcontrol.repository.FileInclusionRuleRepository;
 import com.valb3r.projectcontrol.service.analyze.StateUpdatingService;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.eclipse.jgit.api.Git;
@@ -54,7 +55,7 @@ public abstract class CommitBasedAnalyzer implements AnalysisStep {
             walk.setRevFilter(RevFilter.NO_MERGES);
             walk.markStart(walk.parseCommit(git.getRepository().resolve(HEAD)));
 
-            var container = container(repo);
+            var kie = container(repo);
 
             boolean inExcludeRange = false;
             while ((commit = walk.next()) != null) {
@@ -79,7 +80,9 @@ public abstract class CommitBasedAnalyzer implements AnalysisStep {
                         .repo(repo)
                         .aliasCache(aliasCache)
                         .walk(walk)
-                        .container(container)
+                        .container(kie.getContainer())
+                        .hasInclusionRules(kie.isHasInclusionRules())
+                        .hasExclusionRules(kie.isHasExclusionRules())
                         .commit(commit)
                         .prevCommit(prevCommit)
                         .build();
@@ -98,7 +101,7 @@ public abstract class CommitBasedAnalyzer implements AnalysisStep {
         }
     }
 
-    protected KieContainer container(GitRepo repo) {
+    protected KieSetup container(GitRepo repo) {
         var inclusion = inclusionRepo.findByRepoId(repo.getId());
         var exclusion = exclusionRepo.findByRepoId(repo.getId());
         KieServices services = KieServices.Factory.get();
@@ -111,7 +114,11 @@ public abstract class CommitBasedAnalyzer implements AnalysisStep {
         kb.buildAll();
         KieModule kieModule = kb.getKieModule();
 
-        return services.newKieContainer(kieModule.getReleaseId());
+        return new KieSetup(
+                services.newKieContainer(kieModule.getReleaseId()),
+                !inclusion.isEmpty(),
+                !exclusion.isEmpty()
+        );
     }
 
     protected Alias alias(String name, CommitCtx ctx) {
@@ -130,5 +137,14 @@ public abstract class CommitBasedAnalyzer implements AnalysisStep {
             repo.reportAnalyzedRange(stateOnStart(), new GitRepo.AnalyzedRange(startCommit.getName(), endCommit.getName()));
             stateUpdatingService.updateInternalData(repo);
         }
+    }
+
+    @Getter
+    @RequiredArgsConstructor
+    protected static class KieSetup {
+
+        private final KieContainer container;
+        private final boolean hasInclusionRules;
+        private final boolean hasExclusionRules;
     }
 }

@@ -1,4 +1,4 @@
-package com.valb3r.projectcontrol.service.analyze.steps;
+package com.valb3r.projectcontrol.domain.rules;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -14,5 +14,5 @@ public class RuleContext {
     private final Instant commitDate;
 
     private boolean exclude;
-    private boolean include = true;
+    private boolean include;
 }

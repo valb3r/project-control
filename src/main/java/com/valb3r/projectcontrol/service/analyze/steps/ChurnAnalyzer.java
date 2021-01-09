@@ -2,6 +2,7 @@ package com.valb3r.projectcontrol.service.analyze.steps;
 
 import com.valb3r.projectcontrol.domain.Alias;
 import com.valb3r.projectcontrol.domain.GitRepo;
+import com.valb3r.projectcontrol.domain.rules.RuleContext;
 import com.valb3r.projectcontrol.domain.stats.RemovedLines;
 import com.valb3r.projectcontrol.domain.stats.WeeklyCommitStats;
 import com.valb3r.projectcontrol.repository.AliasRepository;
@@ -119,7 +120,7 @@ public class ChurnAnalyzer extends CommitBasedAnalyzer {
                 var context = new RuleContext(diff.getNewPath(), ctx.getCommit().getAuthorIdent().getName(), ctx.getCommit().getAuthorIdent().getWhen().toInstant());
                 stateless.execute(context);
 
-                if (context.isExclude() || !context.isInclude()) {
+                if (context.isExclude() || (!context.isInclude() && commitCtx.isHasInclusionRules())) {
                     continue;
                 }
 

@@ -18,7 +18,6 @@ import org.eclipse.jgit.lib.Repository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
-import org.kie.api.runtime.KieContainer;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -277,8 +276,8 @@ class RepoAnalyzerTest {
         }
 
         @Override
-        protected KieContainer container(GitRepo repo) {
-            return null;
+        protected KieSetup container(GitRepo repo) {
+            return new KieSetup(null, false, false);
         }
     }
 
@@ -304,8 +303,8 @@ class RepoAnalyzerTest {
         }
 
         @Override
-        protected KieContainer container(GitRepo repo) {
-            return null;
+        protected KieSetup container(GitRepo repo) {
+            return new KieSetup(null, false, false);
         }
     }
 }

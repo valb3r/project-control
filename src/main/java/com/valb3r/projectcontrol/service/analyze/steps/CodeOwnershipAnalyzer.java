@@ -2,6 +2,7 @@ package com.valb3r.projectcontrol.service.analyze.steps;
 
 import com.valb3r.projectcontrol.domain.Alias;
 import com.valb3r.projectcontrol.domain.GitRepo;
+import com.valb3r.projectcontrol.domain.rules.RuleContext;
 import com.valb3r.projectcontrol.domain.stats.TotalOwnershipStats;
 import com.valb3r.projectcontrol.repository.AliasRepository;
 import com.valb3r.projectcontrol.repository.FileExclusionRuleRepository;
@@ -67,7 +68,7 @@ public class CodeOwnershipAnalyzer extends CommitBasedAnalyzer implements Analys
                 var context = new RuleContext(treeWalk.getPathString(), ctx.getCommit().getAuthorIdent().getName(), ctx.getCommit().getAuthorIdent().getWhen().toInstant());
                 stateless.execute(context);
 
-                if (context.isExclude() || !context.isInclude()) {
+                if (context.isExclude() || (!context.isInclude() && ctx.isHasInclusionRules())) {
                     continue;
                 }
 

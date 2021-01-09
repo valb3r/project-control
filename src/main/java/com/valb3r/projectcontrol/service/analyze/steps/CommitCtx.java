@@ -20,6 +20,8 @@ public class CommitCtx {
     private final HashMap<String, Alias> aliasCache;
     private final RevWalk walk;
     private final KieContainer container;
+    private final boolean hasInclusionRules;
+    private final boolean hasExclusionRules;
     private final RevCommit prevCommit;
     private final RevCommit commit;
 }
