@@ -35,6 +35,7 @@ import {MatAutocompleteModule} from "@angular/material/autocomplete";
 import { RulesComponent } from './rules/rules.component';
 import { ProjectRulesComponent } from './components/project-rules/project-rules.component';
 import { ProjectActivityComponent } from './components/project-activity/project-activity.component';
+import {NgxEchartsModule} from "ngx-echarts";
 
 export function apiConfigFactory(): Configuration {
   const params: ConfigurationParameters = {
@@ -61,6 +62,7 @@ export function apiConfigFactory(): Configuration {
   ],
     imports: [
         ApiModule.forRoot(apiConfigFactory),
+        NgxEchartsModule.forRoot({echarts: () => import('echarts')}),
         BrowserModule,
         HttpClientModule,
         AppRoutingModule,
