@@ -72,7 +72,7 @@ paths:
     get:
       tags:
         - alias-search-controller
-      operationId: executeSearch-alias-get
+      operationId: findByNameAndRepoId_Sl
       parameters:
         - name: name
           in: query
@@ -96,7 +96,7 @@ paths:
     get:
       tags:
         - alias-search-controller
-      operationId: executeSearch-alias-get_1
+      operationId: findByRepoId_l
       parameters:
         - name: repoId
           in: query
@@ -116,7 +116,7 @@ paths:
     get:
       tags:
         - alias-search-controller
-      operationId: executeSearch-alias-get_2
+      operationId: findRelatedTo_l
       parameters:
         - name: aliasId
           in: query
@@ -601,7 +601,7 @@ paths:
     get:
       tags:
         - file-exclusion-rule-search-controller
-      operationId: executeSearch-fileexclusionrule-get
+      operationId: findByRepoId_l_1
       parameters:
         - name: repoId
           in: query
@@ -931,7 +931,7 @@ paths:
     get:
       tags:
         - file-inclusion-rule-search-controller
-      operationId: executeSearch-fileinclusionrule-get
+      operationId: findByRepoId_l_2
       parameters:
         - name: repoId
           in: query
@@ -1261,7 +1261,7 @@ paths:
     get:
       tags:
         - git-repo-search-controller
-      operationId: executeSearch-gitrepo-get
+      operationId: deleteById_L
       parameters:
         - name: repoId
           in: query
@@ -1592,7 +1592,7 @@ paths:
     get:
       tags:
         - removed-lines-search-controller
-      operationId: executeSearch-removedlines-get
+      operationId: findByWeeklyIdAndFromAuthorId_ll
       parameters:
         - name: weeklyId
           in: query
@@ -2020,7 +2020,7 @@ paths:
     get:
       tags:
         - statistics-search-controller
-      operationId: executeSearch-statistics-get
+      operationId: getRemovedLinesStats_LLII
       parameters:
         - name: repoId
           in: query
@@ -2055,7 +2055,7 @@ paths:
     get:
       tags:
         - statistics-search-controller
-      operationId: executeSearch-statistics-get_1
+      operationId: getTotalRemovedLinesStats_LII
       parameters:
         - name: repoId
           in: query
@@ -2085,7 +2085,7 @@ paths:
     get:
       tags:
         - statistics-search-controller
-      operationId: executeSearch-statistics-get_2
+      operationId: getTotalWeeklyOwnershipStats_LII
       parameters:
         - name: repoId
           in: query
@@ -2115,7 +2115,7 @@ paths:
     get:
       tags:
         - statistics-search-controller
-      operationId: executeSearch-statistics-get_3
+      operationId: getTotalWeeklyWorkStats_LII
       parameters:
         - name: repoId
           in: query
@@ -2145,7 +2145,7 @@ paths:
     get:
       tags:
         - statistics-search-controller
-      operationId: executeSearch-statistics-get_4
+      operationId: getTotalWorkDateRanges_L
       parameters:
         - name: repoId
           in: query
@@ -2165,7 +2165,7 @@ paths:
     get:
       tags:
         - statistics-search-controller
-      operationId: executeSearch-statistics-get_5
+      operationId: getWeeklyOwnershipStats_LLII
       parameters:
         - name: repoId
           in: query
@@ -2200,7 +2200,7 @@ paths:
     get:
       tags:
         - statistics-search-controller
-      operationId: executeSearch-statistics-get_6
+      operationId: getWeeklyWorkStats_LLII
       parameters:
         - name: repoId
           in: query
@@ -2235,7 +2235,7 @@ paths:
     get:
       tags:
         - statistics-search-controller
-      operationId: executeSearch-statistics-get_7
+      operationId: getWorkDateRanges_LL
       parameters:
         - name: repoId
           in: query
@@ -2322,7 +2322,7 @@ paths:
     get:
       tags:
         - total-ownership-stats-search-controller
-      operationId: executeSearch-totalownershipstats-get
+      operationId: findBy_lI
       parameters:
         - name: aliasId
           in: query
@@ -2812,7 +2812,7 @@ paths:
     get:
       tags:
         - user-search-controller
-      operationId: executeSearch-user-get
+      operationId: findByFullText_S
       parameters:
         - name: name
           in: query
@@ -2831,7 +2831,7 @@ paths:
     get:
       tags:
         - user-search-controller
-      operationId: executeSearch-user-get_1
+      operationId: findByRepoId_L
       parameters:
         - name: repoId
           in: query
@@ -3161,7 +3161,7 @@ paths:
     get:
       tags:
         - weekly-commit-stats-search-controller
-      operationId: executeSearch-weeklycommitstats-get
+      operationId: findBy_lI_1
       parameters:
         - name: aliasId
           in: query
@@ -3790,10 +3790,11 @@ components:
       properties:
         _links:
           $ref: '#/components/schemas/Links'
-    Alias:
+    FileExclusionRule:
       required:
         - name
         - repo
+        - rule
       type: object
       properties:
         repo:
@@ -3803,30 +3804,8 @@ components:
           format: int64
         name:
           type: string
-        user:
-          $ref: '#/components/schemas/User'
-    EntityModelTotalOwnershipStats:
-      type: object
-      properties:
-        repo:
-          $ref: '#/components/schemas/GitRepo'
-        alias:
-          $ref: '#/components/schemas/Alias'
-        id:
-          type: integer
-          format: int64
-        from:
+        rule:
           type: string
-          format: date-time
-        to:
-          type: string
-          format: date-time
-        linesOwned:
-          minimum: 0
-          type: integer
-          format: int64
-        _links:
-          $ref: '#/components/schemas/Links'
     GitRepo:
       required:
         - analysisState
@@ -3877,10 +3856,152 @@ components:
           type: string
         lastAnalyzedCommit:
           type: string
+    RepresentationModelFileExclusionRule:
+      type: object
+      properties:
+        _links:
+          $ref: '#/components/schemas/Links'
+    CollectionModelEntityModelFileExclusionRule:
+      type: object
+      properties:
+        _embedded:
+          type: object
+          properties:
+            fileExclusionRules:
+              type: array
+              items:
+                $ref: '#/components/schemas/EntityModelFileExclusionRule'
+        _links:
+          $ref: '#/components/schemas/Links'
+    EntityModelFileExclusionRule:
+      type: object
+      properties:
+        repo:
+          $ref: '#/components/schemas/GitRepo'
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        rule:
+          type: string
+        _links:
+          $ref: '#/components/schemas/Links'
     Links:
       type: object
       additionalProperties:
         $ref: '#/components/schemas/Link'
+    CollectionModelObject:
+      type: object
+      properties:
+        _embedded:
+          type: object
+          properties:
+            objects:
+              type: array
+              items:
+                type: object
+        _links:
+          $ref: '#/components/schemas/Links'
+    Alias:
+      required:
+        - name
+        - repo
+      type: object
+      properties:
+        repo:
+          $ref: '#/components/schemas/GitRepo'
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        user:
+          $ref: '#/components/schemas/User'
+    User:
+      required:
+        - name
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        aliases:
+          type: array
+          items:
+            $ref: '#/components/schemas/Alias'
+    RepresentationModelAlias:
+      type: object
+      properties:
+        _links:
+          $ref: '#/components/schemas/Links'
+    CollectionModelEntityModelAlias:
+      type: object
+      properties:
+        _embedded:
+          type: object
+          properties:
+            aliases:
+              type: array
+              items:
+                $ref: '#/components/schemas/EntityModelAlias'
+        _links:
+          $ref: '#/components/schemas/Links'
+    EntityModelAlias:
+      type: object
+      properties:
+        repo:
+          $ref: '#/components/schemas/GitRepo'
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        user:
+          $ref: '#/components/schemas/User'
+        _links:
+          $ref: '#/components/schemas/Links'
+    RepresentationModelUser:
+      type: object
+      properties:
+        _links:
+          $ref: '#/components/schemas/Links'
+    CollectionModelEntityModelUser:
+      type: object
+      properties:
+        _embedded:
+          type: object
+          properties:
+            users:
+              type: array
+              items:
+                $ref: '#/components/schemas/EntityModelUser'
+        _links:
+          $ref: '#/components/schemas/Links'
+    EntityModelUser:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        aliases:
+          type: array
+          items:
+            $ref: '#/components/schemas/Alias'
+        _links:
+          $ref: '#/components/schemas/Links'
+    EntityModelStatistics:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        _links:
+          $ref: '#/components/schemas/Links'
     TotalOwnershipStats:
       required:
         - alias
@@ -3906,20 +4027,6 @@ components:
           minimum: 0
           type: integer
           format: int64
-    User:
-      required:
-        - name
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-        name:
-          type: string
-        aliases:
-          type: array
-          items:
-            $ref: '#/components/schemas/Alias'
     RepresentationModelTotalOwnershipStats:
       type: object
       properties:
@@ -3937,63 +4044,26 @@ components:
                 $ref: '#/components/schemas/EntityModelTotalOwnershipStats'
         _links:
           $ref: '#/components/schemas/Links'
-    CollectionModelObject:
+    EntityModelTotalOwnershipStats:
       type: object
       properties:
-        _embedded:
-          type: object
-          properties:
-            objects:
-              type: array
-              items:
-                type: object
-        _links:
-          $ref: '#/components/schemas/Links'
-    EntityModelUser:
-      type: object
-      properties:
+        repo:
+          $ref: '#/components/schemas/GitRepo'
+        alias:
+          $ref: '#/components/schemas/Alias'
         id:
           type: integer
           format: int64
-        name:
+        from:
           type: string
-        aliases:
-          type: array
-          items:
-            $ref: '#/components/schemas/Alias'
-        _links:
-          $ref: '#/components/schemas/Links'
-    RepresentationModelUser:
-      type: object
-      properties:
-        _links:
-          $ref: '#/components/schemas/Links'
-    CollectionModelEntityModelUser:
-      type: object
-      properties:
-        _embedded:
-          type: object
-          properties:
-            users:
-              type: array
-              items:
-                $ref: '#/components/schemas/EntityModelUser'
-        _links:
-          $ref: '#/components/schemas/Links'
-    EntityModelRemovedLines:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-        removedLines:
+          format: date-time
+        to:
+          type: string
+          format: date-time
+        linesOwned:
           minimum: 0
           type: integer
           format: int64
-        fromAuthor:
-          $ref: '#/components/schemas/Alias'
-        weekly:
-          $ref: '#/components/schemas/WeeklyCommitStats'
         _links:
           $ref: '#/components/schemas/Links'
     RemovedLines:
@@ -4068,188 +4138,37 @@ components:
                 $ref: '#/components/schemas/EntityModelRemovedLines'
         _links:
           $ref: '#/components/schemas/Links'
-    EntityModelFileInclusionRule:
+    EntityModelRemovedLines:
       type: object
       properties:
-        repo:
-          $ref: '#/components/schemas/GitRepo'
         id:
           type: integer
           format: int64
-        name:
-          type: string
-        rule:
-          type: string
-        _links:
-          $ref: '#/components/schemas/Links'
-    FileInclusionRule:
-      required:
-        - name
-        - repo
-        - rule
-      type: object
-      properties:
-        repo:
-          $ref: '#/components/schemas/GitRepo'
-        id:
+        removedLines:
+          minimum: 0
           type: integer
           format: int64
-        name:
-          type: string
-        rule:
-          type: string
-    RepresentationModelFileInclusionRule:
-      type: object
-      properties:
-        _links:
-          $ref: '#/components/schemas/Links'
-    CollectionModelEntityModelFileInclusionRule:
-      type: object
-      properties:
-        _embedded:
-          type: object
-          properties:
-            fileInclusionRules:
-              type: array
-              items:
-                $ref: '#/components/schemas/EntityModelFileInclusionRule'
-        _links:
-          $ref: '#/components/schemas/Links'
-    EntityModelAlias:
-      type: object
-      properties:
-        repo:
-          $ref: '#/components/schemas/GitRepo'
-        id:
-          type: integer
-          format: int64
-        name:
-          type: string
-        user:
-          $ref: '#/components/schemas/User'
-        _links:
-          $ref: '#/components/schemas/Links'
-    RepresentationModelAlias:
-      type: object
-      properties:
-        _links:
-          $ref: '#/components/schemas/Links'
-    CollectionModelEntityModelAlias:
-      type: object
-      properties:
-        _embedded:
-          type: object
-          properties:
-            aliases:
-              type: array
-              items:
-                $ref: '#/components/schemas/EntityModelAlias'
-        _links:
-          $ref: '#/components/schemas/Links'
-    EntityModelFileExclusionRule:
-      type: object
-      properties:
-        repo:
-          $ref: '#/components/schemas/GitRepo'
-        id:
-          type: integer
-          format: int64
-        name:
-          type: string
-        rule:
-          type: string
-        _links:
-          $ref: '#/components/schemas/Links'
-    FileExclusionRule:
-      required:
-        - name
-        - repo
-        - rule
-      type: object
-      properties:
-        repo:
-          $ref: '#/components/schemas/GitRepo'
-        id:
-          type: integer
-          format: int64
-        name:
-          type: string
-        rule:
-          type: string
-    RepresentationModelFileExclusionRule:
-      type: object
-      properties:
-        _links:
-          $ref: '#/components/schemas/Links'
-    CollectionModelEntityModelFileExclusionRule:
-      type: object
-      properties:
-        _embedded:
-          type: object
-          properties:
-            fileExclusionRules:
-              type: array
-              items:
-                $ref: '#/components/schemas/EntityModelFileExclusionRule'
-        _links:
-          $ref: '#/components/schemas/Links'
-    EntityModelWeeklyCommitStats:
-      type: object
-      properties:
-        repo:
-          $ref: '#/components/schemas/GitRepo'
-        alias:
+        fromAuthor:
           $ref: '#/components/schemas/Alias'
-        from:
-          type: string
-          format: date-time
-        to:
-          type: string
-          format: date-time
-        commitCount:
-          minimum: 0
-          type: integer
-          format: int64
-        linesAdded:
-          minimum: 0
-          type: integer
-          format: int64
-        linesRemoved:
-          minimum: 0
-          type: integer
-          format: int64
-        id:
-          type: integer
-          format: int64
-        linesRemovedOf:
-          type: array
-          items:
-            $ref: '#/components/schemas/RemovedLines'
+        weekly:
+          $ref: '#/components/schemas/WeeklyCommitStats'
         _links:
           $ref: '#/components/schemas/Links'
-    RepresentationModelWeeklyCommitStats:
+    RepresentationModelGitRepo:
       type: object
       properties:
         _links:
           $ref: '#/components/schemas/Links'
-    CollectionModelEntityModelWeeklyCommitStats:
+    CollectionModelEntityModelGitRepo:
       type: object
       properties:
         _embedded:
           type: object
           properties:
-            weeklyCommitStatses:
+            gitRepoes:
               type: array
               items:
-                $ref: '#/components/schemas/EntityModelWeeklyCommitStats'
-        _links:
-          $ref: '#/components/schemas/Links'
-    EntityModelStatistics:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
+                $ref: '#/components/schemas/EntityModelGitRepo'
         _links:
           $ref: '#/components/schemas/Links'
     EntityModelGitRepo:
@@ -4298,21 +4217,102 @@ components:
           type: string
         _links:
           $ref: '#/components/schemas/Links'
-    RepresentationModelGitRepo:
+    RepresentationModelWeeklyCommitStats:
       type: object
       properties:
         _links:
           $ref: '#/components/schemas/Links'
-    CollectionModelEntityModelGitRepo:
+    CollectionModelEntityModelWeeklyCommitStats:
       type: object
       properties:
         _embedded:
           type: object
           properties:
-            gitRepoes:
+            weeklyCommitStatses:
               type: array
               items:
-                $ref: '#/components/schemas/EntityModelGitRepo'
+                $ref: '#/components/schemas/EntityModelWeeklyCommitStats'
+        _links:
+          $ref: '#/components/schemas/Links'
+    EntityModelWeeklyCommitStats:
+      type: object
+      properties:
+        repo:
+          $ref: '#/components/schemas/GitRepo'
+        alias:
+          $ref: '#/components/schemas/Alias'
+        from:
+          type: string
+          format: date-time
+        to:
+          type: string
+          format: date-time
+        commitCount:
+          minimum: 0
+          type: integer
+          format: int64
+        linesAdded:
+          minimum: 0
+          type: integer
+          format: int64
+        linesRemoved:
+          minimum: 0
+          type: integer
+          format: int64
+        id:
+          type: integer
+          format: int64
+        linesRemovedOf:
+          type: array
+          items:
+            $ref: '#/components/schemas/RemovedLines'
+        _links:
+          $ref: '#/components/schemas/Links'
+    FileInclusionRule:
+      required:
+        - name
+        - repo
+        - rule
+      type: object
+      properties:
+        repo:
+          $ref: '#/components/schemas/GitRepo'
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        rule:
+          type: string
+    RepresentationModelFileInclusionRule:
+      type: object
+      properties:
+        _links:
+          $ref: '#/components/schemas/Links'
+    CollectionModelEntityModelFileInclusionRule:
+      type: object
+      properties:
+        _embedded:
+          type: object
+          properties:
+            fileInclusionRules:
+              type: array
+              items:
+                $ref: '#/components/schemas/EntityModelFileInclusionRule'
+        _links:
+          $ref: '#/components/schemas/Links'
+    EntityModelFileInclusionRule:
+      type: object
+      properties:
+        repo:
+          $ref: '#/components/schemas/GitRepo'
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        rule:
+          type: string
         _links:
           $ref: '#/components/schemas/Links'
     Link:

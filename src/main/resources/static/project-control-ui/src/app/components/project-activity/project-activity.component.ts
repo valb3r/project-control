@@ -50,7 +50,7 @@ export class ProjectActivityComponent implements AfterViewInit {
   constructor(private statistics: StatisticsSearchControllerService) { }
 
   ngAfterViewInit(): void {
-    this.statistics.executeSearchStatisticsGet2()
+
   }
 }
 

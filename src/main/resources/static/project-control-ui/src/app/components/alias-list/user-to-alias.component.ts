@@ -91,7 +91,7 @@ export class UserToAliasComponent implements AfterViewInit {
 
     zip(
       this.usersController.postCollectionResourceUserPost({name: this.newUserName.value} as User),
-      this.userSearch.executeSearchUserGet1(this.repoId)
+      this.userSearch.findByRepoIdL(this.repoId)
     ).subscribe(res => {
       this.users = res[1]._embedded.users;
       this.inMemorySelectedUser = res[0];
@@ -142,7 +142,7 @@ export class UserToAliasComponent implements AfterViewInit {
       name = '';
     }
 
-    return this.userSearch.executeSearchUserGet(name ? name + "*" : "*")
+    return this.userSearch.findByFullTextS(name ? name + "*" : "*")
       .pipe(
         map(response => response._embedded.users.filter(option => {
           return option.name.toLowerCase().indexOf(name.toLowerCase()) === 0
@@ -151,8 +151,8 @@ export class UserToAliasComponent implements AfterViewInit {
   }
 
   private readUsersAndAliases() {
-    const aliases = this.aliasSearch.executeSearchAliasGet1(this.repoId);
-    const users = this.userSearch.executeSearchUserGet1(this.repoId);
+    const aliases = this.aliasSearch.findByRepoIdL(this.repoId);
+    const users = this.userSearch.findByRepoIdL(this.repoId);
 
     zip(aliases, users).subscribe(pair => {
       this.users = pair[1]._embedded.users;
