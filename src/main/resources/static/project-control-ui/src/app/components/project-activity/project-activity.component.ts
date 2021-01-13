@@ -1,63 +1,79 @@
-import {AfterViewInit, Component, Input, OnInit} from '@angular/core';
-import {EntityModelGitRepo, StatisticsSearchControllerService, UserSearchControllerService} from "../../api";
+import {AfterContentInit, Component, Input} from '@angular/core';
+import {EntityModelGitRepo, StatisticsSearchControllerService} from "../../api";
+import {Id} from "../../id";
+import {flatMap} from "rxjs/internal/operators";
 
 @Component({
   selector: 'app-project-activity',
   templateUrl: './project-activity.component.html',
   styleUrls: ['./project-activity.component.scss']
 })
-export class ProjectActivityComponent implements AfterViewInit {
+export class ProjectActivityComponent implements AfterContentInit {
 
   @Input() project: EntityModelGitRepo;
 
   isLoading = false;
-  series: Series[] = []
 
   options = {
     tooltip: {
       trigger: 'axis',
       axisPointer: {
-        type: 'cross',
-        label: {
-          backgroundColor: '#6a7985'
-        }
+        type: 'shadow'
       }
     },
-    legend: {
-      data: ['X-1', 'X-2', 'X-3', 'X-4', 'X-5']
+    title: {
+      left: 'center'
     },
-    grid: {
-      left: '3%',
-      right: '4%',
-      bottom: '3%',
-      containLabel: true
+    toolbox: {
+      feature: {
+        dataZoom: {
+          yAxisIndex: 'none'
+        },
+        restore: {},
+        saveAsImage: {}
+      }
     },
-    xAxis: [
-      {
-        type: 'category',
-        boundaryGap: false,
-        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-      }
-    ],
-    yAxis: [
-      {
-        type: 'value'
-      }
-    ],
-    series: this.series
+    xAxis: {
+      type: 'time',
+      boundaryGap: false,
+      data: [],
+      axisTick: {
+        alignWithLabel: true,
+      },
+    },
+    yAxis: {
+      type: 'value',
+      boundaryGap: [0, '100%']
+    },
+    dataZoom: [{
+      type: 'inside',
+      start: 0,
+      end: 100
+    }, {
+      start: 0,
+      end: 10,
+      handleSize: '80%',
+    }],
+    series: []
   };
+
+  updatedOptions = undefined
 
   constructor(private statistics: StatisticsSearchControllerService) { }
 
-  ngAfterViewInit(): void {
+  ngAfterContentInit(): void {
+    this.isLoading = true;
+    let repoId = +Id.read(this.project._links.self.href);
+    this.statistics.getTotalWorkDateRangesL(repoId).pipe(
+      flatMap(it => this.statistics.getTotalWeeklyWorkStatsLII(repoId, it.from, it.to))
+    ).subscribe(res => {
+      const data = [];
+      res.forEach(it => {data.push([Date.parse(it.from), it.totalCommits]) })
 
+      this.isLoading = false;
+      let update = this.options;
+      update.series = [{type: 'bar', data: data}];
+      this.updatedOptions = update;
+    });
   }
-}
-
-class Series {
-  name: string
-  type: string
-  stack: string
-  areaStyle: { normal: {} }
-  data: number[]
 }

@@ -17,7 +17,10 @@ import { HttpClient, HttpHeaders, HttpParams,
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
-import { EntityModelStatistics } from '../model/models';
+import { DateRange } from '../model/models';
+import { RemovedLinesWeeklyStats } from '../model/models';
+import { WeeklyOwnershipStats } from '../model/models';
+import { WeeklyWorkStats } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
@@ -92,9 +95,9 @@ export class StatisticsSearchControllerService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getRemovedLinesStatsLLII(repoId?: number, userId?: number, from?: string, to?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json'}): Observable<EntityModelStatistics>;
-    public getRemovedLinesStatsLLII(repoId?: number, userId?: number, from?: string, to?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json'}): Observable<HttpResponse<EntityModelStatistics>>;
-    public getRemovedLinesStatsLLII(repoId?: number, userId?: number, from?: string, to?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json'}): Observable<HttpEvent<EntityModelStatistics>>;
+    public getRemovedLinesStatsLLII(repoId?: number, userId?: number, from?: string, to?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json'}): Observable<Array<RemovedLinesWeeklyStats>>;
+    public getRemovedLinesStatsLLII(repoId?: number, userId?: number, from?: string, to?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json'}): Observable<HttpResponse<Array<RemovedLinesWeeklyStats>>>;
+    public getRemovedLinesStatsLLII(repoId?: number, userId?: number, from?: string, to?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json'}): Observable<HttpEvent<Array<RemovedLinesWeeklyStats>>>;
     public getRemovedLinesStatsLLII(repoId?: number, userId?: number, from?: string, to?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/hal+json'}): Observable<any> {
 
         let queryParameters = new HttpParams({encoder: this.encoder});
@@ -135,7 +138,7 @@ export class StatisticsSearchControllerService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<EntityModelStatistics>(`${this.configuration.basePath}/v1/resources/statisticses/search/getRemovedLinesStats`,
+        return this.httpClient.get<Array<RemovedLinesWeeklyStats>>(`${this.configuration.basePath}/v1/resources/statisticses/search/getRemovedLinesStats`,
             {
                 params: queryParameters,
                 responseType: <any>responseType,
@@ -154,9 +157,9 @@ export class StatisticsSearchControllerService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getTotalRemovedLinesStatsLII(repoId?: number, from?: string, to?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json'}): Observable<EntityModelStatistics>;
-    public getTotalRemovedLinesStatsLII(repoId?: number, from?: string, to?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json'}): Observable<HttpResponse<EntityModelStatistics>>;
-    public getTotalRemovedLinesStatsLII(repoId?: number, from?: string, to?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json'}): Observable<HttpEvent<EntityModelStatistics>>;
+    public getTotalRemovedLinesStatsLII(repoId?: number, from?: string, to?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json'}): Observable<Array<RemovedLinesWeeklyStats>>;
+    public getTotalRemovedLinesStatsLII(repoId?: number, from?: string, to?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json'}): Observable<HttpResponse<Array<RemovedLinesWeeklyStats>>>;
+    public getTotalRemovedLinesStatsLII(repoId?: number, from?: string, to?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json'}): Observable<HttpEvent<Array<RemovedLinesWeeklyStats>>>;
     public getTotalRemovedLinesStatsLII(repoId?: number, from?: string, to?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/hal+json'}): Observable<any> {
 
         let queryParameters = new HttpParams({encoder: this.encoder});
@@ -193,7 +196,7 @@ export class StatisticsSearchControllerService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<EntityModelStatistics>(`${this.configuration.basePath}/v1/resources/statisticses/search/getTotalRemovedLinesStats`,
+        return this.httpClient.get<Array<RemovedLinesWeeklyStats>>(`${this.configuration.basePath}/v1/resources/statisticses/search/getTotalRemovedLinesStats`,
             {
                 params: queryParameters,
                 responseType: <any>responseType,
@@ -212,9 +215,9 @@ export class StatisticsSearchControllerService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getTotalWeeklyOwnershipStatsLII(repoId?: number, from?: string, to?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json'}): Observable<EntityModelStatistics>;
-    public getTotalWeeklyOwnershipStatsLII(repoId?: number, from?: string, to?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json'}): Observable<HttpResponse<EntityModelStatistics>>;
-    public getTotalWeeklyOwnershipStatsLII(repoId?: number, from?: string, to?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json'}): Observable<HttpEvent<EntityModelStatistics>>;
+    public getTotalWeeklyOwnershipStatsLII(repoId?: number, from?: string, to?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json'}): Observable<Array<WeeklyOwnershipStats>>;
+    public getTotalWeeklyOwnershipStatsLII(repoId?: number, from?: string, to?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json'}): Observable<HttpResponse<Array<WeeklyOwnershipStats>>>;
+    public getTotalWeeklyOwnershipStatsLII(repoId?: number, from?: string, to?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json'}): Observable<HttpEvent<Array<WeeklyOwnershipStats>>>;
     public getTotalWeeklyOwnershipStatsLII(repoId?: number, from?: string, to?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/hal+json'}): Observable<any> {
 
         let queryParameters = new HttpParams({encoder: this.encoder});
@@ -251,7 +254,7 @@ export class StatisticsSearchControllerService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<EntityModelStatistics>(`${this.configuration.basePath}/v1/resources/statisticses/search/getTotalWeeklyOwnershipStats`,
+        return this.httpClient.get<Array<WeeklyOwnershipStats>>(`${this.configuration.basePath}/v1/resources/statisticses/search/getTotalWeeklyOwnershipStats`,
             {
                 params: queryParameters,
                 responseType: <any>responseType,
@@ -270,9 +273,9 @@ export class StatisticsSearchControllerService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getTotalWeeklyWorkStatsLII(repoId?: number, from?: string, to?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json'}): Observable<EntityModelStatistics>;
-    public getTotalWeeklyWorkStatsLII(repoId?: number, from?: string, to?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json'}): Observable<HttpResponse<EntityModelStatistics>>;
-    public getTotalWeeklyWorkStatsLII(repoId?: number, from?: string, to?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json'}): Observable<HttpEvent<EntityModelStatistics>>;
+    public getTotalWeeklyWorkStatsLII(repoId?: number, from?: string, to?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json'}): Observable<Array<WeeklyWorkStats>>;
+    public getTotalWeeklyWorkStatsLII(repoId?: number, from?: string, to?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json'}): Observable<HttpResponse<Array<WeeklyWorkStats>>>;
+    public getTotalWeeklyWorkStatsLII(repoId?: number, from?: string, to?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json'}): Observable<HttpEvent<Array<WeeklyWorkStats>>>;
     public getTotalWeeklyWorkStatsLII(repoId?: number, from?: string, to?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/hal+json'}): Observable<any> {
 
         let queryParameters = new HttpParams({encoder: this.encoder});
@@ -309,7 +312,7 @@ export class StatisticsSearchControllerService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<EntityModelStatistics>(`${this.configuration.basePath}/v1/resources/statisticses/search/getTotalWeeklyWorkStats`,
+        return this.httpClient.get<Array<WeeklyWorkStats>>(`${this.configuration.basePath}/v1/resources/statisticses/search/getTotalWeeklyWorkStats`,
             {
                 params: queryParameters,
                 responseType: <any>responseType,
@@ -326,9 +329,9 @@ export class StatisticsSearchControllerService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getTotalWorkDateRangesL(repoId?: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json'}): Observable<EntityModelStatistics>;
-    public getTotalWorkDateRangesL(repoId?: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json'}): Observable<HttpResponse<EntityModelStatistics>>;
-    public getTotalWorkDateRangesL(repoId?: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json'}): Observable<HttpEvent<EntityModelStatistics>>;
+    public getTotalWorkDateRangesL(repoId?: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json'}): Observable<DateRange>;
+    public getTotalWorkDateRangesL(repoId?: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json'}): Observable<HttpResponse<DateRange>>;
+    public getTotalWorkDateRangesL(repoId?: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json'}): Observable<HttpEvent<DateRange>>;
     public getTotalWorkDateRangesL(repoId?: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/hal+json'}): Observable<any> {
 
         let queryParameters = new HttpParams({encoder: this.encoder});
@@ -357,7 +360,7 @@ export class StatisticsSearchControllerService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<EntityModelStatistics>(`${this.configuration.basePath}/v1/resources/statisticses/search/getTotalWorkDateRanges`,
+        return this.httpClient.get<DateRange>(`${this.configuration.basePath}/v1/resources/statisticses/search/getTotalWorkDateRanges`,
             {
                 params: queryParameters,
                 responseType: <any>responseType,
@@ -377,9 +380,9 @@ export class StatisticsSearchControllerService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getWeeklyOwnershipStatsLLII(repoId?: number, userId?: number, from?: string, to?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json'}): Observable<EntityModelStatistics>;
-    public getWeeklyOwnershipStatsLLII(repoId?: number, userId?: number, from?: string, to?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json'}): Observable<HttpResponse<EntityModelStatistics>>;
-    public getWeeklyOwnershipStatsLLII(repoId?: number, userId?: number, from?: string, to?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json'}): Observable<HttpEvent<EntityModelStatistics>>;
+    public getWeeklyOwnershipStatsLLII(repoId?: number, userId?: number, from?: string, to?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json'}): Observable<Array<WeeklyOwnershipStats>>;
+    public getWeeklyOwnershipStatsLLII(repoId?: number, userId?: number, from?: string, to?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json'}): Observable<HttpResponse<Array<WeeklyOwnershipStats>>>;
+    public getWeeklyOwnershipStatsLLII(repoId?: number, userId?: number, from?: string, to?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json'}): Observable<HttpEvent<Array<WeeklyOwnershipStats>>>;
     public getWeeklyOwnershipStatsLLII(repoId?: number, userId?: number, from?: string, to?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/hal+json'}): Observable<any> {
 
         let queryParameters = new HttpParams({encoder: this.encoder});
@@ -420,7 +423,7 @@ export class StatisticsSearchControllerService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<EntityModelStatistics>(`${this.configuration.basePath}/v1/resources/statisticses/search/getWeeklyOwnershipStats`,
+        return this.httpClient.get<Array<WeeklyOwnershipStats>>(`${this.configuration.basePath}/v1/resources/statisticses/search/getWeeklyOwnershipStats`,
             {
                 params: queryParameters,
                 responseType: <any>responseType,
@@ -440,9 +443,9 @@ export class StatisticsSearchControllerService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getWeeklyWorkStatsLLII(repoId?: number, userId?: number, from?: string, to?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json'}): Observable<EntityModelStatistics>;
-    public getWeeklyWorkStatsLLII(repoId?: number, userId?: number, from?: string, to?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json'}): Observable<HttpResponse<EntityModelStatistics>>;
-    public getWeeklyWorkStatsLLII(repoId?: number, userId?: number, from?: string, to?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json'}): Observable<HttpEvent<EntityModelStatistics>>;
+    public getWeeklyWorkStatsLLII(repoId?: number, userId?: number, from?: string, to?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json'}): Observable<Array<WeeklyWorkStats>>;
+    public getWeeklyWorkStatsLLII(repoId?: number, userId?: number, from?: string, to?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json'}): Observable<HttpResponse<Array<WeeklyWorkStats>>>;
+    public getWeeklyWorkStatsLLII(repoId?: number, userId?: number, from?: string, to?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json'}): Observable<HttpEvent<Array<WeeklyWorkStats>>>;
     public getWeeklyWorkStatsLLII(repoId?: number, userId?: number, from?: string, to?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/hal+json'}): Observable<any> {
 
         let queryParameters = new HttpParams({encoder: this.encoder});
@@ -483,7 +486,7 @@ export class StatisticsSearchControllerService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<EntityModelStatistics>(`${this.configuration.basePath}/v1/resources/statisticses/search/getWeeklyWorkStats`,
+        return this.httpClient.get<Array<WeeklyWorkStats>>(`${this.configuration.basePath}/v1/resources/statisticses/search/getWeeklyWorkStats`,
             {
                 params: queryParameters,
                 responseType: <any>responseType,
@@ -501,9 +504,9 @@ export class StatisticsSearchControllerService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getWorkDateRangesLL(repoId?: number, userId?: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json'}): Observable<EntityModelStatistics>;
-    public getWorkDateRangesLL(repoId?: number, userId?: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json'}): Observable<HttpResponse<EntityModelStatistics>>;
-    public getWorkDateRangesLL(repoId?: number, userId?: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json'}): Observable<HttpEvent<EntityModelStatistics>>;
+    public getWorkDateRangesLL(repoId?: number, userId?: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json'}): Observable<DateRange>;
+    public getWorkDateRangesLL(repoId?: number, userId?: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json'}): Observable<HttpResponse<DateRange>>;
+    public getWorkDateRangesLL(repoId?: number, userId?: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/hal+json'}): Observable<HttpEvent<DateRange>>;
     public getWorkDateRangesLL(repoId?: number, userId?: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/hal+json'}): Observable<any> {
 
         let queryParameters = new HttpParams({encoder: this.encoder});
@@ -536,7 +539,7 @@ export class StatisticsSearchControllerService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<EntityModelStatistics>(`${this.configuration.basePath}/v1/resources/statisticses/search/getWorkDateRanges`,
+        return this.httpClient.get<DateRange>(`${this.configuration.basePath}/v1/resources/statisticses/search/getWorkDateRanges`,
             {
                 params: queryParameters,
                 responseType: <any>responseType,
