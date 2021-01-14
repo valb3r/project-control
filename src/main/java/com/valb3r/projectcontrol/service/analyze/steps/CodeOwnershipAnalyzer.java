@@ -73,7 +73,7 @@ public class CodeOwnershipAnalyzer extends CommitBasedAnalyzer implements Analys
                 }
 
                 BlameResult result = ctx.getGit().blame().setStartCommit(target).setFilePath(treeWalk.getPathString())
-                        .setTextComparator(RawTextComparator.WS_IGNORE_ALL).call();
+                        .setTextComparator(RawTextComparator.WS_IGNORE_ALL).setFollowFileRenames(true).call();
                 RawText rawText = result.getResultContents();
                 for (int i = 0; i < rawText.size(); i++) {
                     PersonIdent sourceAuthor = result.getSourceAuthor(i);

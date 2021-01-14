@@ -107,7 +107,7 @@ public class ChurnAnalyzer extends CommitBasedAnalyzer {
     private CommitStat analyzeCommit(CommitCtx commitCtx, AnalysisCtx ctx) {
         try (DiffFormatter df = new DiffFormatter(DisabledOutputStream.INSTANCE)) {
             df.setRepository(ctx.getRepo());
-            df.setDiffComparator(RawTextComparator.DEFAULT);
+            df.setDiffComparator(RawTextComparator.WS_IGNORE_ALL);
             df.setDetectRenames(true);
 
             List<DiffEntry> diffs = computeDiffEntries(ctx, df);
