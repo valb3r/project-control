@@ -47,3 +47,13 @@
 </mat-expansion-panel>
 
 <h3>By user statistics (based on defined users)</h3>
+<mat-expansion-panel>
+  <mat-expansion-panel-header>
+    <mat-panel-title>
+      By user project commits
+    </mat-panel-title>
+  </mat-expansion-panel-header>
+  <ng-template matExpansionPanelContent>
+    <app-by-user-commits [project]="project"></app-by-user-commits>
+  </ng-template>
+</mat-expansion-panel>
