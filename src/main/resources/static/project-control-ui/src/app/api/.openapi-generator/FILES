@@ -67,6 +67,7 @@ model/item.ts
 model/jsonSchema.ts
 model/link.ts
 model/models.ts
+model/ownershipStats.ts
 model/removedLines.ts
 model/removedLinesWeeklyStats.ts
 model/representationModelAlias.ts
@@ -81,6 +82,5 @@ model/representationModelWeeklyCommitStats.ts
 model/totalOwnershipStats.ts
 model/user.ts
 model/weeklyCommitStats.ts
-model/weeklyOwnershipStats.ts
-model/weeklyWorkStats.ts
+model/workStats.ts
 variables.ts

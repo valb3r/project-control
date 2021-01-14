@@ -65,7 +65,7 @@ export class ProjectActivityComponent implements AfterContentInit {
     this.isLoading = true;
     let repoId = +Id.read(this.project._links.self.href);
     this.statistics.getTotalWorkDateRangesL(repoId).pipe(
-      flatMap(it => this.statistics.getTotalWeeklyWorkStatsLII(repoId, it.from, it.to))
+      flatMap(it => this.statistics.getTotalWorkStatsLII(repoId, it.from, it.to))
     ).subscribe(res => {
       const data = [];
       res.forEach(it => {data.push([Date.parse(it.from), it.totalCommits]) })

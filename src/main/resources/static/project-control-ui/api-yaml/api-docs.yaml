@@ -2053,6 +2053,38 @@ paths:
                   $ref: '#/components/schemas/RemovedLinesWeeklyStats'
         "404":
           description: Not Found
+  /v1/resources/statisticses/search/getTotalOwnershipStats:
+    get:
+      tags:
+        - statistics-search-controller
+      operationId: getTotalOwnershipStats_LII
+      parameters:
+        - name: repoId
+          in: query
+          schema:
+            type: integer
+            format: int64
+        - name: from
+          in: query
+          schema:
+            type: string
+            format: date-time
+        - name: to
+          in: query
+          schema:
+            type: string
+            format: date-time
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OwnershipStats'
+        "404":
+          description: Not Found
   /v1/resources/statisticses/search/getTotalRemovedLinesStats:
     get:
       tags:
@@ -2085,70 +2117,6 @@ paths:
                   $ref: '#/components/schemas/RemovedLinesWeeklyStats'
         "404":
           description: Not Found
-  /v1/resources/statisticses/search/getTotalWeeklyOwnershipStats:
-    get:
-      tags:
-        - statistics-search-controller
-      operationId: getTotalWeeklyOwnershipStats_LII
-      parameters:
-        - name: repoId
-          in: query
-          schema:
-            type: integer
-            format: int64
-        - name: from
-          in: query
-          schema:
-            type: string
-            format: date-time
-        - name: to
-          in: query
-          schema:
-            type: string
-            format: date-time
-      responses:
-        "200":
-          description: OK
-          content:
-            application/hal+json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/WeeklyOwnershipStats'
-        "404":
-          description: Not Found
-  /v1/resources/statisticses/search/getTotalWeeklyWorkStats:
-    get:
-      tags:
-        - statistics-search-controller
-      operationId: getTotalWeeklyWorkStats_LII
-      parameters:
-        - name: repoId
-          in: query
-          schema:
-            type: integer
-            format: int64
-        - name: from
-          in: query
-          schema:
-            type: string
-            format: date-time
-        - name: to
-          in: query
-          schema:
-            type: string
-            format: date-time
-      responses:
-        "200":
-          description: OK
-          content:
-            application/hal+json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/WeeklyWorkStats'
-        "404":
-          description: Not Found
   /v1/resources/statisticses/search/getTotalWorkDateRanges:
     get:
       tags:
@@ -2167,6 +2135,38 @@ paths:
             application/hal+json:
               schema:
                 $ref: '#/components/schemas/DateRange'
+        "404":
+          description: Not Found
+  /v1/resources/statisticses/search/getTotalWorkStats:
+    get:
+      tags:
+        - statistics-search-controller
+      operationId: getTotalWorkStats_LII
+      parameters:
+        - name: repoId
+          in: query
+          schema:
+            type: integer
+            format: int64
+        - name: from
+          in: query
+          schema:
+            type: string
+            format: date-time
+        - name: to
+          in: query
+          schema:
+            type: string
+            format: date-time
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/WorkStats'
         "404":
           description: Not Found
   /v1/resources/statisticses/search/getWeeklyOwnershipStats:
@@ -2203,7 +2203,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/WeeklyOwnershipStats'
+                  $ref: '#/components/schemas/OwnershipStats'
         "404":
           description: Not Found
   /v1/resources/statisticses/search/getWeeklyWorkStats:
@@ -2240,7 +2240,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/WeeklyWorkStats'
+                  $ref: '#/components/schemas/WorkStats'
         "404":
           description: Not Found
   /v1/resources/statisticses/search/getWorkDateRanges:
@@ -3817,6 +3817,34 @@ components:
           type: string
         user:
           $ref: '#/components/schemas/User'
+    CollectionModelEntityModelRemovedLines:
+      type: object
+      properties:
+        _embedded:
+          type: object
+          properties:
+            removedLineses:
+              type: array
+              items:
+                $ref: '#/components/schemas/EntityModelRemovedLines'
+        _links:
+          $ref: '#/components/schemas/Links'
+    EntityModelRemovedLines:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        removedLines:
+          minimum: 0
+          type: integer
+          format: int64
+        fromAuthor:
+          $ref: '#/components/schemas/Alias'
+        weekly:
+          $ref: '#/components/schemas/WeeklyCommitStats'
+        _links:
+          $ref: '#/components/schemas/Links'
     GitRepo:
       required:
         - analysisState
@@ -3867,6 +3895,10 @@ components:
           type: string
         lastAnalyzedCommit:
           type: string
+    Links:
+      type: object
+      additionalProperties:
+        $ref: '#/components/schemas/Link'
     RemovedLines:
       required:
         - fromAuthor
@@ -3936,61 +3968,11 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/RemovedLines'
-    RepresentationModelWeeklyCommitStats:
+    RepresentationModelRemovedLines:
       type: object
       properties:
         _links:
           $ref: '#/components/schemas/Links'
-    CollectionModelEntityModelWeeklyCommitStats:
-      type: object
-      properties:
-        _embedded:
-          type: object
-          properties:
-            weeklyCommitStatses:
-              type: array
-              items:
-                $ref: '#/components/schemas/EntityModelWeeklyCommitStats'
-        _links:
-          $ref: '#/components/schemas/Links'
-    EntityModelWeeklyCommitStats:
-      type: object
-      properties:
-        repo:
-          $ref: '#/components/schemas/GitRepo'
-        alias:
-          $ref: '#/components/schemas/Alias'
-        from:
-          type: string
-          format: date-time
-        to:
-          type: string
-          format: date-time
-        commitCount:
-          minimum: 0
-          type: integer
-          format: int64
-        linesAdded:
-          minimum: 0
-          type: integer
-          format: int64
-        linesRemoved:
-          minimum: 0
-          type: integer
-          format: int64
-        id:
-          type: integer
-          format: int64
-        linesRemovedOf:
-          type: array
-          items:
-            $ref: '#/components/schemas/RemovedLines'
-        _links:
-          $ref: '#/components/schemas/Links'
-    Links:
-      type: object
-      additionalProperties:
-        $ref: '#/components/schemas/Link'
     CollectionModelObject:
       type: object
       properties:
@@ -4003,7 +3985,33 @@ components:
                 type: object
         _links:
           $ref: '#/components/schemas/Links'
-    RepresentationModelUser:
+    CollectionModelEntityModelAlias:
+      type: object
+      properties:
+        _embedded:
+          type: object
+          properties:
+            aliases:
+              type: array
+              items:
+                $ref: '#/components/schemas/EntityModelAlias'
+        _links:
+          $ref: '#/components/schemas/Links'
+    EntityModelAlias:
+      type: object
+      properties:
+        repo:
+          $ref: '#/components/schemas/GitRepo'
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        user:
+          $ref: '#/components/schemas/User'
+        _links:
+          $ref: '#/components/schemas/Links'
+    RepresentationModelAlias:
       type: object
       properties:
         _links:
@@ -4034,283 +4042,7 @@ components:
             $ref: '#/components/schemas/Alias'
         _links:
           $ref: '#/components/schemas/Links'
-    RepresentationModelAlias:
-      type: object
-      properties:
-        _links:
-          $ref: '#/components/schemas/Links'
-    CollectionModelEntityModelAlias:
-      type: object
-      properties:
-        _embedded:
-          type: object
-          properties:
-            aliases:
-              type: array
-              items:
-                $ref: '#/components/schemas/EntityModelAlias'
-        _links:
-          $ref: '#/components/schemas/Links'
-    EntityModelAlias:
-      type: object
-      properties:
-        repo:
-          $ref: '#/components/schemas/GitRepo'
-        id:
-          type: integer
-          format: int64
-        name:
-          type: string
-        user:
-          $ref: '#/components/schemas/User'
-        _links:
-          $ref: '#/components/schemas/Links'
-    RepresentationModelRemovedLines:
-      type: object
-      properties:
-        _links:
-          $ref: '#/components/schemas/Links'
-    CollectionModelEntityModelRemovedLines:
-      type: object
-      properties:
-        _embedded:
-          type: object
-          properties:
-            removedLineses:
-              type: array
-              items:
-                $ref: '#/components/schemas/EntityModelRemovedLines'
-        _links:
-          $ref: '#/components/schemas/Links'
-    EntityModelRemovedLines:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-        removedLines:
-          minimum: 0
-          type: integer
-          format: int64
-        fromAuthor:
-          $ref: '#/components/schemas/Alias'
-        weekly:
-          $ref: '#/components/schemas/WeeklyCommitStats'
-        _links:
-          $ref: '#/components/schemas/Links'
-    FileExclusionRule:
-      required:
-        - name
-        - repo
-        - rule
-      type: object
-      properties:
-        repo:
-          $ref: '#/components/schemas/GitRepo'
-        id:
-          type: integer
-          format: int64
-        name:
-          type: string
-        rule:
-          type: string
-    RepresentationModelFileExclusionRule:
-      type: object
-      properties:
-        _links:
-          $ref: '#/components/schemas/Links'
-    CollectionModelEntityModelFileExclusionRule:
-      type: object
-      properties:
-        _embedded:
-          type: object
-          properties:
-            fileExclusionRules:
-              type: array
-              items:
-                $ref: '#/components/schemas/EntityModelFileExclusionRule'
-        _links:
-          $ref: '#/components/schemas/Links'
-    EntityModelFileExclusionRule:
-      type: object
-      properties:
-        repo:
-          $ref: '#/components/schemas/GitRepo'
-        id:
-          type: integer
-          format: int64
-        name:
-          type: string
-        rule:
-          type: string
-        _links:
-          $ref: '#/components/schemas/Links'
-    TotalOwnershipStats:
-      required:
-        - alias
-        - from
-        - repo
-        - to
-      type: object
-      properties:
-        repo:
-          $ref: '#/components/schemas/GitRepo'
-        alias:
-          $ref: '#/components/schemas/Alias'
-        id:
-          type: integer
-          format: int64
-        from:
-          type: string
-          format: date-time
-        to:
-          type: string
-          format: date-time
-        linesOwned:
-          minimum: 0
-          type: integer
-          format: int64
-    RepresentationModelTotalOwnershipStats:
-      type: object
-      properties:
-        _links:
-          $ref: '#/components/schemas/Links'
-    CollectionModelEntityModelTotalOwnershipStats:
-      type: object
-      properties:
-        _embedded:
-          type: object
-          properties:
-            totalOwnershipStatses:
-              type: array
-              items:
-                $ref: '#/components/schemas/EntityModelTotalOwnershipStats'
-        _links:
-          $ref: '#/components/schemas/Links'
-    EntityModelTotalOwnershipStats:
-      type: object
-      properties:
-        repo:
-          $ref: '#/components/schemas/GitRepo'
-        alias:
-          $ref: '#/components/schemas/Alias'
-        id:
-          type: integer
-          format: int64
-        from:
-          type: string
-          format: date-time
-        to:
-          type: string
-          format: date-time
-        linesOwned:
-          minimum: 0
-          type: integer
-          format: int64
-        _links:
-          $ref: '#/components/schemas/Links'
-    FileInclusionRule:
-      required:
-        - name
-        - repo
-        - rule
-      type: object
-      properties:
-        repo:
-          $ref: '#/components/schemas/GitRepo'
-        id:
-          type: integer
-          format: int64
-        name:
-          type: string
-        rule:
-          type: string
-    RepresentationModelFileInclusionRule:
-      type: object
-      properties:
-        _links:
-          $ref: '#/components/schemas/Links'
-    CollectionModelEntityModelFileInclusionRule:
-      type: object
-      properties:
-        _embedded:
-          type: object
-          properties:
-            fileInclusionRules:
-              type: array
-              items:
-                $ref: '#/components/schemas/EntityModelFileInclusionRule'
-        _links:
-          $ref: '#/components/schemas/Links'
-    EntityModelFileInclusionRule:
-      type: object
-      properties:
-        repo:
-          $ref: '#/components/schemas/GitRepo'
-        id:
-          type: integer
-          format: int64
-        name:
-          type: string
-        rule:
-          type: string
-        _links:
-          $ref: '#/components/schemas/Links'
-    WeeklyOwnershipStats:
-      type: object
-      properties:
-        from:
-          type: string
-          format: date-time
-        to:
-          type: string
-          format: date-time
-        linesOwned:
-          type: integer
-          format: int64
-    WeeklyWorkStats:
-      type: object
-      properties:
-        from:
-          type: string
-          format: date-time
-        to:
-          type: string
-          format: date-time
-        totalCommits:
-          type: integer
-          format: int64
-        linesAdded:
-          type: integer
-          format: int64
-        linesRemoved:
-          type: integer
-          format: int64
-    DateRange:
-      type: object
-      properties:
-        from:
-          type: string
-          format: date-time
-        to:
-          type: string
-          format: date-time
-    RemovedLinesWeeklyStats:
-      type: object
-      properties:
-        from:
-          type: string
-          format: date-time
-        to:
-          type: string
-          format: date-time
-        removedLinesOfOthers:
-          type: integer
-          format: int64
-        removedByOthersLines:
-          type: integer
-          format: int64
-    RepresentationModelGitRepo:
+    RepresentationModelUser:
       type: object
       properties:
         _links:
@@ -4371,6 +4103,274 @@ components:
           type: string
         lastAnalyzedCommit:
           type: string
+        _links:
+          $ref: '#/components/schemas/Links'
+    RepresentationModelGitRepo:
+      type: object
+      properties:
+        _links:
+          $ref: '#/components/schemas/Links'
+    CollectionModelEntityModelWeeklyCommitStats:
+      type: object
+      properties:
+        _embedded:
+          type: object
+          properties:
+            weeklyCommitStatses:
+              type: array
+              items:
+                $ref: '#/components/schemas/EntityModelWeeklyCommitStats'
+        _links:
+          $ref: '#/components/schemas/Links'
+    EntityModelWeeklyCommitStats:
+      type: object
+      properties:
+        repo:
+          $ref: '#/components/schemas/GitRepo'
+        alias:
+          $ref: '#/components/schemas/Alias'
+        from:
+          type: string
+          format: date-time
+        to:
+          type: string
+          format: date-time
+        commitCount:
+          minimum: 0
+          type: integer
+          format: int64
+        linesAdded:
+          minimum: 0
+          type: integer
+          format: int64
+        linesRemoved:
+          minimum: 0
+          type: integer
+          format: int64
+        id:
+          type: integer
+          format: int64
+        linesRemovedOf:
+          type: array
+          items:
+            $ref: '#/components/schemas/RemovedLines'
+        _links:
+          $ref: '#/components/schemas/Links'
+    RepresentationModelWeeklyCommitStats:
+      type: object
+      properties:
+        _links:
+          $ref: '#/components/schemas/Links'
+    CollectionModelEntityModelFileInclusionRule:
+      type: object
+      properties:
+        _embedded:
+          type: object
+          properties:
+            fileInclusionRules:
+              type: array
+              items:
+                $ref: '#/components/schemas/EntityModelFileInclusionRule'
+        _links:
+          $ref: '#/components/schemas/Links'
+    EntityModelFileInclusionRule:
+      type: object
+      properties:
+        repo:
+          $ref: '#/components/schemas/GitRepo'
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        rule:
+          type: string
+        _links:
+          $ref: '#/components/schemas/Links'
+    FileInclusionRule:
+      required:
+        - name
+        - repo
+        - rule
+      type: object
+      properties:
+        repo:
+          $ref: '#/components/schemas/GitRepo'
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        rule:
+          type: string
+    RepresentationModelFileInclusionRule:
+      type: object
+      properties:
+        _links:
+          $ref: '#/components/schemas/Links'
+    CollectionModelEntityModelFileExclusionRule:
+      type: object
+      properties:
+        _embedded:
+          type: object
+          properties:
+            fileExclusionRules:
+              type: array
+              items:
+                $ref: '#/components/schemas/EntityModelFileExclusionRule'
+        _links:
+          $ref: '#/components/schemas/Links'
+    EntityModelFileExclusionRule:
+      type: object
+      properties:
+        repo:
+          $ref: '#/components/schemas/GitRepo'
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        rule:
+          type: string
+        _links:
+          $ref: '#/components/schemas/Links'
+    FileExclusionRule:
+      required:
+        - name
+        - repo
+        - rule
+      type: object
+      properties:
+        repo:
+          $ref: '#/components/schemas/GitRepo'
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        rule:
+          type: string
+    RepresentationModelFileExclusionRule:
+      type: object
+      properties:
+        _links:
+          $ref: '#/components/schemas/Links'
+    WorkStats:
+      type: object
+      properties:
+        from:
+          type: string
+          format: date-time
+        to:
+          type: string
+          format: date-time
+        totalCommits:
+          type: integer
+          format: int64
+        linesAdded:
+          type: integer
+          format: int64
+        linesRemoved:
+          type: integer
+          format: int64
+    DateRange:
+      type: object
+      properties:
+        from:
+          type: string
+          format: date-time
+        to:
+          type: string
+          format: date-time
+    OwnershipStats:
+      type: object
+      properties:
+        from:
+          type: string
+          format: date-time
+        to:
+          type: string
+          format: date-time
+        linesOwned:
+          type: integer
+          format: int64
+    RemovedLinesWeeklyStats:
+      type: object
+      properties:
+        from:
+          type: string
+          format: date-time
+        to:
+          type: string
+          format: date-time
+        removedLinesOfOthers:
+          type: integer
+          format: int64
+        removedByOthersLines:
+          type: integer
+          format: int64
+    CollectionModelEntityModelTotalOwnershipStats:
+      type: object
+      properties:
+        _embedded:
+          type: object
+          properties:
+            totalOwnershipStatses:
+              type: array
+              items:
+                $ref: '#/components/schemas/EntityModelTotalOwnershipStats'
+        _links:
+          $ref: '#/components/schemas/Links'
+    EntityModelTotalOwnershipStats:
+      type: object
+      properties:
+        repo:
+          $ref: '#/components/schemas/GitRepo'
+        alias:
+          $ref: '#/components/schemas/Alias'
+        id:
+          type: integer
+          format: int64
+        from:
+          type: string
+          format: date-time
+        to:
+          type: string
+          format: date-time
+        linesOwned:
+          minimum: 0
+          type: integer
+          format: int64
+        _links:
+          $ref: '#/components/schemas/Links'
+    TotalOwnershipStats:
+      required:
+        - alias
+        - from
+        - repo
+        - to
+      type: object
+      properties:
+        repo:
+          $ref: '#/components/schemas/GitRepo'
+        alias:
+          $ref: '#/components/schemas/Alias'
+        id:
+          type: integer
+          format: int64
+        from:
+          type: string
+          format: date-time
+        to:
+          type: string
+          format: date-time
+        linesOwned:
+          minimum: 0
+          type: integer
+          format: int64
+    RepresentationModelTotalOwnershipStats:
+      type: object
+      properties:
         _links:
           $ref: '#/components/schemas/Links'
     Link:

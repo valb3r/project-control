@@ -36,6 +36,8 @@ import { RulesComponent } from './rules/rules.component';
 import { ProjectRulesComponent } from './components/project-rules/project-rules.component';
 import { ProjectActivityComponent } from './components/project-activity/project-activity.component';
 import {NgxEchartsModule} from "ngx-echarts";
+import { TotalCommitsComponent } from './components/reports/total-commits/total-commits.component';
+import { TotalChurnComponent } from './components/reports/total-churn/total-churn.component';
 
 export function apiConfigFactory(): Configuration {
   const params: ConfigurationParameters = {
@@ -58,7 +60,9 @@ export function apiConfigFactory(): Configuration {
     UserToAliasComponent,
     RulesComponent,
     ProjectRulesComponent,
-    ProjectActivityComponent
+    ProjectActivityComponent,
+    TotalCommitsComponent,
+    TotalChurnComponent
   ],
     imports: [
         ApiModule.forRoot(apiConfigFactory),
