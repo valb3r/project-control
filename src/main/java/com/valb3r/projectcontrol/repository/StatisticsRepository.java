@@ -43,7 +43,8 @@ public interface StatisticsRepository extends org.springframework.data.repositor
             "WITH a,r,u MATCH (a)<-[:OF]-(w:WeeklyCommitStats)-[:OF]->(r:GitRepo) WHERE w.from >= $from AND w.to <= $to " +
             "WITH w,a,u MATCH (r:RemovedLines)-[:OF]->(w) " +
             "WITH w,r,a,u MATCH (a)<-[:FROM]-(ro:RemovedLines)-[:OF]->(wo)-[:OF]->(ao:Alias) WHERE w.from = wo.from AND NOT (u)-[:ALIAS]->(ao:Alias) " +
-            "RETURN w.from AS from, w.to AS to, SUM(r.removedLines) AS removedLinesOfOthers, SUM(ro.removedLines) AS removedByOthersLines ORDER BY w.from")
+            "WITH w,r,a,u,ro MATCH (a)<-[:FROM]-(rmo:RemovedLines)-[:OF]->(wo)-[:OF]->(ao:Alias) WHERE w.from = wo.from AND (u)-[:ALIAS]->(ao:Alias) " +
+            "RETURN w.from AS from, w.to AS to, SUM(r.removedLines) AS removedLinesOfOthers, SUM(ro.removedLines) AS removedByOthersLines, SUM(rmo.removedLines) AS removedOwnLines ORDER BY w.from")
     RemovedLinesWeeklyStats[] getRemovedLinesStats(@Param("repoId") Long repoId, @Param("userId") Long userId, @Param("from") Instant from, @Param("to") Instant to);
 
     @Query("MATCH (u:User)-[:ALIAS]->(a:Alias)-[:OF]->(r:GitRepo) WHERE id(r) = $repoId " +

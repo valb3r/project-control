@@ -46,14 +46,74 @@
   </ng-template>
 </mat-expansion-panel>
 
-<h3>By user statistics (based on defined users)</h3>
+<h3>By user contribution statistics (based on defined users)</h3>
 <mat-expansion-panel>
   <mat-expansion-panel-header>
     <mat-panel-title>
-      By user project commits
+      Contribution by user project commits
     </mat-panel-title>
   </mat-expansion-panel-header>
   <ng-template matExpansionPanelContent>
     <app-by-user-commits [project]="project"></app-by-user-commits>
+  </ng-template>
+</mat-expansion-panel>
+
+
+<mat-expansion-panel>
+  <mat-expansion-panel-header>
+    <mat-panel-title>
+      Contribution by user project churn
+    </mat-panel-title>
+  </mat-expansion-panel-header>
+  <ng-template matExpansionPanelContent>
+    <app-by-user-churn [project]="project"></app-by-user-churn>
+  </ng-template>
+</mat-expansion-panel>
+
+
+<mat-expansion-panel>
+  <mat-expansion-panel-header>
+    <mat-panel-title>
+      Contribution by user project ownership
+    </mat-panel-title>
+  </mat-expansion-panel-header>
+  <ng-template matExpansionPanelContent>
+    <app-by-user-ownership [project]="project"></app-by-user-ownership>
+  </ng-template>
+</mat-expansion-panel>
+
+
+<mat-expansion-panel>
+  <mat-expansion-panel-header>
+    <mat-panel-title>
+      Contribution by user project removed lines from others
+    </mat-panel-title>
+  </mat-expansion-panel-header>
+  <ng-template matExpansionPanelContent>
+    <app-by-user-rework-from-others [project]="project"></app-by-user-rework-from-others>
+  </ng-template>
+</mat-expansion-panel>
+
+
+<mat-expansion-panel>
+  <mat-expansion-panel-header>
+    <mat-panel-title>
+      Contribution by user project removed lines by others
+    </mat-panel-title>
+  </mat-expansion-panel-header>
+  <ng-template matExpansionPanelContent>
+    <app-by-user-rework-by-others [project]="project"></app-by-user-rework-by-others>
+  </ng-template>
+</mat-expansion-panel>
+
+
+<mat-expansion-panel>
+  <mat-expansion-panel-header>
+    <mat-panel-title>
+      Contribution by user project removed own lines
+    </mat-panel-title>
+  </mat-expansion-panel-header>
+  <ng-template matExpansionPanelContent>
+    <app-by-user-rework-own [project]="project"></app-by-user-rework-own>
   </ng-template>
 </mat-expansion-panel>

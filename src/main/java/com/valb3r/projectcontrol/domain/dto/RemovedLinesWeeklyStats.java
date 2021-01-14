@@ -13,4 +13,5 @@ public class RemovedLinesWeeklyStats {
     private Instant to;
     private Long removedLinesOfOthers;
     private Long removedByOthersLines;
+    private Long removedOwnLines;
 }

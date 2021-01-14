@@ -2,7 +2,7 @@ import {AfterContentInit, Component, Input} from '@angular/core';
 import {EntityModelGitRepo, StatisticsSearchControllerService} from "../../../api";
 import {ChartsConfig} from "../charts-config";
 import {Id} from "../../../id";
-import {mergeMap} from "rxjs/internal/operators";
+import {mergeMap} from "rxjs/operators";
 
 @Component({
   selector: 'app-total-churn',

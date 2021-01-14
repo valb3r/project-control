@@ -1,38 +1,43 @@
 import {AfterContentInit, Component, Input, OnInit} from '@angular/core';
-import {EntityModelGitRepo, StatisticsSearchControllerService} from "../../../api";
+import {
+  EntityModelGitRepo,
+  EntityModelUser,
+  StatisticsSearchControllerService,
+  UserSearchControllerService
+} from "../../../api";
 import {ChartsConfig} from "../charts-config";
 import {Id} from "../../../id";
 import {mergeMap} from "rxjs/operators";
+import {ByUserComponent} from "../by-user.component";
 
 @Component({
   selector: 'app-by-user-churn',
   templateUrl: './by-user-churn.component.html',
   styleUrls: ['./by-user-churn.component.scss']
 })
-export class ByUserChurnComponent implements AfterContentInit {
+export class ByUserChurnComponent extends ByUserComponent {
 
   @Input() project: EntityModelGitRepo;
 
-  isLoading = false;
+  constructor(statistics: StatisticsSearchControllerService, userList: UserSearchControllerService) {
+    super(statistics, userList); }
 
-  options = ChartsConfig.defaultBarChart()
-  updatedOptions = undefined
-
-  constructor(private statistics: StatisticsSearchControllerService) { }
-
-  ngAfterContentInit(): void {
-    this.isLoading = true;
-    let repoId = +Id.read(this.project._links.self.href);
-    this.statistics.getTotalWorkDateRangesL(repoId).pipe(
-      mergeMap(it => this.statistics.getTotalRemovedLinesStatsLII(repoId, it.from, it.to))
-    ).subscribe(res => {
-      const data = [];
-      res.forEach(it => {data.push([Date.parse(it.from), it.removedLinesOfOthers]) })
-
-      this.isLoading = false;
-      let update = this.options;
-      update.series = [{type: 'bar', data: data}];
-      this.updatedOptions = update;
-    });
+  protected loadData(repoId: number, user: EntityModelUser) {
+    this.statistics.getWeeklyWorkStatsLLII(repoId, +Id.read(user._links.self.href), this.dateRange[0], this.dateRange[1])
+      .subscribe(
+        res => {
+          this.isLoading = false;
+          this.series.push({
+            href: user._links.self.href,
+            type: 'bar',
+            stack: true,
+            data: res.map(it => [Date.parse(it.from), it.linesAdded + it.linesRemoved]),
+            name: user.name
+          });
+          let update = ChartsConfig.defaultBarChart();
+          update.series = this.series;
+          this.updatedOptions = update;
+        }
+      )
   }
 }

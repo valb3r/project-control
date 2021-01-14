@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ByUserReworkComponent } from './by-user-rework.component';
+import { ByUserReworkOwnComponent } from './by-user-rework-own.component';
 
-describe('ByUserReworkComponent', () => {
-  let component: ByUserReworkComponent;
-  let fixture: ComponentFixture<ByUserReworkComponent>;
+describe('ByUserReworkOwnComponent', () => {
+  let component: ByUserReworkOwnComponent;
+  let fixture: ComponentFixture<ByUserReworkOwnComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ByUserReworkComponent ]
+      declarations: [ ByUserReworkOwnComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ByUserReworkComponent);
+    fixture = TestBed.createComponent(ByUserReworkOwnComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -1,1 +1,18 @@
-<p>by-user-ownership works!</p>
+<div>
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Users
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <mat-selection-list [multiple]="true" #usersSelected (selectionChange)="userSelectionChange($event)">
+      <mat-list-option *ngFor="let user of users" [value]="user">
+        {{user.name}}
+      </mat-list-option>
+    </mat-selection-list>
+  </mat-expansion-panel>
+
+  <div>
+    <div echarts [options]="options" [loading]="isLoading" [merge]="updatedOptions" theme="macarons" (chartInit)="onChartInit($event)"></div>
+  </div>
+</div>
