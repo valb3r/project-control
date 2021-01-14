@@ -23,6 +23,9 @@ public class RepoEventHandler {
     public void afterSave(GitRepo repo) {
         if (repo.getAnalysisState() == GitRepo.AnalysisState.CLEANUP) {
             gitRepo.deleteAnalyzedDataById(repo.getId());
+            repo.getWorkDoneBySteps().clear();
+            repo.setAnalysisState(GitRepo.AnalysisState.CLEANED);
+            gitRepo.save(repo);
             return;
         }
 
