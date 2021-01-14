@@ -47,6 +47,7 @@ import {MatExpansionModule} from "@angular/material/expansion";
 import { ByUserReworkByOthersComponent } from './components/reports/by-user-rework-by-others/by-user-rework-by-others.component';
 import { ByUserReworkFromOthersComponent } from './components/reports/by-user-rework-from-others/by-user-rework-from-others.component';
 import { ByUserReworkOwnComponent } from './components/reports/by-user-rework-own/by-user-rework-own.component';
+import { ByUserWorkDetailsComponent } from './components/reports/by-user-work-details/by-user-work-details.component';
 
 export function apiConfigFactory(): Configuration {
   const params: ConfigurationParameters = {
@@ -79,7 +80,8 @@ export function apiConfigFactory(): Configuration {
     ByUserOwnershipComponent,
     ByUserReworkByOthersComponent,
     ByUserReworkFromOthersComponent,
-    ByUserReworkOwnComponent
+    ByUserReworkOwnComponent,
+    ByUserWorkDetailsComponent
   ],
     imports: [
         ApiModule.forRoot(apiConfigFactory),
