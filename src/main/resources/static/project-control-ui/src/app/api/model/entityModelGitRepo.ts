@@ -28,9 +28,10 @@ export interface EntityModelGitRepo {
     _links?: { [key: string]: Link; };
 }
 export namespace EntityModelGitRepo {
-    export type AnalysisStateEnum = 'NONE' | 'STARTED' | 'CLONING' | 'CLONED' | 'CHURN_COUNTING' | 'CHURN_COUNTED' | 'LOC_OWNERSHIP_COUNTING' | 'LOC_OWNERSHIP_COUNTED' | 'REFACTOR_COUNTING' | 'REFACTOR_COUNTED' | 'FINISHED' | 'FAILED';
+    export type AnalysisStateEnum = 'NONE' | 'CLEANUP' | 'STARTED' | 'CLONING' | 'CLONED' | 'CHURN_COUNTING' | 'CHURN_COUNTED' | 'LOC_OWNERSHIP_COUNTING' | 'LOC_OWNERSHIP_COUNTED' | 'REFACTOR_COUNTING' | 'REFACTOR_COUNTED' | 'FINISHED' | 'FAILED';
     export const AnalysisStateEnum = {
         None: 'NONE' as AnalysisStateEnum,
+        Cleanup: 'CLEANUP' as AnalysisStateEnum,
         Started: 'STARTED' as AnalysisStateEnum,
         Cloning: 'CLONING' as AnalysisStateEnum,
         Cloned: 'CLONED' as AnalysisStateEnum,

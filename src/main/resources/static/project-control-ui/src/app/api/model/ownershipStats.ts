@@ -9,11 +9,11 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { Link } from './link';
 
 
-export interface EntityModelStatistics { 
-    id?: number;
-    _links?: { [key: string]: Link; };
+export interface OwnershipStats { 
+    from?: string;
+    to?: string;
+    linesOwned?: number;
 }
 

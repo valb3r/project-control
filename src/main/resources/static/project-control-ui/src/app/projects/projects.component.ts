@@ -64,4 +64,9 @@ export class ProjectsComponent implements AfterViewInit {
   deleteRepo(repo: EntityModelGitRepo) {
     this.gitRepoes.deleteItemResourceGitrepoDelete(Id.read(repo._links.self.href)).subscribe(_ => {this.paginator.page.emit()});
   }
+
+  cleanAnalyzedDataOfRepo(repo: EntityModelGitRepo) {
+    this.gitRepoes.patchItemResourceGitrepoPatch(Id.read(repo._links.self.href), {analysisState: AnalysisStateEnum.Cleanup} as GitRepo)
+      .subscribe(_ => {this.paginator.page.emit()}, error => {console.log("Error", error)});
+  }
 }

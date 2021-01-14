@@ -99,6 +99,7 @@ public class GitRepo {
 
     public enum AnalysisState {
         NONE,
+        CLEANUP,
         STARTED,
         CLONING,
         CLONED,

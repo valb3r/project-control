@@ -11,9 +11,11 @@
  */
 
 
-export interface WeeklyOwnershipStats { 
+export interface WorkStats { 
     from?: string;
     to?: string;
-    linesOwned?: number;
+    totalCommits?: number;
+    linesAdded?: number;
+    linesRemoved?: number;
 }
 

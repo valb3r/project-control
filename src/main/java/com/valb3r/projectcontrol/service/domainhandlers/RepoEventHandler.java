@@ -2,6 +2,7 @@ package com.valb3r.projectcontrol.service.domainhandlers;
 
 import com.valb3r.projectcontrol.config.annotation.AfterSaveDo;
 import com.valb3r.projectcontrol.domain.GitRepo;
+import com.valb3r.projectcontrol.repository.GitRepoRepository;
 import com.valb3r.projectcontrol.service.analyze.RepoAnalyzer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,14 +16,18 @@ import org.springframework.transaction.annotation.Transactional;
 public class RepoEventHandler {
 
     private final RepoAnalyzer analyzer;
+    private final GitRepoRepository gitRepo;
 
     @AfterSaveDo
     @Transactional(propagation = Propagation.MANDATORY)
     public void afterSave(GitRepo repo) {
-        if (repo.getAnalysisState() != GitRepo.AnalysisState.STARTED) {
+        if (repo.getAnalysisState() == GitRepo.AnalysisState.CLEANUP) {
+            gitRepo.deleteAnalyzedDataById(repo.getId());
             return;
         }
 
-        analyzer.analyze(repo);
+        if (repo.getAnalysisState() == GitRepo.AnalysisState.STARTED) {
+            analyzer.analyze(repo);
+        }
     }
 }
