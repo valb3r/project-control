@@ -28,16 +28,23 @@ import {AddProjectDialogComponent} from './dialogs/add-project-dialog/add-projec
 import {MatDialogModule} from "@angular/material/dialog";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {MatProgressBarModule} from "@angular/material/progress-bar";
-import { UserToAliasComponent } from './components/alias-list/user-to-alias.component';
+import {UserToAliasComponent} from './components/alias-list/user-to-alias.component';
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {MatOptionModule} from "@angular/material/core";
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
-import { RulesComponent } from './rules/rules.component';
-import { ProjectRulesComponent } from './components/project-rules/project-rules.component';
-import { ProjectActivityComponent } from './components/project-activity/project-activity.component';
+import {RulesComponent} from './rules/rules.component';
+import {ProjectRulesComponent} from './components/project-rules/project-rules.component';
+import {ProjectActivityComponent} from './components/project-activity/project-activity.component';
 import {NgxEchartsModule} from "ngx-echarts";
-import { TotalCommitsComponent } from './components/reports/total-commits/total-commits.component';
-import { TotalChurnComponent } from './components/reports/total-churn/total-churn.component';
+import {TotalCommitsComponent} from './components/reports/total-commits/total-commits.component';
+import {TotalChurnComponent} from './components/reports/total-churn/total-churn.component';
+import {TotalLinesCountComponent} from './components/reports/total-lines-count/total-lines-count.component';
+import {ByUserCommitsComponent} from './components/reports/by-user-commits/by-user-commits.component';
+import {ByUserChurnComponent} from './components/reports/by-user-churn/by-user-churn.component';
+import {TotalReworkComponent} from './components/reports/total-rework/total-rework.component';
+import {ByUserReworkComponent} from './components/reports/by-user-rework/by-user-rework.component';
+import {ByUserOwnershipComponent} from './components/reports/by-user-ownership/by-user-ownership.component';
+import {MatExpansionModule} from "@angular/material/expansion";
 
 export function apiConfigFactory(): Configuration {
   const params: ConfigurationParameters = {
@@ -62,7 +69,13 @@ export function apiConfigFactory(): Configuration {
     ProjectRulesComponent,
     ProjectActivityComponent,
     TotalCommitsComponent,
-    TotalChurnComponent
+    TotalChurnComponent,
+    TotalLinesCountComponent,
+    ByUserCommitsComponent,
+    ByUserChurnComponent,
+    TotalReworkComponent,
+    ByUserReworkComponent,
+    ByUserOwnershipComponent
   ],
     imports: [
         ApiModule.forRoot(apiConfigFactory),
@@ -84,6 +97,7 @@ export function apiConfigFactory(): Configuration {
         MatPaginatorModule,
         MatFormFieldModule,
         MatAutocompleteModule,
+        MatExpansionModule,
         ReactiveFormsModule,
         FlexLayoutModule,
         MatInputModule,

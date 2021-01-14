@@ -1,1 +1,46 @@
-<div echarts [options]="options" [loading]="isLoading" [merge]="updatedOptions" theme="macarons"></div>
+<mat-expansion-panel>
+  <mat-expansion-panel-header>
+    <mat-panel-title>
+      Total project commits
+    </mat-panel-title>
+  </mat-expansion-panel-header>
+  <ng-template matExpansionPanelContent>
+    <app-total-commits [project]="project"></app-total-commits>
+  </ng-template>
+</mat-expansion-panel>
+
+
+<mat-expansion-panel>
+  <mat-expansion-panel-header>
+    <mat-panel-title>
+      Total project churn
+    </mat-panel-title>
+  </mat-expansion-panel-header>
+  <ng-template matExpansionPanelContent>
+    <app-total-churn [project]="project"></app-total-churn>
+  </ng-template>
+</mat-expansion-panel>
+
+
+<mat-expansion-panel>
+  <mat-expansion-panel-header>
+    <mat-panel-title>
+      Total attributable (owned) code (lines including comments, etc.)
+    </mat-panel-title>
+  </mat-expansion-panel-header>
+  <ng-template matExpansionPanelContent>
+    <app-total-lines-count [project]="project"></app-total-lines-count>
+  </ng-template>
+</mat-expansion-panel>
+
+
+<mat-expansion-panel>
+  <mat-expansion-panel-header>
+    <mat-panel-title>
+      Total rework code (lines including comments, etc.)
+    </mat-panel-title>
+  </mat-expansion-panel-header>
+  <ng-template matExpansionPanelContent>
+    <app-total-rework [project]="project"></app-total-rework>
+  </ng-template>
+</mat-expansion-panel>
