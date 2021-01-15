@@ -90,7 +90,7 @@ public class CodeOwnershipAnalyzer extends CommitBasedAnalyzer implements Analys
             var end = weekEnd(lastCommitInWeek.getAuthorIdent().getWhen().toInstant());
             var stats = totalOwnershipStatsRepository.findBy(stat.getKey().getId(), start)
                     .orElseGet(() -> TotalOwnershipStats.builder().repo(ctx.getRepo()).alias(stat.getKey()).linesOwned(0L).from(start).to(end).build());
-            stats.setLinesOwned(stat.getValue());
+            stats.setLinesOwned(Math.max(stat.getValue(), stats.getLinesOwned()));
             totalOwnershipStatsRepository.save(stats);
             log.debug("OWNERSHIP[{}]: Saved {} of {} with {} owned lines", ctx.getCommit().getId(), start, stat.getKey().getName(), stats.getLinesOwned());
         }
