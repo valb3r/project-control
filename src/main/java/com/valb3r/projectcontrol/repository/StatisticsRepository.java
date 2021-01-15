@@ -30,12 +30,12 @@ public interface StatisticsRepository extends org.springframework.data.repositor
     OwnershipStats[] getWeeklyOwnershipStats(@Param("repoId") Long repoId, @Param("userId") Long userId, @Param("from") Instant from, @Param("to") Instant to);
 
     // Note - Spring Data REST handles `Iterable` result from query incorrectly - assumes it is CollectionModel
-    @Query("MATCH (a:Alias)<-[:OF]-(w:WeeklyCommitStats)-[:OF]->(r:GitRepo) WHERE w.from >= $from AND w.to <= $to " +
+    @Query("MATCH (a:Alias)<-[:OF]-(w:WeeklyCommitStats)-[:OF]->(r:GitRepo) WHERE id(r) = $repoId AND w.from >= $from AND w.to <= $to " +
             "RETURN w.from AS from, w.to AS to, SUM(w.commitCount) AS totalCommits, sum(w.linesAdded) AS linesAdded, sum(w.linesRemoved) AS linesRemoved ORDER BY w.from")
     WorkStats[] getTotalWorkStats(@Param("repoId") Long repoId, @Param("from") Instant from, @Param("to") Instant to);
 
     // Note - Spring Data REST handles `Iterable` result from query incorrectly - assumes it is CollectionModel
-    @Query("MATCH (a:Alias)<-[:OF]-(w:TotalOwnershipStats)-[:OF]->(r:GitRepo) WHERE w.from >= $from AND w.to <= $to " +
+    @Query("MATCH (a:Alias)<-[:OF]-(w:TotalOwnershipStats)-[:OF]->(r:GitRepo) WHERE id(r) = $repoId AND w.from >= $from AND w.to <= $to " +
             "RETURN w.from AS from, w.to AS to, SUM(w.linesOwned) AS linesOwned ORDER BY w.from")
     OwnershipStats[] getTotalOwnershipStats(@Param("repoId") Long repoId, @Param("from") Instant from, @Param("to") Instant to);
 

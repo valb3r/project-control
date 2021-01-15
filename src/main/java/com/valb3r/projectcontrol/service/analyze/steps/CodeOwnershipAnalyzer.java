@@ -52,20 +52,18 @@ public class CodeOwnershipAnalyzer extends CommitBasedAnalyzer implements Analys
     @SneakyThrows
     protected void processCommit(CommitCtx ctx) {
         log.debug("OWNERSHIP[{}]: Processing", ctx.getCommit().getId());
-        RevCommit target = ctx.getCommit();
+        RevCommit lastCommitInWeek = ctx.getCommit();
         if (null != ctx.getPrevCommit()) {
             if (weekStart(ctx.getPrevCommit().getAuthorIdent().getWhen().toInstant()).equals(weekStart(ctx.getCommit().getAuthorIdent().getWhen().toInstant()))) {
                 log.debug("OWNERSHIP[{}]: Same week as previous", ctx.getCommit().getId());
                 return;
             }
-
-            target = ctx.getPrevCommit();
         }
 
         var stateless = ctx.getContainer().newStatelessKieSession();
         Map<Alias, Long> owned = new HashMap<>();
         try (var treeWalk = new TreeWalk(ctx.getGit().getRepository())) {
-            var tree = ctx.getWalk().parseTree(target.getTree().getId());
+            var tree = ctx.getWalk().parseTree(lastCommitInWeek.getTree().getId());
             treeWalk.addTree(tree);
             treeWalk.setRecursive(true);
             while (treeWalk.next()) {
@@ -76,7 +74,7 @@ public class CodeOwnershipAnalyzer extends CommitBasedAnalyzer implements Analys
                     continue;
                 }
 
-                BlameResult result = ctx.getGit().blame().setStartCommit(target).setFilePath(treeWalk.getPathString())
+                BlameResult result = ctx.getGit().blame().setStartCommit(lastCommitInWeek).setFilePath(treeWalk.getPathString())
                         .setTextComparator(RawTextComparator.WS_IGNORE_ALL).setFollowFileRenames(true).call();
                 RawText rawText = result.getResultContents();
                 for (int i = 0; i < rawText.size(); i++) {
@@ -88,8 +86,8 @@ public class CodeOwnershipAnalyzer extends CommitBasedAnalyzer implements Analys
         }
 
         for (var stat : owned.entrySet()) {
-            var start = weekStart(target.getAuthorIdent().getWhen().toInstant());
-            var end = weekEnd(target.getAuthorIdent().getWhen().toInstant());
+            var start = weekStart(lastCommitInWeek.getAuthorIdent().getWhen().toInstant());
+            var end = weekEnd(lastCommitInWeek.getAuthorIdent().getWhen().toInstant());
             var stats = totalOwnershipStatsRepository.findBy(stat.getKey().getId(), start)
                     .orElseGet(() -> TotalOwnershipStats.builder().repo(ctx.getRepo()).alias(stat.getKey()).linesOwned(0L).from(start).to(end).build());
             stats.setLinesOwned(stat.getValue());
