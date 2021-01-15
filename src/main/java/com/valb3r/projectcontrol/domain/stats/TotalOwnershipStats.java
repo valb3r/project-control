@@ -35,15 +35,19 @@ public class TotalOwnershipStats extends Accountable {
     @NotNull(groups = OnSaveValidationGroup.class)
     private Instant to;
 
+    @NotNull(groups = OnSaveValidationGroup.class)
+    private Instant trueCommitTime;
+
     @Min(value = 0, groups = OnSaveValidationGroup.class)
     protected long linesOwned;
 
     @Builder
-    public TotalOwnershipStats(GitRepo repo, Alias alias, Long id, @NotNull(groups = OnSaveValidationGroup.class) Instant from, @NotNull(groups = OnSaveValidationGroup.class) Instant to, @Min(value = 0, groups = OnSaveValidationGroup.class) long linesOwned) {
+    public TotalOwnershipStats(GitRepo repo, Alias alias, Long id, @NotNull(groups = OnSaveValidationGroup.class) Instant from, @NotNull(groups = OnSaveValidationGroup.class) Instant to, @Min(value = 0, groups = OnSaveValidationGroup.class) long linesOwned, Instant trueCommitTime) {
         super(repo, alias);
         this.id = id;
         this.from = from;
         this.to = to;
+        this.trueCommitTime = trueCommitTime;
         this.linesOwned = linesOwned;
     }
 }
