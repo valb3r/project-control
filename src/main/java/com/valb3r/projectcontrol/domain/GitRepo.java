@@ -18,6 +18,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -89,7 +90,7 @@ public class GitRepo {
     }
 
     private Map<String, AnalyzedRange> ranges() {
-        Map<String, AnalyzedRange> ranges = new HashMap<>();
+        Map<String, AnalyzedRange> ranges = new LinkedHashMap<>();
         workDoneBySteps.forEach(it -> {
             var split = it.split(":");
             ranges.put(split[0], new AnalyzedRange(split[1], split[2]));
