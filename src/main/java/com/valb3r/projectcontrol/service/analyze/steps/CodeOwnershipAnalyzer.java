@@ -58,7 +58,7 @@ public class CodeOwnershipAnalyzer extends CommitBasedAnalyzer implements Analys
         RevCommit lastCommitInWeek = ctx.getCommit();
         Instant commitDate = ctx.getCommit().getCommitterIdent().getWhen().toInstant();
         if (null != ctx.getPrevCommit()) {
-            if (weekStart(ctx.getPrevCommit().getAuthorIdent().getWhen().toInstant()).equals(weekStart(commitDate))) {
+            if (weekStart(ctx.getPrevCommit().getCommitterIdent().getWhen().toInstant()).equals(weekStart(commitDate))) {
                 log.debug("OWNERSHIP[{}]: Same week as previous", ctx.getCommit().getId());
                 return;
             }
