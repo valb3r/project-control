@@ -10,6 +10,7 @@ import com.valb3r.projectcontrol.repository.FileInclusionRuleRepository;
 import com.valb3r.projectcontrol.repository.TotalOwnershipStatsRepository;
 import com.valb3r.projectcontrol.service.analyze.StateUpdatingService;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.eclipse.jgit.blame.BlameResult;
 import org.eclipse.jgit.diff.RawText;
 import org.eclipse.jgit.diff.RawTextComparator;
@@ -25,6 +26,7 @@ import java.util.Map;
 import static com.valb3r.projectcontrol.service.analyze.DateUtil.weekEnd;
 import static com.valb3r.projectcontrol.service.analyze.DateUtil.weekStart;
 
+@Slf4j
 @Order(2)
 @Service
 public class CodeOwnershipAnalyzer extends CommitBasedAnalyzer implements AnalysisStep {
@@ -49,9 +51,11 @@ public class CodeOwnershipAnalyzer extends CommitBasedAnalyzer implements Analys
     @Override
     @SneakyThrows
     protected void processCommit(CommitCtx ctx) {
+        log.debug("OWNERSHIP[{}]: Processing", ctx.getCommit().getId());
         RevCommit target = ctx.getCommit();
         if (null != ctx.getPrevCommit()) {
             if (weekStart(ctx.getPrevCommit().getAuthorIdent().getWhen().toInstant()).equals(weekStart(ctx.getCommit().getAuthorIdent().getWhen().toInstant()))) {
+                log.debug("OWNERSHIP[{}]: Same week as previous", ctx.getCommit().getId());
                 return;
             }
 
@@ -90,6 +94,7 @@ public class CodeOwnershipAnalyzer extends CommitBasedAnalyzer implements Analys
                     .orElseGet(() -> TotalOwnershipStats.builder().repo(ctx.getRepo()).alias(stat.getKey()).linesOwned(0L).from(start).to(end).build());
             stats.setLinesOwned(stat.getValue());
             totalOwnershipStatsRepository.save(stats);
+            log.debug("OWNERSHIP[{}]: Saved {} of {} with {} owned lines", ctx.getCommit().getId(), start, stat.getKey().getName(), stats.getLinesOwned());
         }
     }
 }

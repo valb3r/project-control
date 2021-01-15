@@ -29,3 +29,8 @@ pcontrol:
     full-text:
       indexes:
         USER: CALL db.index.fulltext.createNodeIndex("%", ["User"],["name"])
+
+
+logging:
+  level:
+    com.valb3r.projectcontrol: DEBUG

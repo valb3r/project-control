@@ -15,6 +15,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.eclipse.jgit.blame.BlameResult;
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.diff.DiffFormatter;
@@ -38,6 +39,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import static com.valb3r.projectcontrol.service.analyze.DateUtil.weekEnd;
 import static com.valb3r.projectcontrol.service.analyze.DateUtil.weekStart;
 
+@Slf4j
 @Order(1)
 @Service
 public class ChurnAnalyzer extends CommitBasedAnalyzer {
@@ -63,6 +65,7 @@ public class ChurnAnalyzer extends CommitBasedAnalyzer {
 
     @Override
     protected void processCommit(CommitCtx ctx) {
+        log.debug("CHURN[{}]: Processing", ctx.getCommit().getId());
         var name = ctx.getCommit().getAuthorIdent().getName();
         var alias = alias(name, ctx);
         var analyzed = analyzeCommit(
@@ -88,6 +91,8 @@ public class ChurnAnalyzer extends CommitBasedAnalyzer {
         });
 
         commitStatsRepo.save(stat);
+        log.debug("CHURN[{}]: Saved {} of {} with churn {} (+{} -{})", ctx.getCommit().getId(), weekStart(analyzed.getDate()),
+                alias.getName(), stat.getLinesAdded() + stat.getLinesRemoved(), stat.getLinesAdded(), stat.getLinesRemoved());
     }
 
     private WeeklyCommitStats weeklyStat(CommitCtx ctx, Alias alias, CommitStat analyzed) {
