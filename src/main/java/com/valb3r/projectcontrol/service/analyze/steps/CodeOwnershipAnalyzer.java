@@ -20,12 +20,15 @@ import org.eclipse.jgit.treewalk.TreeWalk;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 
 import static com.valb3r.projectcontrol.service.analyze.DateUtil.weekEnd;
 import static com.valb3r.projectcontrol.service.analyze.DateUtil.weekStart;
 
+/// !!!! IMPORTANT Code ownership is related to commit date and not to authored date
+/// Only when commit reaches target branch we can attribute code ownership!
 @Slf4j
 @Order(2)
 @Service
@@ -53,8 +56,9 @@ public class CodeOwnershipAnalyzer extends CommitBasedAnalyzer implements Analys
     protected void processCommit(CommitCtx ctx) {
         log.debug("OWNERSHIP[{}]: Processing", ctx.getCommit().getId());
         RevCommit lastCommitInWeek = ctx.getCommit();
+        Instant commitDate = ctx.getCommit().getCommitterIdent().getWhen().toInstant();
         if (null != ctx.getPrevCommit()) {
-            if (weekStart(ctx.getPrevCommit().getAuthorIdent().getWhen().toInstant()).equals(weekStart(ctx.getCommit().getAuthorIdent().getWhen().toInstant()))) {
+            if (weekStart(ctx.getPrevCommit().getAuthorIdent().getWhen().toInstant()).equals(weekStart(commitDate))) {
                 log.debug("OWNERSHIP[{}]: Same week as previous", ctx.getCommit().getId());
                 return;
             }
@@ -67,7 +71,7 @@ public class CodeOwnershipAnalyzer extends CommitBasedAnalyzer implements Analys
             treeWalk.addTree(tree);
             treeWalk.setRecursive(true);
             while (treeWalk.next()) {
-                var context = new RuleContext(treeWalk.getPathString(), ctx.getCommit().getAuthorIdent().getName(), ctx.getCommit().getAuthorIdent().getWhen().toInstant());
+                var context = new RuleContext(treeWalk.getPathString(), ctx.getCommit().getAuthorIdent().getName(), commitDate);
                 stateless.execute(context);
 
                 if (context.isExclude() || (!context.isInclude() && ctx.isHasInclusionRules())) {
@@ -85,9 +89,12 @@ public class CodeOwnershipAnalyzer extends CommitBasedAnalyzer implements Analys
             }
         }
 
+        /// !!!! IMPORTANT Code ownership is related to commit date and not to authored date
+        /// Only when commit reaches target branch we can attribute code ownership!
+        Instant attributionDate = lastCommitInWeek.getCommitterIdent().getWhen().toInstant();
         for (var stat : owned.entrySet()) {
-            var start = weekStart(lastCommitInWeek.getAuthorIdent().getWhen().toInstant());
-            var end = weekEnd(lastCommitInWeek.getAuthorIdent().getWhen().toInstant());
+            var start = weekStart(attributionDate);
+            var end = weekEnd(attributionDate);
             var stats = totalOwnershipStatsRepository.findBy(stat.getKey().getId(), start)
                     .orElseGet(() -> TotalOwnershipStats.builder().repo(ctx.getRepo()).alias(stat.getKey()).linesOwned(0L).from(start).to(end).build());
             stats.setLinesOwned(Math.max(stat.getValue(), stats.getLinesOwned()));
