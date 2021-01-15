@@ -39,6 +39,7 @@ public interface StatisticsRepository extends org.springframework.data.repositor
             "RETURN w.from AS from, w.to AS to, SUM(w.linesOwned) AS linesOwned ORDER BY w.from")
     OwnershipStats[] getTotalOwnershipStats(@Param("repoId") Long repoId, @Param("from") Instant from, @Param("to") Instant to);
 
+    // TODO: FIXME - wrong query
     @Query("MATCH (u:User)-[:ALIAS]->(a:Alias)-[:OF]->(r:GitRepo) WHERE id(r) = $repoId AND id(u) = $userId " +
             "WITH a,r,u MATCH (a)<-[:OF]-(w:WeeklyCommitStats)-[:OF]->(r:GitRepo) WHERE w.from >= $from AND w.to <= $to " +
             "WITH w,a,u MATCH (r:RemovedLines)-[:OF]->(w) " +
