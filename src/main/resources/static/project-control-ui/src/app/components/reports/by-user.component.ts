@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, ViewChild} from "@angular/core";
+import {AfterContentInit, Component, Input, OnInit, ViewChild} from "@angular/core";
 
 import {MatSelectionList, MatSelectionListChange} from "@angular/material/list";
 import {BehaviorSubject, zip} from "rxjs";
@@ -12,7 +12,7 @@ import {ChartsConfig} from "./charts-config";
 import {Id} from "../../id";
 
 @Component({template: ''})
-export abstract class ByUserComponent implements OnInit {
+export abstract class ByUserComponent implements OnInit, AfterContentInit {
   @Input() abstract project: EntityModelGitRepo;
   @ViewChild("usersSelected") usersSelected: MatSelectionList;
 
@@ -50,6 +50,10 @@ export abstract class ByUserComponent implements OnInit {
     ).subscribe(_ => {
       this.doSelect();
     })
+  }
+
+  ngAfterContentInit(): void {
+    this.afterLoaded.next(null);
   }
 
   doSelect() {

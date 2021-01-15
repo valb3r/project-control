@@ -1,8 +1,8 @@
 import {AfterContentInit, Component, Input} from '@angular/core';
 import {EntityModelGitRepo, StatisticsSearchControllerService} from "../../../api";
 import {Id} from "../../../id";
-import {flatMap} from "rxjs/internal/operators";
 import {ChartsConfig} from "../charts-config";
+import {mergeMap} from "rxjs/operators";
 
 @Component({
   selector: 'app-total-commits',
@@ -24,7 +24,7 @@ export class TotalCommitsComponent implements AfterContentInit {
     this.isLoading = true;
     let repoId = +Id.read(this.project._links.self.href);
     this.statistics.getTotalWorkDateRangesL(repoId).pipe(
-      flatMap(it => this.statistics.getTotalWorkStatsLII(repoId, it.from, it.to))
+      mergeMap(it => this.statistics.getTotalWorkStatsLII(repoId, it.from, it.to))
     ).subscribe(res => {
       const data = [];
       res.forEach(it => {data.push([Date.parse(it.from), it.totalCommits]) })
