@@ -20,7 +20,6 @@ import org.eclipse.jgit.treewalk.TreeWalk;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -86,33 +85,14 @@ public class CodeOwnershipAnalyzer extends CommitBasedAnalyzer implements Analys
             }
         }
 
-        Instant commitAuthoredTime = lastCommitInWeek.getAuthorIdent().getWhen().toInstant();
         for (var stat : owned.entrySet()) {
-            var start = weekStart(commitAuthoredTime);
-            var end = weekEnd(commitAuthoredTime);
-            var stats = totalOwnershipStatsRepository.findBy(stat.getKey().getId(), start);
-            TotalOwnershipStats toSave = null;
-            if (stats.isEmpty()) {
-                toSave = TotalOwnershipStats.builder()
-                        .repo(ctx.getRepo()).alias(stat.getKey())
-                        .linesOwned(stat.getValue())
-                        .from(start)
-                        .to(end)
-                        .trueCommitTime(commitAuthoredTime)
-                        .build();
-                totalOwnershipStatsRepository.save(toSave);
-            } else if (stats.get().getTrueCommitTime().isBefore(commitAuthoredTime)){
-                toSave = stats.get();
-                toSave.setLinesOwned(stat.getValue());
-                toSave.setTrueCommitTime(commitAuthoredTime);
-                totalOwnershipStatsRepository.save(toSave);
-            }
-
-            if (null != toSave) {
-                log.debug("OWNERSHIP[{}]: Saved {} of {} with {} owned lines", ctx.getCommit().getId(), start, stat.getKey().getName(), toSave.getLinesOwned());
-            } else {
-                log.debug("OWNERSHIP[{}]: Discard {} of {}", ctx.getCommit().getId(), start, stat.getKey().getName());
-            }
+            var start = weekStart(lastCommitInWeek.getAuthorIdent().getWhen().toInstant());
+            var end = weekEnd(lastCommitInWeek.getAuthorIdent().getWhen().toInstant());
+            var stats = totalOwnershipStatsRepository.findBy(stat.getKey().getId(), start)
+                    .orElseGet(() -> TotalOwnershipStats.builder().repo(ctx.getRepo()).alias(stat.getKey()).linesOwned(0L).from(start).to(end).build());
+            stats.setLinesOwned(stat.getValue());
+            totalOwnershipStatsRepository.save(stats);
+            log.debug("OWNERSHIP[{}]: Saved {} of {} with {} owned lines", ctx.getCommit().getId(), start, stat.getKey().getName(), stats.getLinesOwned());
         }
     }
 }
