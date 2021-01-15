@@ -38,12 +38,22 @@ export class ByUserWorkDetailsComponent extends ByUserComponent {
       this.isLoading = false;
       this.series = [];
       const xData = [];
+      res.forEach(it => it.forEach(data => {
+        if (!xData.includes(data.from)) {
+          xData.push(data.from);
+        }
+      }));
+      xData.sort()
+      const workMap = new Map(res[0].map(it => [it.from, it]));
+      const ownershipMap = new Map(res[1].map(it => [it.from, it]));
+      const removedMap = new Map(res[2].map(it => [it.from, it]));
+
       this.series.push({
         href: user._links.self.href,
         type: 'bar',
         stack: 'churn',
         yAxisIndex: 0,
-        data: res[0].map(it => it.linesAdded),
+        data: xData.map(it => workMap.get(it)?.linesAdded || 0),
         name: 'Lines added'
       });
       this.series.push({
@@ -51,7 +61,7 @@ export class ByUserWorkDetailsComponent extends ByUserComponent {
         type: 'bar',
         stack: 'churn',
         yAxisIndex: 0,
-        data: res[0].map(it => it.linesRemoved),
+        data: xData.map(it => workMap.get(it)?.linesRemoved || 0),
         name: 'Lines removed'
       });
       this.series.push({
@@ -59,7 +69,7 @@ export class ByUserWorkDetailsComponent extends ByUserComponent {
         type: 'bar',
         stack: 'commits',
         yAxisIndex: 1,
-        data: res[0].map(it => it.totalCommits),
+        data: xData.map(it => workMap.get(it)?.totalCommits || 0),
         name: 'Commit count'
       });
       this.series.push({
@@ -67,7 +77,7 @@ export class ByUserWorkDetailsComponent extends ByUserComponent {
         type: 'bar',
         stack: 'lines-owned',
         yAxisIndex: 2,
-        data: res[1].map(it => it.linesOwned),
+        data: xData.map(it => ownershipMap.get(it)?.linesOwned || 0),
         name: 'Lines owned'
       });
       this.series.push({
@@ -75,7 +85,7 @@ export class ByUserWorkDetailsComponent extends ByUserComponent {
         type: 'bar',
         stack: 'lines-removed',
         yAxisIndex: 3,
-        data: res[2].map(it => it.removedOwnLines),
+        data: xData.map(it => removedMap.get(it)?.removedOwnLines || 0),
         name: 'Own lines removed'
       });
       this.series.push({
@@ -83,7 +93,7 @@ export class ByUserWorkDetailsComponent extends ByUserComponent {
         type: 'bar',
         stack: 'lines-removed',
         yAxisIndex: 3,
-        data: res[2].map(it => it.removedLinesOfOthers),
+        data: xData.map(it => removedMap.get(it)?.removedLinesOfOthers || 0),
         name: 'Lines removed of others'
       });
       this.series.push({
@@ -91,15 +101,9 @@ export class ByUserWorkDetailsComponent extends ByUserComponent {
         type: 'bar',
         stack: 'lines-removed',
         yAxisIndex: 3,
-        data: res[2].map(it => it.removedByOthersLines),
+        data: xData.map(it => removedMap.get(it)?.removedByOthersLines || 0),
         name: 'Lines removed by others'
       });
-
-      res.forEach(it => it.forEach(data => {
-        if (!xData.includes(data.from)) {
-          xData.push(data.from);
-        }
-      }));
 
       let update = ChartsConfig.defaultBarChart();
       update.series = this.series;
