@@ -45,7 +45,7 @@ export class ProjectRulesComponent implements OnInit {
 
   addInclusionRule() {
     if (this.newInclusionRule) {
-      this.expandedInclusionRule = undefined;
+      this.newInclusionRule = undefined;
       return;
     }
 
