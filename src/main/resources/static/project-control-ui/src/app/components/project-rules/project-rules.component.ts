@@ -1,10 +1,10 @@
-import {Component, Input, NgZone, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, Input, NgZone, OnInit, ViewChild} from '@angular/core';
 import {
   EntityModelFileExclusionRule,
   EntityModelFileInclusionRule,
   EntityModelGitRepo, FileExclusionRule,
-  FileExclusionRuleEntityControllerService, FileInclusionRule,
-  FileInclusionRuleEntityControllerService, GitRepo
+  FileExclusionRuleEntityControllerService, FileExclusionRuleSearchControllerService, FileInclusionRule,
+  FileInclusionRuleEntityControllerService, FileInclusionRuleSearchControllerService, GitRepo
 } from "../../api";
 import {zip} from "rxjs";
 import {CdkTextareaAutosize} from "@angular/cdk/text-field";
@@ -17,7 +17,7 @@ import {Id} from "../../id";
   templateUrl: './project-rules.component.html',
   styleUrls: ['./project-rules.component.scss']
 })
-export class ProjectRulesComponent implements OnInit {
+export class ProjectRulesComponent implements AfterViewInit {
 
   @Input() project: EntityModelGitRepo;
   @ViewChild('autosizeInclusion') autosizeInclusion: CdkTextareaAutosize;
@@ -36,10 +36,12 @@ export class ProjectRulesComponent implements OnInit {
   constructor(
     private ngZone: NgZone,
     private fileInclusionRules: FileInclusionRuleEntityControllerService,
-    private fileExclusionRules: FileExclusionRuleEntityControllerService
+    private fileExclusionRules: FileExclusionRuleEntityControllerService,
+    private fileInclusionRulesSearch: FileInclusionRuleSearchControllerService,
+    private fileExclusionRulesSearch: FileExclusionRuleSearchControllerService
   ) { }
 
-  ngOnInit(): void {
+  ngAfterViewInit(): void {
     this.loadRules();
   }
 
@@ -134,8 +136,8 @@ export class ProjectRulesComponent implements OnInit {
   private loadRules() {
     this.isLoadingResults = true;
     zip(
-      this.fileInclusionRules.getCollectionResourceFileinclusionruleGet1(),
-      this.fileExclusionRules.getCollectionResourceFileexclusionruleGet1()
+      this.fileInclusionRulesSearch.findByRepoIdL2(+Id.read(this.project._links.self.href)),
+      this.fileExclusionRulesSearch.findByRepoIdL1(+Id.read(this.project._links.self.href))
     ).subscribe(res => {
       this.isLoadingResults = false;
       this.inclusionRules = res[0]._embedded.fileInclusionRules.map(it => {it.repo = this.project._links.self.href as any; return it});
