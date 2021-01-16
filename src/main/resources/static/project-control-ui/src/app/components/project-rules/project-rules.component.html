@@ -1,21 +1,19 @@
 <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
 
 <ng-container *ngIf="!isLoadingResults">
-  <div id="container">
+  <div>
     <div>
       <h3>Inclusion rules (selects files to analyze)</h3>
-      <mat-list>
-        <mat-list-item>
-          <button mat-raised-button aria-label="Add Regex-Inclusion rule" color="primary" (click)="addInclusionRule()">
-            <mat-icon>add</mat-icon>
-            Regex-Inclusion rule
-          </button>
-          <button mat-raised-button aria-label="Add Inclusion rule" color="primary" (click)="addInclusionRule()">
-            <mat-icon>add</mat-icon>
-            Inclusion rule
-          </button>
-        </mat-list-item>
-        <mat-list-item  *ngFor="let rule of inclusionRules">
+      <button mat-raised-button aria-label="Add Inclusion rule" color="primary" (click)="addInclusionRule()">
+        <mat-icon>add</mat-icon>
+        Inclusion rule
+      </button>
+      <mat-list class="rules">
+        <div *ngIf="newInclusionRule">
+          <ng-container
+            *ngTemplateOutlet="ruleDetails; context: {rule: newInclusionRule, type: types.INCLUSION}"></ng-container>
+        </div>
+        <mat-list-item *ngFor="let rule of inclusionRules">
           <button mat-icon-button aria-label="Inclusion rule details" (click)="toggleExpandInclusionRule(rule)">
             <mat-icon *ngIf="rule === expandedInclusionRule">expand_less</mat-icon>
             <mat-icon *ngIf="rule !== expandedInclusionRule">expand_more</mat-icon>
@@ -24,23 +22,24 @@
           <button mat-icon-button aria-label="Remove inclusion rule" (click)="removeInclusionRule(rule)">
             <mat-icon>delete</mat-icon>
           </button>
+          <div *ngIf="rule === expandedInclusionRule">
+            <ng-container *ngTemplateOutlet="ruleDetails; context: {rule: rule, type: types.INCLUSION}"></ng-container>
+          </div>
         </mat-list-item>
       </mat-list>
     </div>
     <div>
       <h3>Exclusion rules (selects files to skip from analysis)</h3>
-      <mat-list>
-        <mat-list-item>
-          <button mat-raised-button aria-label="Add Regex-Exclusion rule" color="primary" (click)="addInclusionRule()">
-            <mat-icon>add</mat-icon>
-            Regex-Exclusion rule
-          </button>
-          <button mat-raised-button aria-label="Add Exclusion rule" color="primary" (click)="addExclusionRule()">
-            <mat-icon>add</mat-icon>
-            Exclusion rule
-          </button>
-        </mat-list-item>
-        <mat-list-item  *ngFor="let rule of exclusionRules">
+      <button mat-raised-button aria-label="Add Exclusion rule" color="primary" (click)="addExclusionRule()">
+        <mat-icon>add</mat-icon>
+        Exclusion rule
+      </button>
+      <mat-list class="rules">
+        <div *ngIf="newExclusionRule">
+          <ng-container
+            *ngTemplateOutlet="ruleDetails; context: {rule: newExclusionRule, type: types.EXCLUSION}"></ng-container>
+        </div>
+        <mat-list-item *ngFor="let rule of exclusionRules">
           <button mat-icon-button aria-label="Exclusion rule details" (click)="toggleExpandExclusionRule(rule)">
             <mat-icon *ngIf="rule === expandedExclusionRule">expand_less</mat-icon>
             <mat-icon *ngIf="rule !== expandedExclusionRule">expand_more</mat-icon>
@@ -49,18 +48,57 @@
           <button mat-icon-button aria-label="Remove exclusion rule" (click)="removeExclusionRule(rule)">
             <mat-icon>delete</mat-icon>
           </button>
+          <div *ngIf="rule === expandedExclusionRule">
+            <ng-container *ngTemplateOutlet="ruleDetails; context: {rule: rule, type: types.EXCLUSION}"></ng-container>
+          </div>
         </mat-list-item>
       </mat-list>
     </div>
-    <ng-template #ruleDetails>
-      <mat-form-field>
-        <mat-label>Rule definition</mat-label>
-        <textarea matInput
-                  cdkTextareaAutosize
-                  #autosize="cdkTextareaAutosize"
-                  cdkAutosizeMinRows="5"
-                  cdkAutosizeMaxRows="50"></textarea>
-      </mat-form-field>
+
+    <ng-template #ruleDetails let-rule="rule" let-type="type">
+      <mat-divider></mat-divider>
+      <form #detailsForm="ngForm" id="detailsForm">
+        <div id="rule-name-edit">
+          <mat-form-field>
+            <mat-label>Rule name</mat-label>
+            <input matInput [(ngModel)]="rule.name" #name="ngModel" required minlength="4" name="name">
+          </mat-form-field>
+          <div *ngIf="name.invalid && (name.dirty || name.touched)" class="alert alert-danger">
+            <mat-error *ngIf="name.errors.required">
+              Name is required.
+            </mat-error>
+            <mat-error *ngIf="name.errors.minlength">
+              Name must be at least 4 characters long.
+            </mat-error>
+          </div>
+          <br/>
+          <button mat-raised-button aria-label="Save" color="primary" (click)="saveRule(rule, type)">
+            <mat-icon>save</mat-icon>
+            Save {{type}} rule
+          </button>
+        </div>
+        <mat-form-field>
+          <mat-label>Rule definition</mat-label>
+          <textarea matInput
+                    required minlength="10"
+                    [(ngModel)]="rule.rule"
+                    name="definition"
+                    cdkTextareaAutosize
+                    #autosizeInclusion="cdkTextareaAutosize"
+                    cdkAutosizeMinRows="5"
+                    cdkAutosizeMaxRows="20"
+                    #definition="ngModel"></textarea>
+          <div *ngIf="definition.invalid && (definition.dirty || definition.touched)" class="alert alert-danger">
+            <mat-error *ngIf="definition.errors.required">
+              Definition is required.
+            </mat-error>
+            <mat-error *ngIf="definition.errors.minlength">
+              Definition must be at least 10 characters long.
+            </mat-error>
+          </div>
+        </mat-form-field>
+      </form>
+      <mat-divider></mat-divider>
     </ng-template>
   </div>
 </ng-container>

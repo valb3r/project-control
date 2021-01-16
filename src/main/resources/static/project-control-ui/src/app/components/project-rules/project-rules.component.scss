@@ -1,15 +1,14 @@
-#container {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  justify-content: space-between;
+.rules form .mat-list-item {
+  height: auto;
 }
 
-#container > div {
-  width: 40%;
-  margin-left: 10%;
+.rules form #rule-name-edit {
+  width: 20%;
+  display: inline-block
 }
 
-#container > div button.mat-raised-button {
-  margin-left: 2%;
+.rules form .mat-form-field {
+  padding-left: 1%;
+  width: 70%;
+  display: inline-block
 }
