@@ -31,6 +31,7 @@ import static org.kie.internal.io.ResourceFactory.newByteArrayResource;
 public abstract class CommitBasedAnalyzer implements AnalysisStep {
 
     private static final int SAVE_EACH_N_COMMIT = 10;
+    public static final String RESOURCES_DIR = "src/main/resources/";
 
     private final AliasRepository aliases;
     private final StateUpdatingService stateUpdatingService;
@@ -107,8 +108,8 @@ public abstract class CommitBasedAnalyzer implements AnalysisStep {
         KieServices services = KieServices.Factory.get();
         KieFileSystem fileSystem = services.newKieFileSystem();
 
-        inclusion.forEach(it -> newByteArrayResource(it.getRule().getBytes(UTF_8)));
-        exclusion.forEach(it -> newByteArrayResource(it.getRule().getBytes(UTF_8)));
+        inclusion.forEach(it -> fileSystem.write(RESOURCES_DIR + it.getName() + ".drl", newByteArrayResource(it.getRule().getBytes(UTF_8))));
+        exclusion.forEach(it -> fileSystem.write(RESOURCES_DIR + it.getName() + ".drl", newByteArrayResource(it.getRule().getBytes(UTF_8))));
 
         KieBuilder kb = services.newKieBuilder(fileSystem);
         kb.buildAll();
