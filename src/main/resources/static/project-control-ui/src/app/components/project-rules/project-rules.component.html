@@ -67,7 +67,7 @@
         <div id="rule-name-edit">
           <mat-form-field>
             <mat-label>Rule name</mat-label>
-            <input matInput [(ngModel)]="rule.name" #name="ngModel" required minlength="4" name="name">
+            <input matInput [(ngModel)]="rule.name" #name="ngModel" required minlength="4" name="name" (change)="ruleNameChange(rule, type)">
           </mat-form-field>
           <div *ngIf="name.invalid && (name.dirty || name.touched)" class="alert alert-danger">
             <mat-error *ngIf="name.errors.required">

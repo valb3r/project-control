@@ -50,8 +50,8 @@ export class ProjectRulesComponent implements OnInit {
     }
 
     this.newInclusionRule = {
-      name: "",
-      rule: "",
+      name: 'Includes',
+      rule: inclusionTemplate.replace(namePlaceholder, '$1Includes$3'),
       repo: this.project._links.self.href as any
     } as EntityModelFileInclusionRule;
   }
@@ -63,10 +63,18 @@ export class ProjectRulesComponent implements OnInit {
     }
 
     this.newExclusionRule = {
-      name: "",
-      rule: "",
+      name: 'Excludes',
+      rule: exclusionTemplate.replace(namePlaceholder, '$1Excludes$3'),
       repo: this.project._links.self.href as any
     } as EntityModelFileExclusionRule
+  }
+
+  ruleNameChange(rule: EntityModelFileInclusionRule|EntityModelFileExclusionRule, type: RuleType) {
+    if (type != RuleType.NEW_EXCLUSION && type != RuleType.NEW_INCLUSION) {
+      return;
+    }
+
+    rule.rule = rule.rule.replace(namePlaceholder, `$1${rule.name}$3`);
   }
 
   removeInclusionRule(rule: EntityModelFileInclusionRule) {
@@ -154,3 +162,36 @@ export enum RuleType {
   NEW_INCLUSION = 'new inclusion',
   NEW_EXCLUSION = 'new exclusion'
 }
+
+const namePlaceholder = /(\s*rule\s+["'])(.+)(["'].*)/
+const inclusionTemplate = 'package com.project_control.rules\n' +
+  '\n' +
+  'import  com.valb3r.projectcontrol.domain.rules.RuleContext\n' +
+  '\n' +
+  'dialect  "mvel"\n' +
+  '\n' +
+  '\n' +
+  'rule "Inclusion rule"\n' +
+  '    no-loop\n' +
+  '    when\n' +
+  '       $c: RuleContext(path matches \'.+\\\\.java\')\n' +
+  '    then\n' +
+  '       $c.include = true;\n' +
+  '       update($c)\n' +
+  'end'
+
+const exclusionTemplate = 'package com.project_control.rules\n' +
+  '\n' +
+  'import  com.valb3r.projectcontrol.domain.rules.RuleContext\n' +
+  '\n' +
+  'dialect  "mvel"\n' +
+  '\n' +
+  '\n' +
+  'rule "Exclusion rule"\n' +
+  '    no-loop\n' +
+  '    when\n' +
+  '       $c: RuleContext(path matches \'.+/resources/.+\')\n' +
+  '    then\n' +
+  '       $c.exclude = true;\n' +
+  '       update($c)\n' +
+  'end';
