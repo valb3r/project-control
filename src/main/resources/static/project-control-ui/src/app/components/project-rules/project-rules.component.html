@@ -11,7 +11,7 @@
       <mat-list class="rules">
         <div *ngIf="newInclusionRule">
           <ng-container
-            *ngTemplateOutlet="ruleDetails; context: {rule: newInclusionRule, type: types.INCLUSION}"></ng-container>
+            *ngTemplateOutlet="ruleDetails; context: {rule: newInclusionRule, type: types.NEW_INCLUSION}"></ng-container>
         </div>
         <mat-list-item *ngFor="let rule of inclusionRules">
           <button mat-icon-button aria-label="Inclusion rule details" (click)="toggleExpandInclusionRule(rule)">
@@ -22,10 +22,11 @@
           <button mat-icon-button aria-label="Remove inclusion rule" (click)="removeInclusionRule(rule)">
             <mat-icon>delete</mat-icon>
           </button>
-          <div *ngIf="rule === expandedInclusionRule">
-            <ng-container *ngTemplateOutlet="ruleDetails; context: {rule: rule, type: types.INCLUSION}"></ng-container>
-          </div>
         </mat-list-item>
+        <div *ngIf="expandedInclusionRule">
+          <ng-container
+            *ngTemplateOutlet="ruleDetails; context: {rule: expandedInclusionRule, type: types.INCLUSION}"></ng-container>
+        </div>
       </mat-list>
     </div>
     <div>
@@ -37,21 +38,24 @@
       <mat-list class="rules">
         <div *ngIf="newExclusionRule">
           <ng-container
-            *ngTemplateOutlet="ruleDetails; context: {rule: newExclusionRule, type: types.EXCLUSION}"></ng-container>
+            *ngTemplateOutlet="ruleDetails; context: {rule: newExclusionRule, type: types.NEW_EXCLUSION}"></ng-container>
         </div>
-        <mat-list-item *ngFor="let rule of exclusionRules">
-          <button mat-icon-button aria-label="Exclusion rule details" (click)="toggleExpandExclusionRule(rule)">
-            <mat-icon *ngIf="rule === expandedExclusionRule">expand_less</mat-icon>
-            <mat-icon *ngIf="rule !== expandedExclusionRule">expand_more</mat-icon>
-          </button>
-          {{ rule.name }}
-          <button mat-icon-button aria-label="Remove exclusion rule" (click)="removeExclusionRule(rule)">
-            <mat-icon>delete</mat-icon>
-          </button>
-          <div *ngIf="rule === expandedExclusionRule">
-            <ng-container *ngTemplateOutlet="ruleDetails; context: {rule: rule, type: types.EXCLUSION}"></ng-container>
+        <ng-container *ngFor="let rule of exclusionRules">
+          <mat-list-item>
+            <button mat-icon-button aria-label="Exclusion rule details" (click)="toggleExpandExclusionRule(rule)">
+              <mat-icon *ngIf="rule === expandedExclusionRule">expand_less</mat-icon>
+              <mat-icon *ngIf="rule !== expandedExclusionRule">expand_more</mat-icon>
+            </button>
+            {{ rule.name }}
+            <button mat-icon-button aria-label="Remove exclusion rule" (click)="removeExclusionRule(rule)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </mat-list-item>
+          <div *ngIf="expandedExclusionRule">
+            <ng-container
+              *ngTemplateOutlet="ruleDetails; context: {rule: expandedExclusionRule, type: types.EXCLUSION}"></ng-container>
           </div>
-        </mat-list-item>
+        </ng-container>
       </mat-list>
     </div>
 
