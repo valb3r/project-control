@@ -56,7 +56,7 @@ public class LinkForCollectionAndEmbeddedForRepresentationProvider {
 
         private boolean isRepresentationModel(ResolvableType resolvableType) {
             var clz = rawClassOfRepresentationModel(resolvableType);
-            return null != clz &&  clz.isAssignableFrom(RepresentationModel.class);
+            return null != clz &&  RepresentationModel.class.isAssignableFrom(clz);
         }
 
         private Class<?> rawClassOfRepresentationModel(ResolvableType resolvableType) {
