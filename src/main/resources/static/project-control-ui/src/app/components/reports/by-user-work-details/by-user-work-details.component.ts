@@ -53,32 +53,18 @@ export class ByUserWorkDetailsComponent extends ByUserComponent {
         type: 'bar',
         stack: 'churn',
         yAxisIndex: 0,
-        data: xData.map(it => workMap.get(it)?.linesAdded || 0),
-        name: 'Lines added'
+        data: xData.map(it => workMap.get(it)?.linesRemoved || 0),
+        name: 'Lines removed',
+        itemStyle: { normal: { color: '#dd0000' } }
       });
       this.series.push({
         href: user._links.self.href,
         type: 'bar',
         stack: 'churn',
         yAxisIndex: 0,
-        data: xData.map(it => workMap.get(it)?.linesRemoved || 0),
-        name: 'Lines removed'
-      });
-      this.series.push({
-        href: user._links.self.href,
-        type: 'bar',
-        stack: 'commits',
-        yAxisIndex: 1,
-        data: xData.map(it => workMap.get(it)?.totalCommits || 0),
-        name: 'Commit count'
-      });
-      this.series.push({
-        href: user._links.self.href,
-        type: 'bar',
-        stack: 'lines-owned',
-        yAxisIndex: 2,
-        data: xData.map(it => ownershipMap.get(it)?.linesOwned || 0),
-        name: 'Lines owned'
+        data: xData.map(it => workMap.get(it)?.linesAdded || 0),
+        name: 'Lines added',
+        itemStyle: { normal: { color: '#00cc00' } }
       });
       this.series.push({
         href: user._links.self.href,
@@ -86,7 +72,8 @@ export class ByUserWorkDetailsComponent extends ByUserComponent {
         stack: 'lines-removed',
         yAxisIndex: 3,
         data: xData.map(it => removedMap.get(it)?.removedOwnLines || 0),
-        name: 'Own lines removed'
+        name: 'Own lines removed',
+        itemStyle: { normal: { color: '#eeee00' } }
       });
       this.series.push({
         href: user._links.self.href,
@@ -94,7 +81,8 @@ export class ByUserWorkDetailsComponent extends ByUserComponent {
         stack: 'lines-removed',
         yAxisIndex: 3,
         data: xData.map(it => removedMap.get(it)?.removedLinesOfOthers || 0),
-        name: 'Lines removed of others'
+        name: 'Lines removed of others',
+        itemStyle: { normal: { color: '#aa0000' } }
       });
       this.series.push({
         href: user._links.self.href,
@@ -102,7 +90,26 @@ export class ByUserWorkDetailsComponent extends ByUserComponent {
         stack: 'lines-removed',
         yAxisIndex: 3,
         data: xData.map(it => removedMap.get(it)?.removedByOthersLines || 0),
-        name: 'Lines removed by others'
+        name: 'Lines removed by others',
+        itemStyle: { normal: { color: '#ff0000' } }
+      });
+      this.series.push({
+        href: user._links.self.href,
+        type: 'bar',
+        stack: 'commits',
+        yAxisIndex: 1,
+        data: xData.map(it => workMap.get(it)?.totalCommits || 0),
+        name: 'Commit count',
+        itemStyle: { normal: { color: '#00aaee' } }
+      });
+      this.series.push({
+        href: user._links.self.href,
+        type: 'bar',
+        stack: 'lines-owned',
+        yAxisIndex: 2,
+        data: xData.map(it => ownershipMap.get(it)?.linesOwned || 0),
+        name: 'Lines owned',
+        itemStyle: { normal: { color: '#0000ee' } }
       });
 
       let update = ChartsConfig.defaultBarChart();
