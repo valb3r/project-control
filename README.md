@@ -17,6 +17,12 @@ A tool to assess the effort spent to develop software project and its readiness.
 ./gradlew clean syncNpm build -x test bootRun
 ```
 
+## Build docker
+
+```shell
+./gradlew clean syncNpm syncJar buildImage
+```
+
 
 # Exclusion/Inclusion rule examples
 
