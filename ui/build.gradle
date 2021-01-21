@@ -11,8 +11,18 @@ task cleanUpStatic(type: Delete) {
   delete "../src/main/resources/static"
 }
 
+task buildAngularApp(type: NpxTask) {
+  dependsOn npmInstall
+  command = 'ng'
+  args = ['build', '--prod']
+  inputs.files('package.json', 'package-lock.json', 'angular.json', 'tsconfig.json', 'tsconfig.app.json')
+  inputs.dir('src')
+  inputs.dir(fileTree("node_modules").exclude(".cache"))
+  outputs.dir('dist')
+}
+
 task syncNpm(type: Copy) {
-  dependsOn cleanUpStatic,npm_run_build
+  dependsOn cleanUpStatic,buildAngularApp
   from "dist/project-control-ui"
   into "../src/main/resources/static"
 }
