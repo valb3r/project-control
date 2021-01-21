@@ -39,13 +39,15 @@ public interface StatisticsRepository extends org.springframework.data.repositor
             "RETURN w.from AS from, w.to AS to, SUM(w.linesOwned) AS linesOwned ORDER BY w.from")
     OwnershipStats[] getTotalOwnershipStats(@Param("repoId") Long repoId, @Param("from") Instant from, @Param("to") Instant to);
 
-    // TODO: FIXME - wrong query
-    @Query("MATCH (u:User)-[:ALIAS]->(a:Alias)-[:OF]->(r:GitRepo) WHERE id(r) = $repoId AND id(u) = $userId " +
-            "WITH a,r,u MATCH (a)<-[:OF]-(w:WeeklyCommitStats)-[:OF]->(r:GitRepo) WHERE w.from >= $from AND w.to <= $to " +
-            "WITH w,a,u MATCH (r:RemovedLines)-[:OF]->(w) " +
-            "WITH w,r,a,u MATCH (a)<-[:FROM]-(ro:RemovedLines)-[:OF]->(wo)-[:OF]->(ao:Alias) WHERE w.from = wo.from AND NOT (u)-[:ALIAS]->(ao:Alias) " +
-            "WITH w,r,a,u,ro MATCH (a)<-[:FROM]-(rmo:RemovedLines)-[:OF]->(wo)-[:OF]->(ao:Alias) WHERE w.from = wo.from AND (u)-[:ALIAS]->(ao:Alias) " +
-            "RETURN w.from AS from, w.to AS to, SUM(r.removedLines) AS removedLinesOfOthers, SUM(ro.removedLines) AS removedByOthersLines, SUM(rmo.removedLines) AS removedOwnLines ORDER BY w.from")
+    @Query("MATCH (r:GitRepo),(u:User) WHERE id(r) = $repoId AND id(u) = $userId " +
+            "WITH u,r MATCH (a)<-[:OF]-(w:WeeklyCommitStats)-[:OF]->(r:GitRepo) WHERE w.from >= $from AND w.to <= $to " +
+            "WITH w,u MATCH (r:RemovedLines)-[:OF]->(w) " +
+            "CALL {" +
+            "  WITH u,r MATCH (af)<-[:FROM]-(r)-[c:OF]->(w:WeeklyCommitStats)-[:OF]->(ao:Alias) WHERE (u)-[:ALIAS]->(af:Alias) AND (u)-[:ALIAS]->(ao:Alias) RETURN w.from AS from, w.to AS to, SUM(r.removedLines) AS removedOwnLines, 0  AS removedByOthersLines, 0 AS removedLinesOfOthers" +
+            "  UNION WITH u,r MATCH (af)<-[:FROM]-(r)-[c:OF]->(w:WeeklyCommitStats)-[:OF]->(ao:Alias) WHERE NOT (u)-[:ALIAS]->(af:Alias) AND (u)-[:ALIAS]->(ao:Alias) RETURN w.from AS from, w.to AS to, SUM(r.removedLines) AS removedByOthersLines, 0 AS removedOwnLines, 0 AS removedLinesOfOthers" +
+            "  UNION WITH u,r OPTIONAL MATCH (af)<-[:FROM]-(r)-[c:OF]->(w:WeeklyCommitStats)-[:OF]->(ao:Alias) WHERE (u)-[:ALIAS]->(af:Alias) AND NOT (u)-[:ALIAS]->(ao:Alias) RETURN w.from AS from, w.to AS to, SUM(r.removedLines) AS removedLinesOfOthers, 0 AS removedByOthersLines, 0 AS removedOwnLines" +
+            "} " +
+            "RETURN w.from AS from, w.to AS to, SUM(removedLinesOfOthers) AS removedLinesOfOthers, SUM(removedByOthersLines) AS removedByOthersLines, SUM(removedOwnLines) AS removedOwnLines ORDER BY w.from")
     RemovedLinesWeeklyStats[] getRemovedLinesStats(@Param("repoId") Long repoId, @Param("userId") Long userId, @Param("from") Instant from, @Param("to") Instant to);
 
     @Query("MATCH (u:User)-[:ALIAS]->(a:Alias)-[:OF]->(r:GitRepo) WHERE id(r) = $repoId " +
