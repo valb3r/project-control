@@ -2,6 +2,22 @@
 
 A tool to assess the effort spent to develop software project and its readiness.
 
+
+# Building project
+
+## Build
+
+```shell
+./gradlew clean syncNpm build
+```
+
+## Build and run
+
+```shell
+./gradlew clean syncNpm build -x test bootRun
+```
+
+
 # Exclusion/Inclusion rule examples
 
 ## Inclusion:

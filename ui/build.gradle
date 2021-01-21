@@ -7,8 +7,12 @@ node {
   version = '14.0.0'
 }
 
+task cleanUpStatic(type: Delete) {
+  delete "../src/main/resources/static"
+}
+
 task syncNpm(type: Copy) {
-  dependsOn npm_run_build
+  dependsOn cleanUpStatic,npm_run_build
   from "dist/project-control-ui"
   into "../src/main/resources/static"
 }
