@@ -37,3 +37,6 @@ out/
 .vscode/
 
 **/compose-data
+
+# Do not commit compiled frontend code
+src/main/resources/static

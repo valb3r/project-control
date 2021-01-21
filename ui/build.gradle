@@ -1,0 +1,14 @@
+plugins {
+  id "com.github.node-gradle.node" version "2.2.0"
+}
+
+node {
+  download = true
+  version = '14.0.0'
+}
+
+task syncNpm(type: Copy) {
+  dependsOn npm_run_build
+  from "dist/project-control-ui"
+  into "../src/main/resources/static"
+}
