@@ -68,7 +68,7 @@ public class GitRepo {
     @JsonProperty("lastAnalyzedCommit")
     public String getLastAnalyzedCommit() {
         if (!workDoneBySteps.isEmpty()) {
-            return workDoneBySteps.get(workDoneBySteps.size() - 1).split(":")[2];
+            return workDoneBySteps.get(workDoneBySteps.size() - 1).split(":")[1];
         }
 
         return null;
