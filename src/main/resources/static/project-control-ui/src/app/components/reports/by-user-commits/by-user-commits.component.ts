@@ -30,7 +30,8 @@ export class ByUserCommitsComponent extends ByUserComponent {
             type: 'bar',
             stack: true,
             data: res.map(it => [Date.parse(it.from), it.totalCommits]),
-            name: user.name
+            name: user.name,
+            itemStyle: { normal: { color: ChartsConfig.seriesColor(user.name) } }
           });
           let update = ChartsConfig.defaultBarChart();
           update.series = this.series;

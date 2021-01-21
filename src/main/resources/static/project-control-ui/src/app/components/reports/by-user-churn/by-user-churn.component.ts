@@ -1,4 +1,4 @@
-import {AfterContentInit, Component, Input, OnInit} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {
   EntityModelGitRepo,
   EntityModelUser,
@@ -7,7 +7,6 @@ import {
 } from "../../../api";
 import {ChartsConfig} from "../charts-config";
 import {Id} from "../../../id";
-import {mergeMap} from "rxjs/operators";
 import {ByUserComponent} from "../by-user.component";
 
 @Component({
@@ -32,7 +31,8 @@ export class ByUserChurnComponent extends ByUserComponent {
             type: 'bar',
             stack: true,
             data: res.map(it => [Date.parse(it.from), it.linesAdded + it.linesRemoved]),
-            name: user.name
+            name: user.name,
+            itemStyle: { normal: { color: ChartsConfig.seriesColor(user.name) } }
           });
           let update = ChartsConfig.defaultBarChart();
           update.series = this.series;
