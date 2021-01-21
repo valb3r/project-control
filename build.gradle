@@ -83,7 +83,7 @@ task createDockerfile(type: Dockerfile) {
 	workingDir("/app")
 	copyFile(jar.archiveFileName.get(), cmd)
 	runCommand("echo 'java -jar ${cmd}' >> run.sh && chmod +x run.sh")
-	entryPoint('bash')
+	entryPoint('sh')
 	defaultCommand('./run.sh')
 	exposePort(8080)
 }
