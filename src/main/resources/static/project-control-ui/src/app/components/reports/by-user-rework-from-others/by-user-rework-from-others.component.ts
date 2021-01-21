@@ -31,7 +31,7 @@ export class ByUserReworkFromOthersComponent extends ByUserComponent {
             href: user._links.self.href,
             type: 'bar',
             stack: true,
-            data: res.map(it => [Date.parse(it.from), it.removedOwnLines]),
+            data: res.map(it => [Date.parse(it.from), it.removedLinesOfOthers]),
             name: user.name
           });
           let update = ChartsConfig.defaultBarChart();
