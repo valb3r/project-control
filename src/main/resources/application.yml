@@ -8,10 +8,6 @@ spring:
       use-native-types: true
     rest:
       base-path: /v1/resources
-  tomcat:
-    relaxed-query-chars:
-      - "["
-      - "]"
 
 server:
   error:
@@ -23,14 +19,28 @@ git:
   password:
   repos-path: ./repos
 
+initial-user:
+  login: admin
+  password: admin
 
 pcontrol:
   neo4j:
-    full-text:
-      indexes:
-        USER: CALL db.index.fulltext.createNodeIndex("%", ["User"],["name"])
+    indexes:
+      USER: CALL db.index.fulltext.createNodeIndex("%", ["User"],["name"])
+    constraints:
+      - CREATE CONSTRAINT ON (user:AuthUser) ASSERT user.login IS UNIQUE
 
 
 logging:
   level:
-    com.valb3r.projectcontrol: DEBUG
+    com.valb3r.projectcontrol: INFO
+
+oauth2:
+  keys:
+    # You should override these!
+    pub: classpath:example.pub
+    priv: classpath:example.pem
+  validity: PT1H
+
+bcrypt:
+  strength: 8

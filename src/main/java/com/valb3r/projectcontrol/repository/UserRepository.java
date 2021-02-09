@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-import static com.valb3r.projectcontrol.config.Neo4jFullTextIndexManagement.USER_IDX;
+import static com.valb3r.projectcontrol.config.Neo4jFullTextIndexAndConstraintsManagement.USER_IDX;
 
 @Repository
 @RepositoryRestResource(excerptProjection = UserExcerpt.class)

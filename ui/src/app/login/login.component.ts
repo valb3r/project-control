@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {FormBuilder, FormControl, Validators} from '@angular/forms';
 import {FieldErrorStateMatcher} from "../app.component";
+import {LoginControllerService, LoginDto} from "../api";
 
 @Component({
   selector: 'login',
@@ -28,7 +29,7 @@ export class LoginComponent implements OnInit {
 
   fieldMatcher = new FieldErrorStateMatcher();
 
-  constructor(private router: Router, private fb: FormBuilder) { }
+  constructor(private auth: LoginControllerService, private router: Router, private fb: FormBuilder) { }
 
   ngOnInit() {
   }
@@ -38,14 +39,13 @@ export class LoginComponent implements OnInit {
       return
     }
 
-    this.router.navigate(['/control/projects']);
-    /*this.api.login(this.userNameControl.value, this.passwordControl.value)
+    this.auth.login({username: this.userNameControl.value, password: this.passwordControl.value} as LoginDto)
       .subscribe(
         success => {
           this.router.navigate(['/control/projects']);
         },
         error => {
-          console.log("Error", error);
-        });*/
+          this.responseError = error.status === 401 ? "Unauthorized" : error.message;
+        });
   }
 }

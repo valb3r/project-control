@@ -2,10 +2,9 @@ package com.valb3r.projectcontrol.repository;
 
 import com.valb3r.projectcontrol.domain.Statistics;
 import com.valb3r.projectcontrol.domain.dto.DateRange;
-import com.valb3r.projectcontrol.domain.dto.RemovedLinesWeeklyStats;
 import com.valb3r.projectcontrol.domain.dto.OwnershipStats;
+import com.valb3r.projectcontrol.domain.dto.RemovedLinesWeeklyStats;
 import com.valb3r.projectcontrol.domain.dto.WorkStats;
-import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.data.neo4j.annotation.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;

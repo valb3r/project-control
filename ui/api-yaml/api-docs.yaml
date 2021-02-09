@@ -6,6 +6,55 @@ servers:
   - url: http://localhost:8080
     description: Generated server url
 paths:
+  /v1/resources/auth-user/update-password:
+    post:
+      tags:
+        - auth-user-controller
+      operationId: updatePassword
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdatePasswordDto'
+        required: true
+      responses:
+        "200":
+          description: OK
+  /v1/resources/auth-user/update-login:
+    post:
+      tags:
+        - auth-user-controller
+      operationId: updateLogin
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateLoginDto'
+        required: true
+      responses:
+        "200":
+          description: OK
+  /login:
+    post:
+      tags:
+        - login-controller
+      operationId: login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginDto'
+        required: true
+      responses:
+        "200":
+          description: OK
+    delete:
+      tags:
+        - login-controller
+      operationId: logout
+      responses:
+        "200":
+          description: OK
   /v1/resources/aliases:
     get:
       tags:
@@ -67,7 +116,7 @@ paths:
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelAlias'
+                $ref: '#/components/schemas/EntityModelAlias'
   /v1/resources/aliases/search/findByNameAndRepoId:
     get:
       tags:
@@ -175,13 +224,13 @@ paths:
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelAlias'
+                $ref: '#/components/schemas/EntityModelAlias'
         "201":
           description: Created
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelAlias'
+                $ref: '#/components/schemas/EntityModelAlias'
         "204":
           description: No Content
     delete:
@@ -222,7 +271,7 @@ paths:
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelAlias'
+                $ref: '#/components/schemas/EntityModelAlias'
         "204":
           description: No Content
   /v1/resources/aliases/{id}/repo:
@@ -243,10 +292,10 @@ paths:
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelAlias'
+                $ref: '#/components/schemas/EntityModelAlias'
             text/uri-list:
               schema:
-                $ref: '#/components/schemas/RepresentationModelAlias'
+                $ref: '#/components/schemas/EntityModelAlias'
         "404":
           description: Not Found
     put:
@@ -277,13 +326,13 @@ paths:
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelAlias'
+                $ref: '#/components/schemas/EntityModelAlias'
         "201":
           description: Created
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelAlias'
+                $ref: '#/components/schemas/EntityModelAlias'
         "204":
           description: No Content
     delete:
@@ -330,7 +379,7 @@ paths:
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelAlias'
+                $ref: '#/components/schemas/EntityModelAlias'
         "204":
           description: No Content
   /v1/resources/aliases/{id}/repo/{propertyId}:
@@ -356,7 +405,7 @@ paths:
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelAlias'
+                $ref: '#/components/schemas/EntityModelAlias'
         "404":
           description: Not Found
     delete:
@@ -398,10 +447,10 @@ paths:
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelAlias'
+                $ref: '#/components/schemas/EntityModelAlias'
             text/uri-list:
               schema:
-                $ref: '#/components/schemas/RepresentationModelAlias'
+                $ref: '#/components/schemas/EntityModelAlias'
         "404":
           description: Not Found
     put:
@@ -432,13 +481,13 @@ paths:
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelAlias'
+                $ref: '#/components/schemas/EntityModelAlias'
         "201":
           description: Created
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelAlias'
+                $ref: '#/components/schemas/EntityModelAlias'
         "204":
           description: No Content
     delete:
@@ -485,7 +534,7 @@ paths:
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelAlias'
+                $ref: '#/components/schemas/EntityModelAlias'
         "204":
           description: No Content
   /v1/resources/aliases/{id}/user/{propertyId}:
@@ -511,7 +560,7 @@ paths:
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelAlias'
+                $ref: '#/components/schemas/EntityModelAlias'
         "404":
           description: Not Found
     delete:
@@ -535,6 +584,180 @@ paths:
           description: No Content
         "404":
           description: Not Found
+  /v1/resources/authUsers:
+    get:
+      tags:
+        - auth-user-entity-controller
+      description: get-authuser
+      operationId: getCollectionResource-authuser-get_1
+      parameters:
+        - name: page
+          in: query
+          description: Zero-based page index (0..N)
+          required: false
+          schema:
+            minimum: 0
+            type: integer
+            default: "0"
+        - name: size
+          in: query
+          description: The size of the page to be returned
+          required: false
+          schema:
+            minimum: 1
+            type: integer
+            default: "20"
+        - name: sort
+          in: query
+          description: "Sorting criteria in the format: property(,asc|desc). Default\
+          \ sort order is ascending. Multiple sort criteria are supported."
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/CollectionModelEntityModelAuthUser'
+            application/x-spring-data-compact+json:
+              schema:
+                $ref: '#/components/schemas/CollectionModelEntityModelAuthUser'
+            text/uri-list:
+              schema:
+                $ref: '#/components/schemas/CollectionModelEntityModelAuthUser'
+    post:
+      tags:
+        - auth-user-entity-controller
+      description: create-authuser
+      operationId: postCollectionResource-authuser-post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthUser'
+      responses:
+        "201":
+          description: Created
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/EntityModelAuthUser'
+  /v1/resources/authUsers/search/findByLogin:
+    get:
+      tags:
+        - auth-user-search-controller
+      operationId: findByLogin_S
+      parameters:
+        - name: login
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/EntityModelAuthUser'
+        "404":
+          description: Not Found
+  /v1/resources/authUsers/{id}:
+    get:
+      tags:
+        - auth-user-entity-controller
+      description: get-authuser
+      operationId: getItemResource-authuser-get
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/EntityModelAuthUser'
+        "404":
+          description: Not Found
+    put:
+      tags:
+        - auth-user-entity-controller
+      description: update-authuser
+      operationId: putItemResource-authuser-put
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthUser'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/EntityModelAuthUser'
+        "201":
+          description: Created
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/EntityModelAuthUser'
+        "204":
+          description: No Content
+    delete:
+      tags:
+        - auth-user-entity-controller
+      description: delete-authuser
+      operationId: deleteItemResource-authuser-delete
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+    patch:
+      tags:
+        - auth-user-entity-controller
+      description: patch-authuser
+      operationId: patchItemResource-authuser-patch
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthUser'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/EntityModelAuthUser'
+        "204":
+          description: No Content
   /v1/resources/fileExclusionRules:
     get:
       tags:
@@ -596,7 +819,7 @@ paths:
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelFileExclusionRule'
+                $ref: '#/components/schemas/EntityModelFileExclusionRule'
   /v1/resources/fileExclusionRules/search/findByRepoId:
     get:
       tags:
@@ -660,13 +883,13 @@ paths:
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelFileExclusionRule'
+                $ref: '#/components/schemas/EntityModelFileExclusionRule'
         "201":
           description: Created
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelFileExclusionRule'
+                $ref: '#/components/schemas/EntityModelFileExclusionRule'
         "204":
           description: No Content
     delete:
@@ -707,7 +930,7 @@ paths:
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelFileExclusionRule'
+                $ref: '#/components/schemas/EntityModelFileExclusionRule'
         "204":
           description: No Content
   /v1/resources/fileExclusionRules/{id}/repo:
@@ -728,10 +951,10 @@ paths:
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelFileExclusionRule'
+                $ref: '#/components/schemas/EntityModelFileExclusionRule'
             text/uri-list:
               schema:
-                $ref: '#/components/schemas/RepresentationModelFileExclusionRule'
+                $ref: '#/components/schemas/EntityModelFileExclusionRule'
         "404":
           description: Not Found
     put:
@@ -762,13 +985,13 @@ paths:
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelFileExclusionRule'
+                $ref: '#/components/schemas/EntityModelFileExclusionRule'
         "201":
           description: Created
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelFileExclusionRule'
+                $ref: '#/components/schemas/EntityModelFileExclusionRule'
         "204":
           description: No Content
     delete:
@@ -815,7 +1038,7 @@ paths:
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelFileExclusionRule'
+                $ref: '#/components/schemas/EntityModelFileExclusionRule'
         "204":
           description: No Content
   /v1/resources/fileExclusionRules/{id}/repo/{propertyId}:
@@ -841,7 +1064,7 @@ paths:
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelFileExclusionRule'
+                $ref: '#/components/schemas/EntityModelFileExclusionRule'
         "404":
           description: Not Found
     delete:
@@ -926,7 +1149,7 @@ paths:
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelFileInclusionRule'
+                $ref: '#/components/schemas/EntityModelFileInclusionRule'
   /v1/resources/fileInclusionRules/search/findByRepoId:
     get:
       tags:
@@ -990,13 +1213,13 @@ paths:
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelFileInclusionRule'
+                $ref: '#/components/schemas/EntityModelFileInclusionRule'
         "201":
           description: Created
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelFileInclusionRule'
+                $ref: '#/components/schemas/EntityModelFileInclusionRule'
         "204":
           description: No Content
     delete:
@@ -1037,7 +1260,7 @@ paths:
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelFileInclusionRule'
+                $ref: '#/components/schemas/EntityModelFileInclusionRule'
         "204":
           description: No Content
   /v1/resources/fileInclusionRules/{id}/repo:
@@ -1058,10 +1281,10 @@ paths:
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelFileInclusionRule'
+                $ref: '#/components/schemas/EntityModelFileInclusionRule'
             text/uri-list:
               schema:
-                $ref: '#/components/schemas/RepresentationModelFileInclusionRule'
+                $ref: '#/components/schemas/EntityModelFileInclusionRule'
         "404":
           description: Not Found
     put:
@@ -1092,13 +1315,13 @@ paths:
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelFileInclusionRule'
+                $ref: '#/components/schemas/EntityModelFileInclusionRule'
         "201":
           description: Created
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelFileInclusionRule'
+                $ref: '#/components/schemas/EntityModelFileInclusionRule'
         "204":
           description: No Content
     delete:
@@ -1145,7 +1368,7 @@ paths:
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelFileInclusionRule'
+                $ref: '#/components/schemas/EntityModelFileInclusionRule'
         "204":
           description: No Content
   /v1/resources/fileInclusionRules/{id}/repo/{propertyId}:
@@ -1171,7 +1394,7 @@ paths:
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelFileInclusionRule'
+                $ref: '#/components/schemas/EntityModelFileInclusionRule'
         "404":
           description: Not Found
     delete:
@@ -1256,7 +1479,7 @@ paths:
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelGitRepo'
+                $ref: '#/components/schemas/EntityModelGitRepo'
   /v1/resources/gitRepoes/search/deleteById:
     get:
       tags:
@@ -1320,13 +1543,13 @@ paths:
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelGitRepo'
+                $ref: '#/components/schemas/EntityModelGitRepo'
         "201":
           description: Created
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelGitRepo'
+                $ref: '#/components/schemas/EntityModelGitRepo'
         "204":
           description: No Content
     delete:
@@ -1367,7 +1590,7 @@ paths:
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelGitRepo'
+                $ref: '#/components/schemas/EntityModelGitRepo'
         "204":
           description: No Content
   /v1/resources/profile:
@@ -1381,7 +1604,7 @@ paths:
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelObject'
+                $ref: '#/components/schemas/EntityModelObject'
   /v1/resources/profile/aliases:
     get:
       tags:
@@ -1400,7 +1623,7 @@ paths:
             application/schema+json:
               schema:
                 $ref: '#/components/schemas/JsonSchema'
-  /v1/resources/profile/fileExclusionRules:
+  /v1/resources/profile/authUsers:
     get:
       tags:
         - profile-controller
@@ -1418,7 +1641,7 @@ paths:
             application/schema+json:
               schema:
                 $ref: '#/components/schemas/JsonSchema'
-  /v1/resources/profile/fileInclusionRules:
+  /v1/resources/profile/fileExclusionRules:
     get:
       tags:
         - profile-controller
@@ -1436,7 +1659,7 @@ paths:
             application/schema+json:
               schema:
                 $ref: '#/components/schemas/JsonSchema'
-  /v1/resources/profile/gitRepoes:
+  /v1/resources/profile/fileInclusionRules:
     get:
       tags:
         - profile-controller
@@ -1454,7 +1677,7 @@ paths:
             application/schema+json:
               schema:
                 $ref: '#/components/schemas/JsonSchema'
-  /v1/resources/profile/removedLineses:
+  /v1/resources/profile/gitRepoes:
     get:
       tags:
         - profile-controller
@@ -1472,7 +1695,7 @@ paths:
             application/schema+json:
               schema:
                 $ref: '#/components/schemas/JsonSchema'
-  /v1/resources/profile/totalOwnershipStatses:
+  /v1/resources/profile/removedLineses:
     get:
       tags:
         - profile-controller
@@ -1490,7 +1713,7 @@ paths:
             application/schema+json:
               schema:
                 $ref: '#/components/schemas/JsonSchema'
-  /v1/resources/profile/users:
+  /v1/resources/profile/totalOwnershipStatses:
     get:
       tags:
         - profile-controller
@@ -1508,11 +1731,29 @@ paths:
             application/schema+json:
               schema:
                 $ref: '#/components/schemas/JsonSchema'
-  /v1/resources/profile/weeklyCommitStatses:
+  /v1/resources/profile/users:
     get:
       tags:
         - profile-controller
       operationId: descriptor_8
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+            application/alps+json:
+              schema:
+                type: string
+            application/schema+json:
+              schema:
+                $ref: '#/components/schemas/JsonSchema'
+  /v1/resources/profile/weeklyCommitStatses:
+    get:
+      tags:
+        - profile-controller
+      operationId: descriptor_9
       responses:
         "200":
           description: OK
@@ -1587,7 +1828,7 @@ paths:
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelRemovedLines'
+                $ref: '#/components/schemas/EntityModelRemovedLines'
   /v1/resources/removedLineses/search/findByWeeklyIdAndFromAuthorId:
     get:
       tags:
@@ -1656,13 +1897,13 @@ paths:
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelRemovedLines'
+                $ref: '#/components/schemas/EntityModelRemovedLines'
         "201":
           description: Created
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelRemovedLines'
+                $ref: '#/components/schemas/EntityModelRemovedLines'
         "204":
           description: No Content
     delete:
@@ -1703,7 +1944,7 @@ paths:
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelRemovedLines'
+                $ref: '#/components/schemas/EntityModelRemovedLines'
         "204":
           description: No Content
   /v1/resources/removedLineses/{id}/fromAuthor:
@@ -1724,10 +1965,10 @@ paths:
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelRemovedLines'
+                $ref: '#/components/schemas/EntityModelRemovedLines'
             text/uri-list:
               schema:
-                $ref: '#/components/schemas/RepresentationModelRemovedLines'
+                $ref: '#/components/schemas/EntityModelRemovedLines'
         "404":
           description: Not Found
     put:
@@ -1758,13 +1999,13 @@ paths:
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelRemovedLines'
+                $ref: '#/components/schemas/EntityModelRemovedLines'
         "201":
           description: Created
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelRemovedLines'
+                $ref: '#/components/schemas/EntityModelRemovedLines'
         "204":
           description: No Content
     delete:
@@ -1811,7 +2052,7 @@ paths:
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelRemovedLines'
+                $ref: '#/components/schemas/EntityModelRemovedLines'
         "204":
           description: No Content
   /v1/resources/removedLineses/{id}/fromAuthor/{propertyId}:
@@ -1837,7 +2078,7 @@ paths:
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelRemovedLines'
+                $ref: '#/components/schemas/EntityModelRemovedLines'
         "404":
           description: Not Found
     delete:
@@ -1879,10 +2120,10 @@ paths:
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelRemovedLines'
+                $ref: '#/components/schemas/EntityModelRemovedLines'
             text/uri-list:
               schema:
-                $ref: '#/components/schemas/RepresentationModelRemovedLines'
+                $ref: '#/components/schemas/EntityModelRemovedLines'
         "404":
           description: Not Found
     put:
@@ -1913,13 +2154,13 @@ paths:
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelRemovedLines'
+                $ref: '#/components/schemas/EntityModelRemovedLines'
         "201":
           description: Created
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelRemovedLines'
+                $ref: '#/components/schemas/EntityModelRemovedLines'
         "204":
           description: No Content
     delete:
@@ -1966,7 +2207,7 @@ paths:
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelRemovedLines'
+                $ref: '#/components/schemas/EntityModelRemovedLines'
         "204":
           description: No Content
   /v1/resources/removedLineses/{id}/weekly/{propertyId}:
@@ -1992,7 +2233,7 @@ paths:
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelRemovedLines'
+                $ref: '#/components/schemas/EntityModelRemovedLines'
         "404":
           description: Not Found
     delete:
@@ -2329,7 +2570,7 @@ paths:
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelTotalOwnershipStats'
+                $ref: '#/components/schemas/EntityModelTotalOwnershipStats'
   /v1/resources/totalOwnershipStatses/search/findBy:
     get:
       tags:
@@ -2398,13 +2639,13 @@ paths:
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelTotalOwnershipStats'
+                $ref: '#/components/schemas/EntityModelTotalOwnershipStats'
         "201":
           description: Created
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelTotalOwnershipStats'
+                $ref: '#/components/schemas/EntityModelTotalOwnershipStats'
         "204":
           description: No Content
     delete:
@@ -2445,7 +2686,7 @@ paths:
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelTotalOwnershipStats'
+                $ref: '#/components/schemas/EntityModelTotalOwnershipStats'
         "204":
           description: No Content
   /v1/resources/totalOwnershipStatses/{id}/alias:
@@ -2466,10 +2707,10 @@ paths:
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelTotalOwnershipStats'
+                $ref: '#/components/schemas/EntityModelTotalOwnershipStats'
             text/uri-list:
               schema:
-                $ref: '#/components/schemas/RepresentationModelTotalOwnershipStats'
+                $ref: '#/components/schemas/EntityModelTotalOwnershipStats'
         "404":
           description: Not Found
     put:
@@ -2500,13 +2741,13 @@ paths:
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelTotalOwnershipStats'
+                $ref: '#/components/schemas/EntityModelTotalOwnershipStats'
         "201":
           description: Created
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelTotalOwnershipStats'
+                $ref: '#/components/schemas/EntityModelTotalOwnershipStats'
         "204":
           description: No Content
     delete:
@@ -2553,7 +2794,7 @@ paths:
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelTotalOwnershipStats'
+                $ref: '#/components/schemas/EntityModelTotalOwnershipStats'
         "204":
           description: No Content
   /v1/resources/totalOwnershipStatses/{id}/alias/{propertyId}:
@@ -2579,7 +2820,7 @@ paths:
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelTotalOwnershipStats'
+                $ref: '#/components/schemas/EntityModelTotalOwnershipStats'
         "404":
           description: Not Found
     delete:
@@ -2621,10 +2862,10 @@ paths:
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelTotalOwnershipStats'
+                $ref: '#/components/schemas/EntityModelTotalOwnershipStats'
             text/uri-list:
               schema:
-                $ref: '#/components/schemas/RepresentationModelTotalOwnershipStats'
+                $ref: '#/components/schemas/EntityModelTotalOwnershipStats'
         "404":
           description: Not Found
     put:
@@ -2655,13 +2896,13 @@ paths:
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelTotalOwnershipStats'
+                $ref: '#/components/schemas/EntityModelTotalOwnershipStats'
         "201":
           description: Created
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelTotalOwnershipStats'
+                $ref: '#/components/schemas/EntityModelTotalOwnershipStats'
         "204":
           description: No Content
     delete:
@@ -2708,7 +2949,7 @@ paths:
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelTotalOwnershipStats'
+                $ref: '#/components/schemas/EntityModelTotalOwnershipStats'
         "204":
           description: No Content
   /v1/resources/totalOwnershipStatses/{id}/repo/{propertyId}:
@@ -2734,7 +2975,7 @@ paths:
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelTotalOwnershipStats'
+                $ref: '#/components/schemas/EntityModelTotalOwnershipStats'
         "404":
           description: Not Found
     delete:
@@ -2819,7 +3060,7 @@ paths:
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelUser'
+                $ref: '#/components/schemas/EntityModelUser'
   /v1/resources/users/search/findByFullText:
     get:
       tags:
@@ -2902,13 +3143,13 @@ paths:
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelUser'
+                $ref: '#/components/schemas/EntityModelUser'
         "201":
           description: Created
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelUser'
+                $ref: '#/components/schemas/EntityModelUser'
         "204":
           description: No Content
     delete:
@@ -2949,7 +3190,7 @@ paths:
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelUser'
+                $ref: '#/components/schemas/EntityModelUser'
         "204":
           description: No Content
   /v1/resources/users/{id}/aliases:
@@ -2970,10 +3211,10 @@ paths:
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelUser'
+                $ref: '#/components/schemas/EntityModelUser'
             text/uri-list:
               schema:
-                $ref: '#/components/schemas/RepresentationModelUser'
+                $ref: '#/components/schemas/EntityModelUser'
         "404":
           description: Not Found
     put:
@@ -3004,13 +3245,13 @@ paths:
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelUser'
+                $ref: '#/components/schemas/EntityModelUser'
         "201":
           description: Created
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelUser'
+                $ref: '#/components/schemas/EntityModelUser'
         "204":
           description: No Content
     delete:
@@ -3057,7 +3298,7 @@ paths:
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelUser'
+                $ref: '#/components/schemas/EntityModelUser'
         "204":
           description: No Content
   /v1/resources/users/{id}/aliases/{propertyId}:
@@ -3083,7 +3324,7 @@ paths:
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelUser'
+                $ref: '#/components/schemas/EntityModelUser'
         "404":
           description: Not Found
     delete:
@@ -3168,7 +3409,7 @@ paths:
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelWeeklyCommitStats'
+                $ref: '#/components/schemas/EntityModelWeeklyCommitStats'
   /v1/resources/weeklyCommitStatses/search/findBy:
     get:
       tags:
@@ -3237,13 +3478,13 @@ paths:
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelWeeklyCommitStats'
+                $ref: '#/components/schemas/EntityModelWeeklyCommitStats'
         "201":
           description: Created
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelWeeklyCommitStats'
+                $ref: '#/components/schemas/EntityModelWeeklyCommitStats'
         "204":
           description: No Content
     delete:
@@ -3284,7 +3525,7 @@ paths:
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelWeeklyCommitStats'
+                $ref: '#/components/schemas/EntityModelWeeklyCommitStats'
         "204":
           description: No Content
   /v1/resources/weeklyCommitStatses/{id}/alias:
@@ -3305,10 +3546,10 @@ paths:
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelWeeklyCommitStats'
+                $ref: '#/components/schemas/EntityModelWeeklyCommitStats'
             text/uri-list:
               schema:
-                $ref: '#/components/schemas/RepresentationModelWeeklyCommitStats'
+                $ref: '#/components/schemas/EntityModelWeeklyCommitStats'
         "404":
           description: Not Found
     put:
@@ -3339,13 +3580,13 @@ paths:
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelWeeklyCommitStats'
+                $ref: '#/components/schemas/EntityModelWeeklyCommitStats'
         "201":
           description: Created
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelWeeklyCommitStats'
+                $ref: '#/components/schemas/EntityModelWeeklyCommitStats'
         "204":
           description: No Content
     delete:
@@ -3392,7 +3633,7 @@ paths:
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelWeeklyCommitStats'
+                $ref: '#/components/schemas/EntityModelWeeklyCommitStats'
         "204":
           description: No Content
   /v1/resources/weeklyCommitStatses/{id}/alias/{propertyId}:
@@ -3418,7 +3659,7 @@ paths:
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelWeeklyCommitStats'
+                $ref: '#/components/schemas/EntityModelWeeklyCommitStats'
         "404":
           description: Not Found
     delete:
@@ -3460,10 +3701,10 @@ paths:
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelWeeklyCommitStats'
+                $ref: '#/components/schemas/EntityModelWeeklyCommitStats'
             text/uri-list:
               schema:
-                $ref: '#/components/schemas/RepresentationModelWeeklyCommitStats'
+                $ref: '#/components/schemas/EntityModelWeeklyCommitStats'
         "404":
           description: Not Found
     put:
@@ -3494,13 +3735,13 @@ paths:
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelWeeklyCommitStats'
+                $ref: '#/components/schemas/EntityModelWeeklyCommitStats'
         "201":
           description: Created
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelWeeklyCommitStats'
+                $ref: '#/components/schemas/EntityModelWeeklyCommitStats'
         "204":
           description: No Content
     delete:
@@ -3547,7 +3788,7 @@ paths:
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelWeeklyCommitStats'
+                $ref: '#/components/schemas/EntityModelWeeklyCommitStats'
         "204":
           description: No Content
   /v1/resources/weeklyCommitStatses/{id}/linesRemovedOf/{propertyId}:
@@ -3573,7 +3814,7 @@ paths:
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelWeeklyCommitStats'
+                $ref: '#/components/schemas/EntityModelWeeklyCommitStats'
         "404":
           description: Not Found
     delete:
@@ -3615,10 +3856,10 @@ paths:
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelWeeklyCommitStats'
+                $ref: '#/components/schemas/EntityModelWeeklyCommitStats'
             text/uri-list:
               schema:
-                $ref: '#/components/schemas/RepresentationModelWeeklyCommitStats'
+                $ref: '#/components/schemas/EntityModelWeeklyCommitStats'
         "404":
           description: Not Found
     put:
@@ -3649,13 +3890,13 @@ paths:
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelWeeklyCommitStats'
+                $ref: '#/components/schemas/EntityModelWeeklyCommitStats'
         "201":
           description: Created
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelWeeklyCommitStats'
+                $ref: '#/components/schemas/EntityModelWeeklyCommitStats'
         "204":
           description: No Content
     delete:
@@ -3702,7 +3943,7 @@ paths:
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelWeeklyCommitStats'
+                $ref: '#/components/schemas/EntityModelWeeklyCommitStats'
         "204":
           description: No Content
   /v1/resources/weeklyCommitStatses/{id}/repo/{propertyId}:
@@ -3728,7 +3969,7 @@ paths:
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/RepresentationModelWeeklyCommitStats'
+                $ref: '#/components/schemas/EntityModelWeeklyCommitStats'
         "404":
           description: Not Found
     delete:
@@ -3754,6 +3995,93 @@ paths:
           description: Not Found
 components:
   schemas:
+    UpdatePasswordDto:
+      required:
+        - newPassword
+        - oldPassword
+      type: object
+      properties:
+        oldPassword:
+          type: string
+        newPassword:
+          type: string
+    UpdateLoginDto:
+      required:
+        - newLogin
+        - password
+      type: object
+      properties:
+        newLogin:
+          type: string
+        password:
+          type: string
+    LoginDto:
+      required:
+        - password
+        - username
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+    WorkStats:
+      type: object
+      properties:
+        from:
+          type: string
+          format: date-time
+        to:
+          type: string
+          format: date-time
+        totalCommits:
+          type: integer
+          format: int64
+        linesAdded:
+          type: integer
+          format: int64
+        linesRemoved:
+          type: integer
+          format: int64
+    DateRange:
+      type: object
+      properties:
+        from:
+          type: string
+          format: date-time
+        to:
+          type: string
+          format: date-time
+    RemovedLinesWeeklyStats:
+      type: object
+      properties:
+        from:
+          type: string
+          format: date-time
+        to:
+          type: string
+          format: date-time
+        removedLinesOfOthers:
+          type: integer
+          format: int64
+        removedByOthersLines:
+          type: integer
+          format: int64
+        removedOwnLines:
+          type: integer
+          format: int64
+    OwnershipStats:
+      type: object
+      properties:
+        from:
+          type: string
+          format: date-time
+        to:
+          type: string
+          format: date-time
+        linesOwned:
+          type: integer
+          format: int64
     AbstractJsonSchemaPropertyObject:
       type: object
       properties:
@@ -3797,11 +4125,17 @@ components:
           type: string
         $schema:
           type: string
-    RepresentationModelObject:
+    EntityModelObject:
       type: object
       properties:
+        content:
+          type: object
         _links:
           $ref: '#/components/schemas/Links'
+    Links:
+      type: object
+      additionalProperties:
+        $ref: '#/components/schemas/Link'
     Alias:
       required:
         - name
@@ -3817,38 +4151,30 @@ components:
           type: string
         user:
           $ref: '#/components/schemas/User'
-    EntityModelWeeklyCommitStats:
+    CollectionModelEntityModelUser:
       type: object
       properties:
-        repo:
-          $ref: '#/components/schemas/GitRepo'
-        alias:
-          $ref: '#/components/schemas/Alias'
-        from:
-          type: string
-          format: date-time
-        to:
-          type: string
-          format: date-time
-        commitCount:
-          minimum: 0
-          type: integer
-          format: int64
-        linesAdded:
-          minimum: 0
-          type: integer
-          format: int64
-        linesRemoved:
-          minimum: 0
-          type: integer
-          format: int64
+        _embedded:
+          type: object
+          properties:
+            users:
+              type: array
+              items:
+                $ref: '#/components/schemas/EntityModelUser'
+        _links:
+          $ref: '#/components/schemas/Links'
+    EntityModelUser:
+      type: object
+      properties:
         id:
           type: integer
           format: int64
-        linesRemovedOf:
+        name:
+          type: string
+        aliases:
           type: array
           items:
-            $ref: '#/components/schemas/RemovedLines'
+            $ref: '#/components/schemas/Alias'
         _links:
           $ref: '#/components/schemas/Links'
     GitRepo:
@@ -3903,10 +4229,104 @@ components:
           type: string
         lastAnalyzedCommit:
           type: string
-    Links:
+    User:
+      required:
+        - name
       type: object
-      additionalProperties:
-        $ref: '#/components/schemas/Link'
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        aliases:
+          type: array
+          items:
+            $ref: '#/components/schemas/Alias'
+    CollectionModelObject:
+      type: object
+      properties:
+        _embedded:
+          type: object
+          properties:
+            objects:
+              type: array
+              items:
+                type: object
+        _links:
+          $ref: '#/components/schemas/Links'
+    CollectionModelEntityModelAlias:
+      type: object
+      properties:
+        _embedded:
+          type: object
+          properties:
+            aliases:
+              type: array
+              items:
+                $ref: '#/components/schemas/EntityModelAlias'
+        _links:
+          $ref: '#/components/schemas/Links'
+    EntityModelAlias:
+      type: object
+      properties:
+        repo:
+          $ref: '#/components/schemas/GitRepo'
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        user:
+          $ref: '#/components/schemas/User'
+        _links:
+          $ref: '#/components/schemas/Links'
+    CollectionModelEntityModelWeeklyCommitStats:
+      type: object
+      properties:
+        _embedded:
+          type: object
+          properties:
+            weeklyCommitStatses:
+              type: array
+              items:
+                $ref: '#/components/schemas/EntityModelWeeklyCommitStats'
+        _links:
+          $ref: '#/components/schemas/Links'
+    EntityModelWeeklyCommitStats:
+      type: object
+      properties:
+        repo:
+          $ref: '#/components/schemas/GitRepo'
+        alias:
+          $ref: '#/components/schemas/Alias'
+        from:
+          type: string
+          format: date-time
+        to:
+          type: string
+          format: date-time
+        commitCount:
+          minimum: 0
+          type: integer
+          format: int64
+        linesAdded:
+          minimum: 0
+          type: integer
+          format: int64
+        linesRemoved:
+          minimum: 0
+          type: integer
+          format: int64
+        id:
+          type: integer
+          format: int64
+        linesRemovedOf:
+          type: array
+          items:
+            $ref: '#/components/schemas/RemovedLines'
+        _links:
+          $ref: '#/components/schemas/Links'
     RemovedLines:
       required:
         - fromAuthor
@@ -3924,20 +4344,6 @@ components:
           $ref: '#/components/schemas/Alias'
         weekly:
           $ref: '#/components/schemas/WeeklyCommitStats'
-    User:
-      required:
-        - name
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-        name:
-          type: string
-        aliases:
-          type: array
-          items:
-            $ref: '#/components/schemas/Alias'
     WeeklyCommitStats:
       required:
         - alias
@@ -3976,33 +4382,48 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/RemovedLines'
-    CollectionModelEntityModelWeeklyCommitStats:
+    AuthUser:
+      required:
+        - login
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        login:
+          type: string
+    CollectionModelEntityModelAuthUser:
       type: object
       properties:
         _embedded:
           type: object
           properties:
-            weeklyCommitStatses:
+            authUsers:
               type: array
               items:
-                $ref: '#/components/schemas/EntityModelWeeklyCommitStats'
+                $ref: '#/components/schemas/EntityModelAuthUser'
         _links:
           $ref: '#/components/schemas/Links'
-    RepresentationModelWeeklyCommitStats:
+    EntityModelAuthUser:
       type: object
       properties:
+        id:
+          type: integer
+          format: int64
+        login:
+          type: string
         _links:
           $ref: '#/components/schemas/Links'
-    CollectionModelObject:
+    CollectionModelEntityModelTotalOwnershipStats:
       type: object
       properties:
         _embedded:
           type: object
           properties:
-            objects:
+            totalOwnershipStatses:
               type: array
               items:
-                type: object
+                $ref: '#/components/schemas/EntityModelTotalOwnershipStats'
         _links:
           $ref: '#/components/schemas/Links'
     EntityModelTotalOwnershipStats:
@@ -4052,21 +4473,16 @@ components:
           minimum: 0
           type: integer
           format: int64
-    CollectionModelEntityModelTotalOwnershipStats:
+    CollectionModelEntityModelGitRepo:
       type: object
       properties:
         _embedded:
           type: object
           properties:
-            totalOwnershipStatses:
+            gitRepoes:
               type: array
               items:
-                $ref: '#/components/schemas/EntityModelTotalOwnershipStats'
-        _links:
-          $ref: '#/components/schemas/Links'
-    RepresentationModelTotalOwnershipStats:
-      type: object
-      properties:
+                $ref: '#/components/schemas/EntityModelGitRepo'
         _links:
           $ref: '#/components/schemas/Links'
     EntityModelGitRepo:
@@ -4117,130 +4533,16 @@ components:
           type: string
         _links:
           $ref: '#/components/schemas/Links'
-    CollectionModelEntityModelGitRepo:
+    CollectionModelEntityModelFileExclusionRule:
       type: object
       properties:
         _embedded:
           type: object
           properties:
-            gitRepoes:
+            fileExclusionRules:
               type: array
               items:
-                $ref: '#/components/schemas/EntityModelGitRepo'
-        _links:
-          $ref: '#/components/schemas/Links'
-    RepresentationModelGitRepo:
-      type: object
-      properties:
-        _links:
-          $ref: '#/components/schemas/Links'
-    EntityModelAlias:
-      type: object
-      properties:
-        repo:
-          $ref: '#/components/schemas/GitRepo'
-        id:
-          type: integer
-          format: int64
-        name:
-          type: string
-        user:
-          $ref: '#/components/schemas/User'
-        _links:
-          $ref: '#/components/schemas/Links'
-    CollectionModelEntityModelAlias:
-      type: object
-      properties:
-        _embedded:
-          type: object
-          properties:
-            aliases:
-              type: array
-              items:
-                $ref: '#/components/schemas/EntityModelAlias'
-        _links:
-          $ref: '#/components/schemas/Links'
-    RepresentationModelAlias:
-      type: object
-      properties:
-        _links:
-          $ref: '#/components/schemas/Links'
-    EntityModelFileInclusionRule:
-      type: object
-      properties:
-        repo:
-          $ref: '#/components/schemas/GitRepo'
-        id:
-          type: integer
-          format: int64
-        name:
-          type: string
-        rule:
-          type: string
-        _links:
-          $ref: '#/components/schemas/Links'
-    FileInclusionRule:
-      required:
-        - name
-        - repo
-        - rule
-      type: object
-      properties:
-        repo:
-          $ref: '#/components/schemas/GitRepo'
-        id:
-          type: integer
-          format: int64
-        name:
-          type: string
-        rule:
-          type: string
-    CollectionModelEntityModelFileInclusionRule:
-      type: object
-      properties:
-        _embedded:
-          type: object
-          properties:
-            fileInclusionRules:
-              type: array
-              items:
-                $ref: '#/components/schemas/EntityModelFileInclusionRule'
-        _links:
-          $ref: '#/components/schemas/Links'
-    RepresentationModelFileInclusionRule:
-      type: object
-      properties:
-        _links:
-          $ref: '#/components/schemas/Links'
-    EntityModelUser:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-        name:
-          type: string
-        aliases:
-          type: array
-          items:
-            $ref: '#/components/schemas/Alias'
-        _links:
-          $ref: '#/components/schemas/Links'
-    CollectionModelEntityModelUser:
-      type: object
-      properties:
-        _embedded:
-          type: object
-          properties:
-            users:
-              type: array
-              items:
-                $ref: '#/components/schemas/EntityModelUser'
-        _links:
-          $ref: '#/components/schemas/Links'
-    RepresentationModelUser:
-      type: object
-      properties:
+                $ref: '#/components/schemas/EntityModelFileExclusionRule'
         _links:
           $ref: '#/components/schemas/Links'
     EntityModelFileExclusionRule:
@@ -4273,21 +4575,58 @@ components:
           type: string
         rule:
           type: string
-    CollectionModelEntityModelFileExclusionRule:
+    CollectionModelEntityModelFileInclusionRule:
       type: object
       properties:
         _embedded:
           type: object
           properties:
-            fileExclusionRules:
+            fileInclusionRules:
               type: array
               items:
-                $ref: '#/components/schemas/EntityModelFileExclusionRule'
+                $ref: '#/components/schemas/EntityModelFileInclusionRule'
         _links:
           $ref: '#/components/schemas/Links'
-    RepresentationModelFileExclusionRule:
+    EntityModelFileInclusionRule:
       type: object
       properties:
+        repo:
+          $ref: '#/components/schemas/GitRepo'
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        rule:
+          type: string
+        _links:
+          $ref: '#/components/schemas/Links'
+    FileInclusionRule:
+      required:
+        - name
+        - repo
+        - rule
+      type: object
+      properties:
+        repo:
+          $ref: '#/components/schemas/GitRepo'
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        rule:
+          type: string
+    CollectionModelEntityModelRemovedLines:
+      type: object
+      properties:
+        _embedded:
+          type: object
+          properties:
+            removedLineses:
+              type: array
+              items:
+                $ref: '#/components/schemas/EntityModelRemovedLines'
         _links:
           $ref: '#/components/schemas/Links'
     EntityModelRemovedLines:
@@ -4306,80 +4645,6 @@ components:
           $ref: '#/components/schemas/WeeklyCommitStats'
         _links:
           $ref: '#/components/schemas/Links'
-    CollectionModelEntityModelRemovedLines:
-      type: object
-      properties:
-        _embedded:
-          type: object
-          properties:
-            removedLineses:
-              type: array
-              items:
-                $ref: '#/components/schemas/EntityModelRemovedLines'
-        _links:
-          $ref: '#/components/schemas/Links'
-    RepresentationModelRemovedLines:
-      type: object
-      properties:
-        _links:
-          $ref: '#/components/schemas/Links'
-    WorkStats:
-      type: object
-      properties:
-        from:
-          type: string
-          format: date-time
-        to:
-          type: string
-          format: date-time
-        totalCommits:
-          type: integer
-          format: int64
-        linesAdded:
-          type: integer
-          format: int64
-        linesRemoved:
-          type: integer
-          format: int64
-    DateRange:
-      type: object
-      properties:
-        from:
-          type: string
-          format: date-time
-        to:
-          type: string
-          format: date-time
-    OwnershipStats:
-      type: object
-      properties:
-        from:
-          type: string
-          format: date-time
-        to:
-          type: string
-          format: date-time
-        linesOwned:
-          type: integer
-          format: int64
-    RemovedLinesWeeklyStats:
-      type: object
-      properties:
-        from:
-          type: string
-          format: date-time
-        to:
-          type: string
-          format: date-time
-        removedLinesOfOthers:
-          type: integer
-          format: int64
-        removedByOthersLines:
-          type: integer
-          format: int64
-        removedOwnLines:
-          type: integer
-          format: int64
     Link:
       type: object
       properties:
