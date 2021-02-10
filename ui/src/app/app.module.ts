@@ -13,7 +13,7 @@ import {MatButtonModule} from "@angular/material/button";
 import {ProjectsComponent} from './projects/projects.component';
 import {ReportsComponent} from './reports/reports.component';
 import {UserMappingsComponent} from './user-mappings/user-mappings.component';
-import {HttpClientModule} from "@angular/common/http";
+import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {ApiModule, Configuration, ConfigurationParameters} from "./api";
 import {LoginComponent} from './login/login.component';
 import {MatCardModule} from "@angular/material/card";
@@ -52,6 +52,7 @@ import {environment} from "../environments/environment";
 import { ChangePasswordComponent } from './change-password/change-password.component';
 import { MyProfileComponent } from './my-profile/my-profile.component';
 import { LogoutComponent } from './logout/logout.component';
+import {AuthHttpInterceptor} from "./http-interceptor";
 
 export function apiConfigFactory(): Configuration {
   const params: ConfigurationParameters = {
@@ -61,6 +62,10 @@ export function apiConfigFactory(): Configuration {
 
   return new Configuration(params);
 }
+
+export const httpInterceptorProviders = [
+  { provide: HTTP_INTERCEPTORS, useClass: AuthHttpInterceptor, multi: true },
+];
 
 @NgModule({
   declarations: [
@@ -118,7 +123,7 @@ export function apiConfigFactory(): Configuration {
         MatProgressSpinnerModule,
         MatOptionModule
     ],
-  providers:[{provide: MatPaginatorIntl, useClass: MatPaginatorIntlWithoutRange}],
+  providers:[{provide: MatPaginatorIntl, useClass: MatPaginatorIntlWithoutRange}, httpInterceptorProviders],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
