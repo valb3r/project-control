@@ -75,7 +75,7 @@ jobs:
           key: ${{ secrets.CI_CD_PRIVATE_KEY }}
           script: |
             killall java
-            timeout 10s bash -c 'while [[ $(wget -qO- --no-check-certificate "http://localhost:443/v3/api-docs" | grep -c 'openapi') == 1 ]]; do echo -n "."; sleep 1; done' || exit 1
+            timeout 10s bash -c 'while [[ $(wget -qO- --no-check-certificate "https://127.0.0.1:443/v3/api-docs" | grep -c 'openapi') == 1 ]]; do echo -n "."; sleep 1; done' || exit 1
             cd ./apps/project-control
             chmod +x run-prod.sh
             nohup ./run-prod.sh > logs.log 2>&1 &
@@ -87,4 +87,4 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.CI_CD_PRIVATE_KEY }}
           script: |
-            timeout 60s bash -c 'while [[ $(wget -qO- --no-check-certificate "http://localhost:443/v3/api-docs" | grep -c 'openapi') < 1 ]]; do echo -n "."; sleep 1; done' || exit 1
+            timeout 60s bash -c 'while [[ $(wget -qO- --no-check-certificate "https://127.0.0.1:443/v3/api-docs" | grep -c 'openapi') < 1 ]]; do echo -n "."; sleep 1; done' || exit 1
