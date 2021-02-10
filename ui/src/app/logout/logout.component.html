@@ -1,0 +1,10 @@
+<div id="login-form" fxFlexFill fxLayoutAlign="center center">
+  <mat-card fxLayout="column" fxLayoutAlign="space-around center">
+    <mat-card-header>
+      <mat-card-title>Logging out...</mat-card-title>
+    </mat-card-header>
+    <mat-error *ngIf="responseError">
+      Server error: {{responseError}}
+    </mat-error>
+  </mat-card>
+</div>

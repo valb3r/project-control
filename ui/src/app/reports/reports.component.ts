@@ -19,6 +19,8 @@ import {animate, state, style, transition, trigger} from "@angular/animations";
 })
 export class ReportsComponent implements AfterViewInit {
 
+  public static ROUTE = 'reports';
+
   @ViewChild(MatPaginator) paginator: MatPaginator;
   repos: EntityModelGitRepo[];
 

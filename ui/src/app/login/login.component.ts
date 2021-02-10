@@ -11,6 +11,8 @@ import {LoginControllerService, LoginDto} from "../api";
 })
 export class LoginComponent implements OnInit {
 
+  public static ROUTE = 'login';
+
   responseError: string;
   hide = true;
 

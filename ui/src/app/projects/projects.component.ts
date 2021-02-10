@@ -15,6 +15,8 @@ import AnalysisStateEnum = EntityModelGitRepo.AnalysisStateEnum;
 })
 export class ProjectsComponent implements AfterViewInit {
 
+  public static ROUTE = 'projects';
+
   @ViewChild(MatPaginator) paginator: MatPaginator;
   repos: EntityModelGitRepo[];
 

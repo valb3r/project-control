@@ -49,6 +49,9 @@ import {ByUserReworkFromOthersComponent} from './components/reports/by-user-rewo
 import {ByUserReworkOwnComponent} from './components/reports/by-user-rework-own/by-user-rework-own.component';
 import {ByUserWorkDetailsComponent} from './components/reports/by-user-work-details/by-user-work-details.component';
 import {environment} from "../environments/environment";
+import { ChangePasswordComponent } from './change-password/change-password.component';
+import { MyProfileComponent } from './my-profile/my-profile.component';
+import { LogoutComponent } from './logout/logout.component';
 
 export function apiConfigFactory(): Configuration {
   const params: ConfigurationParameters = {
@@ -82,7 +85,10 @@ export function apiConfigFactory(): Configuration {
     ByUserReworkByOthersComponent,
     ByUserReworkFromOthersComponent,
     ByUserReworkOwnComponent,
-    ByUserWorkDetailsComponent
+    ByUserWorkDetailsComponent,
+    ChangePasswordComponent,
+    MyProfileComponent,
+    LogoutComponent
   ],
     imports: [
         ApiModule.forRoot(apiConfigFactory),

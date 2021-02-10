@@ -19,6 +19,8 @@ import {animate, state, style, transition, trigger} from "@angular/animations";
 })
 export class UserMappingsComponent implements AfterViewInit {
 
+  public static ROUTE = 'user-mappings';
+
   @ViewChild(MatPaginator) paginator: MatPaginator;
   repos: EntityModelGitRepo[];
 

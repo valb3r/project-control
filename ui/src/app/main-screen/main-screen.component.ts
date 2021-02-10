@@ -8,13 +8,18 @@ import {MediaMatcher} from "@angular/cdk/layout";
 })
 export class MainScreenComponent implements OnInit {
 
+  public static ROUTE = 'control';
+
   mobileQuery: MediaQueryList;
 
   fillerNav: Nav[] = [
     new Nav("Projects", "projects"),
     new Nav("Reports", "reports"),
     new Nav("File inclusion/exclusion rules", "rules"),
-    new Nav("User mappings", "user-mappings")
+    new Nav("User mappings", "user-mappings"),
+    new Nav("My profile", "my-profile"),
+    new Nav("Change password", "change-password"),
+    new Nav("Logout", "logout"),
   ];
 
   filteredNav: Nav[];

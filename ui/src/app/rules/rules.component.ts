@@ -12,6 +12,8 @@ import {MatPaginator} from "@angular/material/paginator";
 })
 export class RulesComponent implements AfterViewInit {
 
+  public static ROUTE = 'rules';
+
   @ViewChild(MatPaginator) paginator: MatPaginator;
   repos: EntityModelGitRepo[];
 
