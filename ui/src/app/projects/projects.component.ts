@@ -1,7 +1,7 @@
 import {AfterViewInit, Component, ViewChild} from '@angular/core';
 import {MatPaginator} from "@angular/material/paginator";
 import {catchError, map, startWith, switchMap} from "rxjs/operators";
-import {EMPTY} from "rxjs";
+import {EMPTY, interval, Subscription} from "rxjs";
 import {MatDialog} from "@angular/material/dialog";
 import {AddProjectDialogComponent} from "../dialogs/add-project-dialog/add-project-dialog.component";
 import {EntityModelGitRepo, GitRepo, GitRepoEntityControllerService, GitRepoSearchControllerService} from "../api";
@@ -24,15 +24,15 @@ export class ProjectsComponent implements AfterViewInit {
   resultsLength = 0;
   isLoadingResults = true;
 
+  private timeInterval: Subscription;
+
   constructor(private gitRepoes: GitRepoEntityControllerService, public dialog: MatDialog) { }
 
   ngAfterViewInit() {
-    this.paginator.page.pipe(
-        startWith({}),
-        switchMap(() => {
-          this.isLoadingResults = true;
-          return this.gitRepoes.getCollectionResourceGitrepoGet1(this.paginator.pageIndex, this.paginator.pageSize)
-        }),
+    this.timeInterval = interval(5000)
+      .pipe(
+        startWith(0),
+        switchMap(() => this.gitRepoes.getCollectionResourceGitrepoGet1(this.paginator.pageIndex, this.paginator.pageSize)),
         map(data => {
           this.isLoadingResults = false;
           this.resultsLength = data._embedded.gitRepoes.length;
@@ -44,6 +44,10 @@ export class ProjectsComponent implements AfterViewInit {
           return EMPTY;
         })
       ).subscribe(data => this.repos = data);
+  }
+
+  ngOnDestroy(): void {
+    this.timeInterval.unsubscribe();
   }
 
   repo(item: EntityModelGitRepo): EntityModelGitRepo {
