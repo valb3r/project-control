@@ -55,6 +55,7 @@ jobs:
           source: "build/libs/project-control*.jar,run-prod.sh"
           target: "apps/project-control"
           strip_components: 2
+          overwrite: true
 
       - name: Run new app deployment
         uses: appleboy/ssh-action@master
@@ -64,4 +65,5 @@ jobs:
           key: ${{ secrets.CI_CD_PRIVATE_KEY }}
           script: |
             killall java
+            chmod +x ./apps/project-control/run-prod.sh
             . ./apps/project-control/run-prod.sh || exit 1
