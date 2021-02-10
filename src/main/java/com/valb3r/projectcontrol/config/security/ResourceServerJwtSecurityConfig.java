@@ -93,15 +93,4 @@ public class ResourceServerJwtSecurityConfig extends WebSecurityConfigurerAdapte
             return new OAuth2AuthenticationException(new BearerTokenError("No token cookie", HttpStatus.UNAUTHORIZED, null, null));
         }
     }
-
-    @SneakyThrows
-    private RSAPublicKey convert(Resource resource) {
-        KeyFactory factory = KeyFactory.getInstance("RSA");
-        try (Reader keyReader =  new InputStreamReader(resource.getInputStream()); PemReader pemReader = new PemReader(keyReader)) {
-            PemObject pemObject = pemReader.readPemObject();
-            byte[] content = pemObject.getContent();
-            X509EncodedKeySpec pubKeySpec = new X509EncodedKeySpec(content);
-            return (RSAPublicKey) factory.generatePublic(pubKeySpec);
-        }
-    }
 }
