@@ -57,6 +57,16 @@ jobs:
           strip_components: 2
           overwrite: true
 
+      - name: Copy run script to remote
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.CI_CD_PRIVATE_KEY }}
+          source: "run-prod.sh"
+          target: "apps/project-control"
+          overwrite: true
+
       - name: Run new app deployment
         uses: appleboy/ssh-action@master
         with:
