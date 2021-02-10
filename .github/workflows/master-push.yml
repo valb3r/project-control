@@ -43,5 +43,23 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
 
-      - name: Build project backend and run tests
-        run: ./gradlew clean test
+      - name: Build project backend and frontend (monolith) and run tests
+        run: ./gradlew clean syncNpm test bootJar
+
+      - name: Copy built JAR to remote
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.CI_CD_PRIVATE_KEY }}
+          source: "build/libs/project-control*.jar,run-prod.sh"
+          target: "apps/project-control"
+
+      - name: Run new app deployment
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.CI_CD_PRIVATE_KEY }}
+          script: |
+            . ./apps/project-control/run-prod.sh || exit 1
