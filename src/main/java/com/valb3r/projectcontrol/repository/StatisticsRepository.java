@@ -42,8 +42,8 @@ public interface StatisticsRepository extends org.springframework.data.repositor
             "WITH u,r MATCH (a)<-[:OF]-(w:WeeklyCommitStats)-[:OF]->(r:GitRepo) WHERE w.from >= $from AND w.to <= $to " +
             "CALL {" +
             "  WITH u,w MATCH (af)<-[:FROM]-(r:RemovedLines)-[c:OF]->(w)-[:OF]->(ao:Alias) WHERE (u)-[:ALIAS]->(af:Alias) AND (u)-[:ALIAS]->(ao:Alias) RETURN w.from AS from, w.to AS to, SUM(r.removedLines) AS removedOwnLines, 0  AS removedByOthersLines, 0 AS removedLinesOfOthers" +
-            "  UNION WITH u,w MATCH (af)<-[:FROM]-(r:RemovedLines)-[c:OF]->(w)-[:OF]->(ao:Alias) WHERE NOT (u)-[:ALIAS]->(af:Alias) AND (u)-[:ALIAS]->(ao:Alias) RETURN w.from AS from, w.to AS to, SUM(r.removedLines) AS removedLinesOfOthers, 0 AS removedOwnLines, 0 AS removedLinesOfOthers" +
-            "  UNION WITH u,w MATCH (af)<-[:FROM]-(r:RemovedLines)-[c:OF]->(w)-[:OF]->(ao:Alias) WHERE (u)-[:ALIAS]->(af:Alias) AND NOT (u)-[:ALIAS]->(ao:Alias) RETURN w.from AS from, w.to AS to, SUM(r.removedLines) AS removedByOthersLines, 0 AS removedByOthersLines, 0 AS removedOwnLines" +
+            "  UNION WITH u,w MATCH (af)<-[:FROM]-(r:RemovedLines)-[c:OF]->(w)-[:OF]->(ao:Alias) WHERE NOT (u)-[:ALIAS]->(af:Alias) AND (u)-[:ALIAS]->(ao:Alias) RETURN w.from AS from, w.to AS to, SUM(r.removedLines) AS removedLinesOfOthers, 0 AS removedOwnLines, 0 AS removedByOthersLines" +
+            "  UNION WITH u,w MATCH (af)<-[:FROM]-(r:RemovedLines)-[c:OF]->(w)-[:OF]->(ao:Alias) WHERE (u)-[:ALIAS]->(af:Alias) AND NOT (u)-[:ALIAS]->(ao:Alias) RETURN w.from AS from, w.to AS to, SUM(r.removedLines) AS removedByOthersLines, 0 AS removedLinesOfOthers, 0 AS removedOwnLines" +
             "} " +
             "RETURN from, to, SUM(removedLinesOfOthers) AS removedLinesOfOthers, SUM(removedByOthersLines) AS removedByOthersLines, SUM(removedOwnLines) AS removedOwnLines ORDER BY from")
     RemovedLinesWeeklyStats[] getRemovedLinesStats(@Param("repoId") Long repoId, @Param("userId") Long userId, @Param("from") Instant from, @Param("to") Instant to);
