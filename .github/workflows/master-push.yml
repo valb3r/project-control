@@ -65,5 +65,6 @@ jobs:
           key: ${{ secrets.CI_CD_PRIVATE_KEY }}
           script: |
             killall java
-            chmod +x ./apps/project-control/run-prod.sh
-            . ./apps/project-control/run-prod.sh || exit 1
+            cd ./apps/project-control
+            chmod +x run-prod.sh
+            nohup ./run-prod.sh & > allout.txt 2>&1 || exit 1
