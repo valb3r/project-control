@@ -3,6 +3,7 @@ import {HttpRequest, HttpHandler, HttpEvent, HttpInterceptor, HttpErrorResponse}
 import { Observable } from 'rxjs';
 import {tap} from 'rxjs/operators';
 import {Router} from '@angular/router';
+import {LoginComponent} from "./login/login.component";
 
 @Injectable()
 export class AuthHttpInterceptor implements HttpInterceptor {
@@ -12,6 +13,10 @@ export class AuthHttpInterceptor implements HttpInterceptor {
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return next.handle(request).pipe( tap(() => {},
       (err: any) => {
+        if (request.url.indexOf(LoginComponent.ROUTE) > 0) {
+          return;
+        }
+
         if (err instanceof HttpErrorResponse) {
           if (err.status !== 401) {
             return;
