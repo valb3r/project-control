@@ -77,4 +77,4 @@ jobs:
             killall java
             cd ./apps/project-control
             chmod +x run-prod.sh
-            nohup ./run-prod.sh & > logs.log 2>&1 || exit 1
+            nohup ./run-prod.sh > logs.log 2>&1 &
