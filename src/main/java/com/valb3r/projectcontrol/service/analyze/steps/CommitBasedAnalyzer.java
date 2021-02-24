@@ -44,6 +44,7 @@ public abstract class CommitBasedAnalyzer implements AnalysisStep {
         return git;
     }
 
+    // FIXME Support of multiple analyzed ranges is necessary. It is possible to get (HEAD)1-new,2-analyzed,3-analyzed,4-new,5-analyzed,6-new(FIRST) sequence during multiple restarts as we traverse from HEAD
     protected void analyzeRepo(Git git, GitRepo repo) throws IOException {
         var aliasCache = new HashMap<String, Alias>();
         var counter = 0L;
