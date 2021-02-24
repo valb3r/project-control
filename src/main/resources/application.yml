@@ -35,6 +35,11 @@ logging:
   level:
     com.valb3r.projectcontrol: INFO
 
+schedule:
+  reanalyze:
+    enabled: true
+    cron: 0 0 0 * * ?
+
 oauth2:
   keys:
     # You should override these!
