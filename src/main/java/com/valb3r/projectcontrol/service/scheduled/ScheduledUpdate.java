@@ -19,6 +19,7 @@ public class ScheduledUpdate {
     @Scheduled(cron = "${schedule.reanalyze.cron}")
     public void reanalyze() {
         repositories.findAll().forEach(it -> {
+            log.info("Scheduling {} for re-analysis", it.getName());
             it.setAnalysisState(GitRepo.AnalysisState.STARTED);
             repositories.save(it);
         });

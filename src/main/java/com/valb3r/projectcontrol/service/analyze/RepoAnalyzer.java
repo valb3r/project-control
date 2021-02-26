@@ -23,6 +23,7 @@ public class RepoAnalyzer {
     @Async
     @SneakyThrows
     public void analyze(GitRepo repo) {
+        log.info("Analyzing {}", repo.getName());
         repo.setErrorMessage(null);
         Git git = null;
         try {
