@@ -9,6 +9,7 @@ import com.valb3r.projectcontrol.service.analyze.StateUpdatingService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
@@ -27,6 +28,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.eclipse.jgit.lib.Constants.HEAD;
 import static org.kie.internal.io.ResourceFactory.newByteArrayResource;
 
+@Slf4j
 @RequiredArgsConstructor
 public abstract class CommitBasedAnalyzer implements AnalysisStep {
 
@@ -61,6 +63,7 @@ public abstract class CommitBasedAnalyzer implements AnalysisStep {
 
             boolean inExcludeRange = false;
             while ((commit = walk.next()) != null) {
+                log.info("[{}->{}] On commit {}", stateOnStart(), stateOnSuccess(), commit.getId());
                 if (null == startCommit) {
                     startCommit = commit;
                 }
@@ -89,6 +92,7 @@ public abstract class CommitBasedAnalyzer implements AnalysisStep {
                         .prevCommit(prevCommit)
                         .build();
 
+                log.info("[{}->{}] Analyzing commit {}", stateOnStart(), stateOnSuccess(), commit.getId());
                 processCommit(ctx);
                 counter++;
 
