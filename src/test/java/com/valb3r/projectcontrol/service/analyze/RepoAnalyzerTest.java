@@ -123,9 +123,9 @@ class RepoAnalyzerTest {
         verify(cloneRepoStep).execute(any(), any());
         var order = inOrder(commitAnalyzer, codeOwnershipAnalyzer);
         order.verify(commitAnalyzer, times(4)).processCommit(commitAnalyzerCaptor.capture());
-        assertThat(commitAnalyzerCaptor.getAllValues()).map(commitMessageStart()).containsExactly("4", "3", "2", "1");
+        assertThat(commitAnalyzerCaptor.getAllValues()).map(commitMessageStart()).containsExactly("1", "2", "3", "4");
         order.verify(codeOwnershipAnalyzer, times(4)).processCommit(ownershipAnalyzerCaptor.capture());
-        assertThat(ownershipAnalyzerCaptor.getAllValues()).map(commitMessageStart()).containsExactly("4", "3", "2", "1");
+        assertThat(ownershipAnalyzerCaptor.getAllValues()).map(commitMessageStart()).containsExactly("1", "2", "3", "4");
     }
 
     @Test
@@ -141,9 +141,9 @@ class RepoAnalyzerTest {
         verify(cloneRepoStep, times(2)).execute(any(), any());
         var order = inOrder(commitAnalyzer, codeOwnershipAnalyzer);
         order.verify(commitAnalyzer, times(4)).processCommit(commitAnalyzerCaptor.capture());
-        assertThat(commitAnalyzerCaptor.getAllValues()).map(commitMessageStart()).containsExactly("4", "3", "2", "1");
+        assertThat(commitAnalyzerCaptor.getAllValues()).map(commitMessageStart()).containsExactly("1", "2", "3", "4");
         order.verify(codeOwnershipAnalyzer, times(4)).processCommit(ownershipAnalyzerCaptor.capture());
-        assertThat(ownershipAnalyzerCaptor.getAllValues()).map(commitMessageStart()).containsExactly("4", "3", "2", "1");
+        assertThat(ownershipAnalyzerCaptor.getAllValues()).map(commitMessageStart()).containsExactly("1", "2", "3", "4");
     }
 
     @Test
@@ -160,8 +160,8 @@ class RepoAnalyzerTest {
         tested.analyze(repo.get());
         verify(cloneRepoStep).execute(any(), any());
         var order = inOrder(commitAnalyzer, codeOwnershipAnalyzer);
-        order.verify(commitAnalyzer, times(2)).processCommit(commitAnalyzerCaptor.capture());
-        assertThat(commitAnalyzerCaptor.getAllValues()).map(commitMessageStart()).containsExactly("4", "3");
+        order.verify(commitAnalyzer, times(3)).processCommit(commitAnalyzerCaptor.capture());
+        assertThat(commitAnalyzerCaptor.getAllValues()).map(commitMessageStart()).containsExactly("1", "2", "3");
         order.verify(codeOwnershipAnalyzer, never()).processCommit(ownershipAnalyzerCaptor.capture());
 
         commitAnalyzerCaptor = ArgumentCaptor.forClass(CommitCtx.class);
@@ -169,10 +169,10 @@ class RepoAnalyzerTest {
         doAnswer(inv -> null).when(commitAnalyzer).processCommit(any());
         tested.analyze(repo.get());
         verify(cloneRepoStep, times(2)).execute(any(), any());
-        order.verify(commitAnalyzer, times(3)).processCommit(commitAnalyzerCaptor.capture());
-        assertThat(commitAnalyzerCaptor.getAllValues()).map(commitMessageStart()).containsExactly("3", "2", "1");
+        order.verify(commitAnalyzer, times(2)).processCommit(commitAnalyzerCaptor.capture());
+        assertThat(commitAnalyzerCaptor.getAllValues()).map(commitMessageStart()).containsExactly("3", "4");
         order.verify(codeOwnershipAnalyzer, times(4)).processCommit(ownershipAnalyzerCaptor.capture());
-        assertThat(ownershipAnalyzerCaptor.getAllValues()).map(commitMessageStart()).containsExactly("4", "3", "2", "1");
+        assertThat(ownershipAnalyzerCaptor.getAllValues()).map(commitMessageStart()).containsExactly("1", "2", "3", "4");
     }
 
     @Test
@@ -190,17 +190,17 @@ class RepoAnalyzerTest {
         verify(cloneRepoStep).execute(any(), any());
         var order = inOrder(commitAnalyzer, codeOwnershipAnalyzer);
         order.verify(commitAnalyzer, times(4)).processCommit(commitAnalyzerCaptor.capture());
-        assertThat(commitAnalyzerCaptor.getAllValues()).map(commitMessageStart()).containsExactly("4", "3", "2", "1");
-        order.verify(codeOwnershipAnalyzer, times(2)).processCommit(ownershipAnalyzerCaptor.capture());
-        assertThat(ownershipAnalyzerCaptor.getAllValues()).map(commitMessageStart()).containsExactly("4", "3");
+        assertThat(commitAnalyzerCaptor.getAllValues()).map(commitMessageStart()).containsExactly("1", "2", "3", "4");
+        order.verify(codeOwnershipAnalyzer, times(3)).processCommit(ownershipAnalyzerCaptor.capture());
+        assertThat(ownershipAnalyzerCaptor.getAllValues()).map(commitMessageStart()).containsExactly("1", "2", "3");
 
         ownershipAnalyzerCaptor = ArgumentCaptor.forClass(CommitCtx.class);
         doAnswer(inv -> null).when(codeOwnershipAnalyzer).processCommit(any());
         tested.analyze(repo.get());
         verify(cloneRepoStep, times(2)).execute(any(), any());
         order.verify(commitAnalyzer, never()).processCommit(commitAnalyzerCaptor.capture());
-        order.verify(codeOwnershipAnalyzer, times(3)).processCommit(ownershipAnalyzerCaptor.capture());
-        assertThat(ownershipAnalyzerCaptor.getAllValues()).map(commitMessageStart()).containsExactly("3", "2", "1");
+        order.verify(codeOwnershipAnalyzer, times(2)).processCommit(ownershipAnalyzerCaptor.capture());
+        assertThat(ownershipAnalyzerCaptor.getAllValues()).map(commitMessageStart()).containsExactly("3", "4");
     }
 
     @Test
@@ -210,9 +210,9 @@ class RepoAnalyzerTest {
         verify(cloneRepoStep).execute(any(), any());
         var order = inOrder(commitAnalyzer, codeOwnershipAnalyzer);
         order.verify(commitAnalyzer, times(4)).processCommit(commitAnalyzerCaptor.capture());
-        assertThat(commitAnalyzerCaptor.getAllValues()).map(commitMessageStart()).containsExactly("4", "3", "2", "1");
+        assertThat(commitAnalyzerCaptor.getAllValues()).map(commitMessageStart()).containsExactly("1", "2", "3", "4");
         order.verify(codeOwnershipAnalyzer, times(4)).processCommit(ownershipAnalyzerCaptor.capture());
-        assertThat(ownershipAnalyzerCaptor.getAllValues()).map(commitMessageStart()).containsExactly("4", "3", "2", "1");
+        assertThat(ownershipAnalyzerCaptor.getAllValues()).map(commitMessageStart()).containsExactly("1", "2", "3", "4");
 
         commitAnalyzerCaptor = ArgumentCaptor.forClass(CommitCtx.class);
         ownershipAnalyzerCaptor = ArgumentCaptor.forClass(CommitCtx.class);
@@ -229,9 +229,9 @@ class RepoAnalyzerTest {
         verify(cloneRepoStep).execute(any(), any());
         var order = inOrder(commitAnalyzer, codeOwnershipAnalyzer);
         order.verify(commitAnalyzer, times(4)).processCommit(commitAnalyzerCaptor.capture());
-        assertThat(commitAnalyzerCaptor.getAllValues()).map(commitMessageStart()).containsExactly("4", "3", "2", "1");
+        assertThat(commitAnalyzerCaptor.getAllValues()).map(commitMessageStart()).containsExactly("1", "2", "3", "4");
         order.verify(codeOwnershipAnalyzer, times(4)).processCommit(ownershipAnalyzerCaptor.capture());
-        assertThat(ownershipAnalyzerCaptor.getAllValues()).map(commitMessageStart()).containsExactly("4", "3", "2", "1");
+        assertThat(ownershipAnalyzerCaptor.getAllValues()).map(commitMessageStart()).containsExactly("1", "2", "3", "4");
 
         var git = Git.open(repoToAnalyze);
         Files.write(repoToAnalyze.toPath().resolve("new-commit.txt"), "".getBytes(StandardCharsets.UTF_8));

@@ -21,7 +21,9 @@ import org.kie.api.builder.KieModule;
 import org.kie.api.runtime.KieContainer;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Objects;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -32,7 +34,6 @@ import static org.kie.internal.io.ResourceFactory.newByteArrayResource;
 @RequiredArgsConstructor
 public abstract class CommitBasedAnalyzer implements AnalysisStep {
 
-    private static final int SAVE_EACH_N_COMMIT = 10;
     public static final String RESOURCES_DIR = "src/main/resources/";
 
     private final AliasRepository aliases;
@@ -52,31 +53,26 @@ public abstract class CommitBasedAnalyzer implements AnalysisStep {
         var counter = 0L;
         RevCommit commit;
         RevCommit prevCommit = null;
-        RevCommit startCommit = null;
 
-        var range = repo.beginEndOfStep(stateOnStart());
+        var startCommit = repo.beginEndOfStep(stateOnStart());
         try (var walk = new RevWalk(git.getRepository())) {
             walk.setRevFilter(RevFilter.NO_MERGES);
             walk.markStart(walk.parseCommit(git.getRepository().resolve(HEAD)));
+            List<RevCommit> commits = new ArrayList<>();
+            while ((commit = walk.next()) != null) {
+                commits.add(commit);
+            }
 
             var kie = container(repo);
 
-            boolean inExcludeRange = false;
-            while ((commit = walk.next()) != null) {
-                log.info("[{}->{}] On commit {}", stateOnStart(), stateOnSuccess(), commit.getId());
-                if (null == startCommit) {
-                    startCommit = commit;
-                }
+            boolean started = false;
+            for (int i = commits.size() - 1; i >= 0; i--) {
+                commit = commits.get(i);
 
-                if (commit.getName().equals(range.getStart())) {
-                    inExcludeRange = !Objects.equals(range.getStart(), range.getEnd());
-                    continue;
-                }
-                if (commit.getName().equals(range.getEnd())) {
-                    inExcludeRange = false;
-                    continue;
-                }
-                if (inExcludeRange) {
+                if (null != startCommit && !started) {
+                    if (startCommit.equals(commit.getName())) {
+                        started = true;
+                    }
                     continue;
                 }
 
@@ -97,12 +93,11 @@ public abstract class CommitBasedAnalyzer implements AnalysisStep {
                 counter++;
 
                 prevCommit = commit;
-                updateRepoLastCommit(repo, counter, startCommit, commit, counter % SAVE_EACH_N_COMMIT == 0);
+                updateRepoLastCommit(repo, counter, commit);
             }
 
-            updateRepoLastCommit(repo, counter, startCommit, prevCommit, prevCommit != null);
         } catch (Exception ex) {
-            updateRepoLastCommit(repo, counter, startCommit, prevCommit, prevCommit != null);
+            updateRepoLastCommit(repo, counter, prevCommit);
             throw ex;
         }
     }
@@ -137,12 +132,14 @@ public abstract class CommitBasedAnalyzer implements AnalysisStep {
 
     protected abstract void processCommit(CommitCtx ctx);
 
-    private void updateRepoLastCommit(GitRepo repo, long counter, RevCommit startCommit, RevCommit endCommit, boolean needUpdate) {
-        if (needUpdate) {
-            repo.setCommitsProcessed(counter);
-            repo.reportAnalyzedRange(stateOnStart(), new GitRepo.AnalyzedRange(startCommit.getName(), endCommit.getName()));
-            stateUpdatingService.updateInternalData(repo);
+    private void updateRepoLastCommit(GitRepo repo, long count, RevCommit commit) {
+        if (null == commit) {
+            return;
         }
+
+        repo.setCommitsProcessed((null != repo.getCommitsProcessed() ? repo.getCommitsProcessed() : 0L) + count);
+        repo.reportAnalyzedRange(stateOnStart(), commit.getId().getName());
+        stateUpdatingService.updateInternalData(repo);
     }
 
     @Getter

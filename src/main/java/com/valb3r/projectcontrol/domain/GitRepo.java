@@ -72,26 +72,26 @@ public class GitRepo {
         return null;
     }
 
-    public AnalyzedRange beginEndOfStep(AnalysisState start) {
-        Map<String, AnalyzedRange> ranges = ranges();
-        return ranges.getOrDefault(start.name(), new AnalyzedRange(null, null));
+    public String beginEndOfStep(AnalysisState start) {
+        Map<String, String> ranges = ranges();
+        return ranges.getOrDefault(start.name(), null);
     }
 
-    public void reportAnalyzedRange(AnalysisState start, AnalyzedRange range) {
-        Map<String, AnalyzedRange> ranges = ranges();
-        ranges.put(start.name(), range);
+    public void reportAnalyzedRange(AnalysisState start, String commitId) {
+        Map<String, String> ranges = ranges();
+        ranges.put(start.name(), commitId);
         setWorkDoneBySteps(
                 ranges.entrySet().stream()
-                        .map(it -> String.format("%s:%s:%s", it.getKey(), it.getValue().getStart(), it.getValue().getEnd()))
+                        .map(it -> String.format("%s:%s", it.getKey(), it.getValue()))
                         .collect(Collectors.toList())
         );
     }
 
-    private Map<String, AnalyzedRange> ranges() {
-        Map<String, AnalyzedRange> ranges = new LinkedHashMap<>();
+    private Map<String, String> ranges() {
+        Map<String, String> ranges = new LinkedHashMap<>();
         workDoneBySteps.forEach(it -> {
             var split = it.split(":");
-            ranges.put(split[0], new AnalyzedRange(split[1], split[2]));
+            ranges.put(split[0], split[1]);
         });
         return ranges;
     }
@@ -111,12 +111,5 @@ public class GitRepo {
         REFACTOR_COUNTED,
         FINISHED,
         FAILED
-    }
-
-    @Getter
-    @RequiredArgsConstructor
-    public static class AnalyzedRange {
-        private final String start;
-        private final String end;
     }
 }
