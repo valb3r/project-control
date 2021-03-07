@@ -72,13 +72,13 @@ public class GitRepo {
         return null;
     }
 
-    public AnalyzedRange beginEndOfStep(AnalysisState start) {
-        Map<String, AnalyzedRange> ranges = ranges();
-        return ranges.getOrDefault(start.name(), new AnalyzedRange(null, null));
+    public List<AnalyzedRange> beginEndOfStep(AnalysisState start) {
+        Map<String, List<AnalyzedRange>> ranges = ranges();
+        return ranges.getOrDefault(start.name(), new ArrayList<>());
     }
 
     public void reportAnalyzedRange(AnalysisState start, AnalyzedRange range) {
-        Map<String, AnalyzedRange> ranges = ranges();
+        Map<String, List<AnalyzedRange>> ranges = ranges();
         ranges.put(start.name(), range);
         setWorkDoneBySteps(
                 ranges.entrySet().stream()
@@ -87,11 +87,11 @@ public class GitRepo {
         );
     }
 
-    private Map<String, AnalyzedRange> ranges() {
-        Map<String, AnalyzedRange> ranges = new LinkedHashMap<>();
+    Map<String, List<AnalyzedRange>> ranges() {
+        Map<String, List<AnalyzedRange>> ranges = new LinkedHashMap<>();
         workDoneBySteps.forEach(it -> {
             var split = it.split(":");
-            ranges.put(split[0], new AnalyzedRange(split[1], split[2]));
+            ranges.computeIfAbsent(split[0], id -> new ArrayList<>()).add(new AnalyzedRange(split[1], split[2]));
         });
         return ranges;
     }
