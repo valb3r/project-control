@@ -88,3 +88,31 @@ jobs:
           key: ${{ secrets.CI_CD_PRIVATE_KEY }}
           script: |
             timeout 60s bash -c 'while [[ $(wget -qO- --no-check-certificate "https://127.0.0.1:443/actuator" | grep -c 'actuator') < 1 ]]; do echo -n "."; sleep 1; done' || exit 1
+
+      - name: DEMO env deployment
+        run: |
+          ./gradlew clean syncNpm -x test syncJar buildImage
+          docker save -o project-control.img project-control/project-control:${{ steps.vars.outputs.sha_short }}
+
+      - name: Copy docker-image to DEMO
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.DEMO_HOST }}
+          username: ${{ secrets.DEMO_USERNAME }}
+          key: ${{ secrets.DEMO_CI_CD_PRIVATE_KEY }}
+          source: "project-control.img"
+          target: "apps"
+          overwrite: true
+
+      - name: Deploy new docker image on DEMO
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.DEMO_HOST }}
+          username: ${{ secrets.DEMO_USERNAME }}
+          key: ${{ secrets.DEMO_CI_CD_PRIVATE_KEY }}
+          script: |
+            docker load -i apps/project-control.img
+            echo "export PROJECT_CONTROL_LATEST=${{ steps.vars.outputs.sha_short }}" > ./project-control-version.sh
+            ./all-env.sh
+            docker-compose down
+            docker-compose up -d
