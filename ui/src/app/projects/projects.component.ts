@@ -56,23 +56,38 @@ export class ProjectsComponent implements AfterViewInit {
 
   runAnalysis(repo: EntityModelGitRepo) {
     this.gitRepoes.patchItemResourceGitrepoPatch(Id.read(repo._links.self.href), {analysisState: AnalysisStateEnum.Started} as GitRepo)
-      .subscribe(_ => {this.paginator.page.emit()}, error => {console.log("Error", error)});
+      .subscribe(_ => {this.refresh()}, error => {console.log("Error", error)});
   }
 
   newRepo() {
     this.dialog.open(AddProjectDialogComponent, {width: "70%"}).afterClosed().subscribe(res => {
       if (res) {
-        this.paginator.page.emit();
+        this.refresh();
       }
     });
   }
 
   deleteRepo(repo: EntityModelGitRepo) {
-    this.gitRepoes.deleteItemResourceGitrepoDelete(Id.read(repo._links.self.href)).subscribe(_ => {this.paginator.page.emit()});
+    this.gitRepoes.deleteItemResourceGitrepoDelete(Id.read(repo._links.self.href)).subscribe(_ => {this.refresh()});
   }
 
   cleanAnalyzedDataOfRepo(repo: EntityModelGitRepo) {
     this.gitRepoes.patchItemResourceGitrepoPatch(Id.read(repo._links.self.href), {analysisState: AnalysisStateEnum.Cleanup} as GitRepo)
-      .subscribe(_ => {this.paginator.page.emit()}, error => {console.log("Error", error)});
+      .subscribe(_ => {this.refresh()}, error => {console.log("Error", error)});
+  }
+
+  private refresh() {
+    this.isLoadingResults = true;
+    this.gitRepoes.getCollectionResourceGitrepoGet1(this.paginator.pageIndex, this.paginator.pageSize).pipe(
+      map(data => {
+        this.isLoadingResults = false;
+        this.resultsLength = data._embedded.gitRepoes.length;
+
+        return data._embedded.gitRepoes;
+      }),
+      catchError(() => {
+        this.isLoadingResults = false;
+        return EMPTY;
+      })).subscribe(data => this.repos = data);
   }
 }
