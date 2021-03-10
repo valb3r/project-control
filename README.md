@@ -2,6 +2,10 @@
 
 A tool to assess the effort spent to develop software project and its readiness.
 
+# DEMO site credentials
+
+Credentials: `admin/admin`
+
 ### Analyzes and graphically represents
 
 1. Commit count per developer per week
