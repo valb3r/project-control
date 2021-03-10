@@ -113,6 +113,6 @@ jobs:
           script: |
             docker load -i apps/project-control.img
             echo "export PROJECT_CONTROL_LATEST=${{ steps.vars.outputs.sha_short }}" > ./project-control-version.sh
-            ./all-env.sh
+            . ./all-env.sh
             docker-compose down
             docker-compose up -d
