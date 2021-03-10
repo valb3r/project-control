@@ -98,3 +98,7 @@ task buildImage(type: DockerBuildImage) {
 	inputDir.set(project.file(dockerBuildDir))
 	images.add("project-control/project-control:${commitSha()}")
 }
+
+task printCommitSha {
+	println "COMMIT:${commitSha()}"
+}
