@@ -39,7 +39,7 @@
       </ng-container>
 
       <ng-container matColumnDef="modifiedAt">
-        <th mat-header-cell *matHeaderCellDef>Updated at</th>
+        <th mat-header-cell *matHeaderCellDef>Updated at (UTC)</th>
         <td mat-cell *matCellDef="let row">{{friendlyDate(repo(row).modifiedAt)}}</td>
       </ng-container>
 
