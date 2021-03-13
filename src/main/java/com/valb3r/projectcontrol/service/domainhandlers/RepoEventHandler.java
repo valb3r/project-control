@@ -25,6 +25,7 @@ public class RepoEventHandler {
             gitRepo.deleteAnalyzedDataById(repo.getId());
             repo.getWorkDoneBySteps().clear();
             repo.setAnalysisState(GitRepo.AnalysisState.CLEANED);
+            repo.setCommitsProcessed(0L);
             gitRepo.save(repo);
             return;
         }

@@ -24,6 +24,8 @@ export interface EntityModelGitRepo {
     analysisState?: EntityModelGitRepo.AnalysisStateEnum;
     commitsProcessed?: number;
     errorMessage?: string;
+    createdAt?: string;
+    modifiedAt?: string;
     lastAnalyzedCommit?: string;
     _links?: { [key: string]: Link; };
 }

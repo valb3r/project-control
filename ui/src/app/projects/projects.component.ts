@@ -20,7 +20,7 @@ export class ProjectsComponent implements AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   repos: EntityModelGitRepo[];
 
-  displayedColumns: string[] = ['actions', 'name', 'status', 'branch', 'lastAnalyzedCommit', 'url', 'needsAuthentication', 'errorMessage'];
+  displayedColumns: string[] = ['actions', 'name', 'modifiedAt', 'status', 'branch', 'lastAnalyzedCommit', 'url', 'needsAuthentication', 'errorMessage'];
   resultsLength = 0;
   isLoadingResults = true;
 
@@ -74,6 +74,14 @@ export class ProjectsComponent implements AfterViewInit {
   cleanAnalyzedDataOfRepo(repo: EntityModelGitRepo) {
     this.gitRepoes.patchItemResourceGitrepoPatch(Id.read(repo._links.self.href), {analysisState: AnalysisStateEnum.Cleanup} as GitRepo)
       .subscribe(_ => {this.refresh()}, error => {console.log("Error", error)});
+  }
+
+  friendlyDate(date: string): string {
+    if (!date) {
+      return '';
+    }
+
+    return date.replace('T', ' ').split('.')[0];
   }
 
   private refresh() {

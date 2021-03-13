@@ -23,6 +23,8 @@ export interface GitRepo {
     analysisState: GitRepo.AnalysisStateEnum;
     commitsProcessed?: number;
     errorMessage?: string;
+    createdAt?: string;
+    modifiedAt?: string;
     lastAnalyzedCommit?: string;
 }
 export namespace GitRepo {

@@ -12,9 +12,13 @@ import lombok.experimental.SuperBuilder;
 import org.neo4j.ogm.annotation.GeneratedValue;
 import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.annotation.ReadOnlyProperty;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -62,6 +66,14 @@ public class GitRepo {
     private Long commitsProcessed;
 
     private String errorMessage;
+
+    @CreatedDate
+    @ReadOnlyProperty
+    private Instant createdAt;
+
+    @LastModifiedDate
+    @ReadOnlyProperty
+    private Instant modifiedAt;
 
     @JsonProperty("lastAnalyzedCommit")
     public String getLastAnalyzedCommit() {
