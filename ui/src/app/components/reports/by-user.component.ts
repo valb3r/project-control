@@ -1,7 +1,7 @@
 import {AfterContentInit, Component, Input, OnInit, ViewChild} from "@angular/core";
 
 import {MatSelectionList, MatSelectionListChange} from "@angular/material/list";
-import {BehaviorSubject, zip} from "rxjs";
+import {BehaviorSubject, merge, zip} from "rxjs";
 import {
   EntityModelGitRepo,
   EntityModelUser,
@@ -17,39 +17,39 @@ export abstract class ByUserComponent implements OnInit, AfterContentInit {
   @ViewChild("usersSelected") usersSelected: MatSelectionList;
 
   isLoading = false;
-  users: EntityModelUser[]
-  options = ChartsConfig.defaultBarChart()
-  updatedOptions = undefined
-  dateRange: string[] = []
-  series = []
-  chart = undefined
+  users: EntityModelUser[];
+  options = ChartsConfig.defaultBarChart();
+  updatedOptions = undefined;
+  dateRange: string[] = [];
+  series = [];
+  chart = undefined;
   userSelected = {} as EntityModelUser;
 
-  afterLoaded = new BehaviorSubject(null)
+  afterLoaded = new BehaviorSubject(null);
 
   protected constructor(protected statistics: StatisticsSearchControllerService, protected userList: UserSearchControllerService) {
   }
 
   ngOnInit(): void {
-    let repoId = +Id.read(this.project._links.self.href);
-    this.userList.findByRepoIdL(repoId)
+    const repoId = +Id.read(this.project._links.self.href);
+    this.userList.findByRepoIdL(repoId);
     const loaded = zip(
       this.statistics.getTotalWorkDateRangesL(repoId),
       this.userList.findByRepoIdL(repoId)
     );
 
     loaded.subscribe(res => {
-      this.users = res[1]._embedded.users
-      this.dateRange[0] = res[0].from
-      this.dateRange[1] = res[0].to
+      this.users = res[1]._embedded.users;
+      this.dateRange[0] = res[0].from;
+      this.dateRange[1] = res[0].to;
     });
 
-    zip(
+    merge(
       this.afterLoaded,
       loaded
     ).subscribe(_ => {
       this.doSelect();
-    })
+    });
   }
 
   ngAfterContentInit(): void {
