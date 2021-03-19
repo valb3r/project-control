@@ -66,6 +66,10 @@ export abstract class ByUserComponent implements OnInit, AfterContentInit {
   }
 
   userSelectionChange(change: MatSelectionListChange) {
+    if (!change.options || 0 === change.options.length) {
+      return;
+    }
+
     let repoId = +Id.read(this.project._links.self.href);
     this.isLoading = true;
     const user = change.options[0].value as EntityModelUser;
