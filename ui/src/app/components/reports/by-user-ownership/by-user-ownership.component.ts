@@ -8,6 +8,7 @@ import {
 import {Id} from "../../../id";
 import {ChartsConfig} from "../charts-config";
 import {ByUserComponent} from "../by-user.component";
+import {Observable} from "rxjs";
 
 @Component({
   selector: 'app-by-user-ownership',
@@ -22,11 +23,10 @@ export class ByUserOwnershipComponent extends ByUserComponent {
     super(statistics, userList);
   }
 
-  protected loadData(repoId: number, user: EntityModelUser) {
-    this.statistics.getWeeklyOwnershipStatsLLII(repoId, +Id.read(user._links.self.href), this.dateRange[0], this.dateRange[1])
-      .subscribe(
+  protected loadData(repoId: number, user: EntityModelUser): Observable<any>  {
+    const resp = this.statistics.getWeeklyOwnershipStatsLLII(repoId, +Id.read(user._links.self.href), this.dateRange[0], this.dateRange[1]);
+    resp.subscribe(
         res => {
-          this.isLoading = false;
           this.series.push({
             href: user._links.self.href,
             type: 'bar',
@@ -39,6 +39,7 @@ export class ByUserOwnershipComponent extends ByUserComponent {
           update.series = this.series;
           this.updatedOptions = update;
         }
-      )
+      );
+    return resp;
   }
 }

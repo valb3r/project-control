@@ -8,7 +8,7 @@ import {
 import {Id} from "../../../id";
 import {ChartsConfig} from "../charts-config";
 import {ByUserComponent} from "../by-user.component";
-import {zip} from "rxjs";
+import {Observable, zip} from "rxjs";
 import {MatSelectionListChange} from "@angular/material/list";
 
 @Component({
@@ -25,17 +25,17 @@ export class ByUserWorkDetailsComponent extends ByUserComponent {
   }
 
   doSelect() {
-    this.usersSelected.selectedOptions.select(this.usersSelected.options.first)
+    this.usersSelected.selectedOptions.select(this.usersSelected.options.first);
     this.userSelectionChange(new MatSelectionListChange(this.usersSelected, null, [this.usersSelected.options.first]));
   }
 
-  protected loadData(repoId: number, user: EntityModelUser) {
-    zip(
+  protected loadData(repoId: number, user: EntityModelUser): Observable<any>  {
+    const resp = zip(
       this.statistics.getWeeklyWorkStatsLLII(repoId, +Id.read(user._links.self.href), this.dateRange[0], this.dateRange[1]),
       this.statistics.getWeeklyOwnershipStatsLLII(repoId, +Id.read(user._links.self.href), this.dateRange[0], this.dateRange[1]),
       this.statistics.getRemovedLinesStatsLLII(repoId, +Id.read(user._links.self.href), this.dateRange[0], this.dateRange[1])
-    ).subscribe(res => {
-      this.isLoading = false;
+    );
+    resp.subscribe(res => {
       this.series = [];
       const xData = [];
       res.forEach(it => it.forEach(data => {
@@ -43,7 +43,7 @@ export class ByUserWorkDetailsComponent extends ByUserComponent {
           xData.push(data.from);
         }
       }));
-      xData.sort()
+      xData.sort();
       const workMap = new Map(res[0].map(it => [it.from, it]));
       const ownershipMap = new Map(res[1].map(it => [it.from, it]));
       const removedMap = new Map(res[2].map(it => [it.from, it]));
@@ -124,10 +124,11 @@ export class ByUserWorkDetailsComponent extends ByUserComponent {
       ];
       this.updatedOptions = update;
     });
+    return resp;
   }
 
   private static clone<T>(objectToCopy: T): T {
-    return JSON.parse(JSON.stringify(objectToCopy))
+    return JSON.parse(JSON.stringify(objectToCopy));
   }
 
   private static xAxis() {
@@ -137,6 +138,6 @@ export class ByUserWorkDetailsComponent extends ByUserComponent {
       axisTick: {
         alignWithLabel: true,
       }
-    }
+    };
   }
 }

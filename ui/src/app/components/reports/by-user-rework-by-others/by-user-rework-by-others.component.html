@@ -12,6 +12,6 @@
     </mat-selection-list>
   </mat-expansion-panel>
   <div>
-    <div echarts [options]="options" [loading]="isLoading" [merge]="updatedOptions" theme="macarons" (chartInit)="onChartInit($event)"></div>
+    <div echarts [options]="options" [loading]="numLoading != 0" [merge]="updatedOptions" theme="macarons" (chartInit)="onChartInit($event)"></div>
   </div>
 </div>

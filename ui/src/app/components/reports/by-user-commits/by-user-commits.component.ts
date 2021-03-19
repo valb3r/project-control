@@ -8,6 +8,7 @@ import {
 import {ChartsConfig} from "../charts-config";
 import {Id} from "../../../id";
 import {ByUserComponent} from "../by-user.component";
+import {Observable} from "rxjs";
 
 @Component({
   selector: 'app-by-user-commits',
@@ -20,11 +21,12 @@ export class ByUserCommitsComponent extends ByUserComponent {
 
   constructor(statistics: StatisticsSearchControllerService, userList: UserSearchControllerService) {
     super(statistics, userList); }
-  protected loadData(repoId: number, user: EntityModelUser) {
-    this.statistics.getWeeklyWorkStatsLLII(repoId, +Id.read(user._links.self.href), this.dateRange[0], this.dateRange[1])
-      .subscribe(
+
+  protected loadData(repoId: number, user: EntityModelUser): Observable<any> {
+    const resp = this.statistics.getWeeklyWorkStatsLLII(repoId, +Id.read(user._links.self.href), this.dateRange[0], this.dateRange[1]);
+
+    resp.subscribe(
         res => {
-          this.isLoading = false;
           this.series.push({
             href: user._links.self.href,
             type: 'bar',
@@ -37,6 +39,8 @@ export class ByUserCommitsComponent extends ByUserComponent {
           update.series = this.series;
           this.updatedOptions = update;
         }
-      )
+      );
+
+    return resp;
   }
 }

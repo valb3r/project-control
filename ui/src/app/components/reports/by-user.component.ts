@@ -1,7 +1,7 @@
 import {AfterContentInit, Component, Input, OnInit, ViewChild} from "@angular/core";
 
 import {MatSelectionList, MatSelectionListChange} from "@angular/material/list";
-import {BehaviorSubject, merge, zip} from "rxjs";
+import {BehaviorSubject, Observable, of, zip} from "rxjs";
 import {
   EntityModelGitRepo,
   EntityModelUser,
@@ -10,13 +10,14 @@ import {
 } from "../../api";
 import {ChartsConfig} from "./charts-config";
 import {Id} from "../../id";
+import {delay} from "rxjs/operators";
 
 @Component({template: ''})
 export abstract class ByUserComponent implements OnInit, AfterContentInit {
   @Input() abstract project: EntityModelGitRepo;
   @ViewChild("usersSelected") usersSelected: MatSelectionList;
 
-  isLoading = false;
+  numLoading = 0;
   users: EntityModelUser[];
   options = ChartsConfig.defaultBarChart();
   updatedOptions = undefined;
@@ -32,7 +33,6 @@ export abstract class ByUserComponent implements OnInit, AfterContentInit {
 
   ngOnInit(): void {
     const repoId = +Id.read(this.project._links.self.href);
-    this.userList.findByRepoIdL(repoId);
     const loaded = zip(
       this.statistics.getTotalWorkDateRangesL(repoId),
       this.userList.findByRepoIdL(repoId)
@@ -44,9 +44,10 @@ export abstract class ByUserComponent implements OnInit, AfterContentInit {
       this.dateRange[1] = res[0].to;
     });
 
-    merge(
+    const delayedLoaded = loaded.pipe(delay(100)); // FIXME - need to catch after `usersSelected` options ready
+    zip(
       this.afterLoaded,
-      loaded
+      delayedLoaded
     ).subscribe(_ => {
       this.doSelect();
     });
@@ -58,33 +59,39 @@ export abstract class ByUserComponent implements OnInit, AfterContentInit {
 
   doSelect() {
     this.usersSelected.selectAll();
-    this.usersSelected.options.forEach(it => this.userSelectionChange(new MatSelectionListChange(this.usersSelected, null, [it])))
+    this.usersSelected.options.forEach(it => this.userSelectionChange(new MatSelectionListChange(this.usersSelected, null, [it])));
   }
 
   onChartInit(ec) {
     this.chart = ec;
+    this.numLoading = this.usersSelected.options.length;
   }
 
-  userSelectionChange(change: MatSelectionListChange) {
-    if (!change.options || 0 === change.options.length) {
+  userSelectionChange(change: MatSelectionListChange): Observable<any> {
+    if (!change.options || 0 === change.options.length || !change.options[0]) {
       return;
     }
 
-    let repoId = +Id.read(this.project._links.self.href);
-    this.isLoading = true;
+    const repoId = +Id.read(this.project._links.self.href);
     const user = change.options[0].value as EntityModelUser;
     if (change.source.selectedOptions.isSelected(change.options[0])) {
-      this.loadData(repoId, user);
-      this.userSelected = change.options[0].value
+      this.numLoading++;
+      this.userSelected = change.options[0].value;
+      const resp = this.loadData(repoId, user);
+      resp.subscribe(_ => this.numLoading--);
+      return resp;
     } else {
+      this.numLoading++;
       this.chart.clear();
-      this.isLoading = false;
-      let update = ChartsConfig.defaultBarChart();
-      this.series = this.series.filter(it => it.href !== user._links.self.href)
+      const update = ChartsConfig.defaultBarChart();
+      this.series = this.series.filter(it => it.href !== user._links.self.href);
       update.series = this.series;
       this.updatedOptions = update;
+      this.numLoading--;
     }
+
+    return of(null);
   }
 
-  protected abstract loadData(repoId: number, user: EntityModelUser): void;
+  protected abstract loadData(repoId: number, user: EntityModelUser): Observable<any>;
 }
