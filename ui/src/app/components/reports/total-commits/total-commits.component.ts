@@ -14,6 +14,7 @@ export class TotalCommitsComponent implements AfterContentInit {
   @Input() project: EntityModelGitRepo;
 
   isLoading = false;
+  chartData = [];
 
   options = ChartsConfig.defaultBarChart()
   updatedOptions = undefined
@@ -26,12 +27,12 @@ export class TotalCommitsComponent implements AfterContentInit {
     this.statistics.getTotalWorkDateRangesL(repoId).pipe(
       mergeMap(it => this.statistics.getTotalWorkStatsLII(repoId, it.from, it.to))
     ).subscribe(res => {
-      const data = [];
-      res.forEach(it => {data.push([Date.parse(it.from), it.totalCommits]) })
+      this.chartData = [];
+      res.forEach(it => {this.chartData.push([Date.parse(it.from), it.totalCommits]) })
 
       this.isLoading = false;
       let update = this.options;
-      update.series = [{type: 'bar', data: data}];
+      update.series = [{type: 'bar', data: this.chartData}];
       this.updatedOptions = update;
     });
   }

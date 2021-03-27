@@ -53,6 +53,7 @@ import { ChangePasswordComponent } from './change-password/change-password.compo
 import { MyProfileComponent } from './my-profile/my-profile.component';
 import { LogoutComponent } from './logout/logout.component';
 import {AuthHttpInterceptor} from "./http-interceptor";
+import { CsvExportComponent } from './components/csv-export/csv-export.component';
 
 export function apiConfigFactory(): Configuration {
   const params: ConfigurationParameters = {
@@ -93,7 +94,8 @@ export const httpInterceptorProviders = [
     ByUserWorkDetailsComponent,
     ChangePasswordComponent,
     MyProfileComponent,
-    LogoutComponent
+    LogoutComponent,
+    CsvExportComponent
   ],
     imports: [
         ApiModule.forRoot(apiConfigFactory),

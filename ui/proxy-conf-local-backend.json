@@ -1,6 +1,6 @@
 {
   "/api-proxy/*": {
-    "target": "http://localhost:8080",
+    "target": "https://project-control.demo.nillhill.com",
     "secure": false,
     "changeOrigin": true,
     "pathRewrite": {
