@@ -73,6 +73,7 @@ public abstract class CommitBasedAnalyzer implements AnalysisStep {
                     if (startCommit.equals(commit.getName())) {
                         started = true;
                     }
+                    prevCommit = commit;
                     continue;
                 }
 
