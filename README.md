@@ -2,7 +2,7 @@
 
 A tool to assess the effort spent to develop software project and its readiness.
 
-### Analyzes and graphically represents
+### Analyzes and graphically represents, exports to csv
 
 1. Commit count per developer per week
 1. Churn (lines changed) per developer per week
