@@ -7,10 +7,12 @@ import org.apache.tomcat.util.net.SSLHostConfig;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.shredzone.acme4j.Account;
 import org.shredzone.acme4j.AccountBuilder;
-import org.shredzone.acme4j.Authorization;
 import org.shredzone.acme4j.Order;
 import org.shredzone.acme4j.Session;
+import org.shredzone.acme4j.Status;
+import org.shredzone.acme4j.challenge.Http01Challenge;
 import org.shredzone.acme4j.exception.AcmeException;
+import org.shredzone.acme4j.util.CSRBuilder;
 import org.shredzone.acme4j.util.KeyPairUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,6 +52,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * This configuration class is responsible for maintaining KeyStore with LetsEncrypt certificates.
@@ -65,14 +68,17 @@ public class TomcatWellKnownLetsEncryptChallengeEndpointConfig implements Tomcat
     private final Logger logger = LoggerFactory.getLogger(TomcatWellKnownLetsEncryptChallengeEndpointConfig.class);
 
     private final String domain;
+    private final String contactEmail;
     private final String letsEncryptServer;
     private final int keySize;
     private final Duration updateBeforeExpiry;
     private final Duration busyWaitInterval;
     private final String accountKeyAlias;
+    private final String accountKeyPassword;
     private final boolean enabled;
     private final ServerProperties serverProperties;
 
+    private final AtomicReference<String> challengeToken = new AtomicReference<>();
     private final List<Endpoint> observedEndpoints = new CopyOnWriteArrayList<>();
     private final AtomicBoolean customized = new AtomicBoolean();
     private final AtomicBoolean ready = new AtomicBoolean();
@@ -80,21 +86,25 @@ public class TomcatWellKnownLetsEncryptChallengeEndpointConfig implements Tomcat
     public TomcatWellKnownLetsEncryptChallengeEndpointConfig(
             ServerProperties serverProperties,
             @Value("${lets-encrypt-helper.domain}") String domain,
+            @Value("${lets-encrypt-helper.contactEmail}") String contactEmail,
             @Value("${lets-encrypt-helper.letsencrypt-server:acme://letsencrypt.org/staging}") String letsEncryptServer,
             @Value("${lets-encrypt-helper.key-size:2048}") int keySize,
             @Value("${lets-encrypt-helper.update-before-expiry:PT7D}") Duration updateBeforeExpiry,
             @Value("${lets-encrypt-helper.busy-wait-interval:PT10S}") Duration busyWaitInterval,
             @Value("${lets-encrypt-helper.account-key-alias:letsencrypt-user}") String accountKeyAlias,
+            @Value("${lets-encrypt-helper.account-key-alias:letsencrypt-key-password}") String accountKeyPassword,
             @Value("${lets-encrypt-helper.enabled:true}") boolean enabled
     ) {
         Security.addProvider(new BouncyCastleProvider());
         this.serverProperties = serverProperties;
         this.domain = domain;
+        this.contactEmail = contactEmail;
         this.letsEncryptServer = letsEncryptServer;
         this.keySize = keySize;
         this.updateBeforeExpiry = updateBeforeExpiry;
         this.busyWaitInterval = busyWaitInterval;
         this.accountKeyAlias = accountKeyAlias;
+        this.accountKeyPassword = accountKeyPassword;
         this.enabled = enabled;
 
         if (null == this.serverProperties.getSsl()) {
@@ -238,7 +248,7 @@ public class TomcatWellKnownLetsEncryptChallengeEndpointConfig implements Tomcat
 
     @Bean
     WellKnownLetsEncryptChallenge wellKnownLetsEncryptChallenge() {
-        return new WellKnownLetsEncryptChallenge();
+        return new WellKnownLetsEncryptChallenge(challengeToken);
     }
 
     private void letsEncryptCheckCertValidityAndRotateIfNeeded() {
@@ -271,6 +281,7 @@ public class TomcatWellKnownLetsEncryptChallengeEndpointConfig implements Tomcat
             }
 
             updateCertificateAndKeystore(false);
+            endpoint.getTomcatEndpoint().reloadSslHostConfigs();
         }
     }
 
@@ -282,21 +293,61 @@ public class TomcatWellKnownLetsEncryptChallengeEndpointConfig implements Tomcat
             if (null != tos && isNewKeystore) {
                 logger.warn("Please review carefully and accept TOS {}", tos);
             }
-            KeyPair domainKeyPair = KeyPairUtils.createKeyPair(keySize);
+            KeyPair accountKey = KeyPairUtils.createKeyPair(keySize);
+            KeyPair domainKey = KeyPairUtils.createKeyPair(keySize);
             Account account = new AccountBuilder()
+                    .addContact(contactEmail)
                     .agreeToTermsOfService()
                     .useKeyPair(accountKey)
                     .create(session);
 
             Order order = account.newOrder().domains(domain).create();
-
-            // Perform all required authorizations
-            for (Authorization auth : order.getAuthorizations()) {
-                authorize(auth);
+            for (var auth : order.getAuthorizations()) {
+                var challenge = auth.findChallenge(Http01Challenge.class);
+                if (null == challenge) {
+                    throw new IllegalStateException("Requires non-http challenge");
+                }
+                challengeToken.set(challenge.getToken());
+                challenge.trigger();
             }
 
-        } catch (AcmeException e) {
+            CSRBuilder csrb = new CSRBuilder();
+            csrb.addDomain(domain);
+            csrb.sign(domainKey);
+            byte[] csr = csrb.getEncoded();
+
+            finalizeOrder(order, csr);
+
+            var certificate = order.getCertificate();
+            if (null == certificate) {
+                throw new IllegalStateException("Failed to obtain certificate");
+            }
+            var newKeystore = KeyStore.getInstance(serverProperties.getSsl().getKeyStoreType());
+            newKeystore.setCertificateEntry(serverProperties.getSsl().getKeyAlias(), certificate.getCertificate());
+            newKeystore.setKeyEntry(accountKeyAlias, accountKey.getPrivate(), accountKeyPassword.toCharArray(), new Certificate[0]);
+        } catch (AcmeException|IOException|KeyStoreException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    private void finalizeOrder(Order order, byte[] csrb) throws AcmeException {
+        order.execute(csrb);
+
+        // Wait for the order to complete
+        try {
+            int attempts = 10;
+            while (order.getStatus() != Status.VALID && attempts-- > 0) {
+                if (order.getStatus() == Status.INVALID) {
+                    logger.error("Order has failed, reason: {}", order.getError());
+                    throw new AcmeException("Order failed... Giving up.");
+                }
+
+                Thread.sleep(3000L);
+                order.update();
+            }
+        } catch (InterruptedException ex) {
+            logger.error("Interrupted", ex);
+            Thread.currentThread().interrupt();
         }
     }
 
@@ -350,12 +401,18 @@ public class TomcatWellKnownLetsEncryptChallengeEndpointConfig implements Tomcat
 
     public static class WellKnownLetsEncryptChallenge extends AbstractController {
 
+        private final AtomicReference<String> challengeToken;
+
+        public WellKnownLetsEncryptChallenge(AtomicReference<String> challengeToken) {
+            this.challengeToken = challengeToken;
+        }
+
         @Override
         protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) {
             var res = new ModelAndView();
             res.setView((model, viewRequest, viewResponse) -> {
                 try (var os = viewResponse.getOutputStream()) {
-                    os.write("HELLO".getBytes(StandardCharsets.UTF_8));
+                    os.write(challengeToken.get().getBytes(StandardCharsets.UTF_8));
                 }
             });
             return res;
