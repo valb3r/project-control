@@ -261,7 +261,7 @@ public class TomcatWellKnownLetsEncryptChallengeEndpointConfig implements Tomcat
     private Connector httpToHttpsRedirectConnector() {
         Connector connector = new Connector("org.apache.coyote.http11.Http11NioProtocol");
         connector.setScheme("http");
-        connector.setPort(11180);
+        connector.setPort(80);
         connector.setSecure(false);
         connector.setRedirectPort(443);
         return connector;
