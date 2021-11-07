@@ -29,10 +29,11 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.boot.web.embedded.tomcat.TomcatConnectorCustomizer;
+import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.SimpleUrlHandlerMapping;
@@ -103,6 +104,7 @@ public class TomcatWellKnownLetsEncryptChallengeEndpointConfig implements Tomcat
 
     public TomcatWellKnownLetsEncryptChallengeEndpointConfig(
             ServerProperties serverProperties,
+            @Lazy TomcatServletWebServerFactory factory,
             @Value("${lets-encrypt-helper.domain}") String domain,
             @Value("${lets-encrypt-helper.contact}") String contact,
             @Value("${lets-encrypt-helper.account-key-alias:letsencrypt-user}") String accountKeyAlias,
@@ -113,6 +115,7 @@ public class TomcatWellKnownLetsEncryptChallengeEndpointConfig implements Tomcat
             @Value("${lets-encrypt-helper.enabled:true}") boolean enabled
     ) {
         Security.addProvider(new BouncyCastleProvider());
+        factory.addAdditionalTomcatConnectors(httpToHttpsRedirectConnector());
         this.serverProperties = serverProperties;
         this.domain = domain;
         this.contactEmail = contact;
@@ -196,6 +199,29 @@ public class TomcatWellKnownLetsEncryptChallengeEndpointConfig implements Tomcat
         }
     }
 
+    @Override
+    public void onApplicationEvent(ApplicationReadyEvent event) {
+        if (observedEndpoints.isEmpty()) {
+            throw new IllegalStateException("Failed to configure LetsEncrypt");
+        }
+    }
+
+    @Bean
+    public SimpleUrlHandlerMapping wellKnownLetsEncryptHook(WellKnownLetsEncryptChallenge challenge) {
+        SimpleUrlHandlerMapping simpleUrlHandlerMapping = new SimpleUrlHandlerMapping();
+        simpleUrlHandlerMapping.setOrder(Integer.MAX_VALUE - 2); // Launch before ResourceHttpRequestHandler
+        Map<String, Object> urlMap = new HashMap<>();
+        urlMap.put("/.well-known/acme-challenge/*", challenge);
+        simpleUrlHandlerMapping.setUrlMap(urlMap);
+
+        return simpleUrlHandlerMapping;
+    }
+
+    @Bean
+    WellKnownLetsEncryptChallenge wellKnownLetsEncryptChallenge() {
+        return new WellKnownLetsEncryptChallenge(challengeTokens);
+    }
+
     private void createBasicKeystoreIfMissing() {
         File keystoreFile = getKeystoreFile();
         if (keystoreFile.exists()) {
@@ -224,27 +250,13 @@ public class TomcatWellKnownLetsEncryptChallengeEndpointConfig implements Tomcat
         return observe;
     }
 
-    @Override
-    public void onApplicationEvent(ApplicationReadyEvent event) {
-        if (observedEndpoints.isEmpty()) {
-            throw new IllegalStateException("Failed to configure LetsEncrypt");
-        }
-    }
-
-    @Bean
-    public SimpleUrlHandlerMapping wellKnownLetsEncryptHook(WellKnownLetsEncryptChallenge challenge) {
-        SimpleUrlHandlerMapping simpleUrlHandlerMapping = new SimpleUrlHandlerMapping();
-        simpleUrlHandlerMapping.setOrder(Integer.MAX_VALUE - 2); // Launch before ResourceHttpRequestHandler
-        Map<String, Object> urlMap = new HashMap<>();
-        urlMap.put("/.well-known/acme-challenge/*", challenge);
-        simpleUrlHandlerMapping.setUrlMap(urlMap);
-
-        return simpleUrlHandlerMapping;
-    }
-
-    @Bean
-    WellKnownLetsEncryptChallenge wellKnownLetsEncryptChallenge() {
-        return new WellKnownLetsEncryptChallenge(challengeTokens);
+    private Connector httpToHttpsRedirectConnector() {
+        Connector connector = new Connector("org.apache.coyote.http11.Http11NioProtocol");
+        connector.setScheme("http");
+        connector.setPort(80);
+        connector.setSecure(false);
+        connector.setRedirectPort(443);
+        return connector;
     }
 
     private File getKeystoreFile() {
