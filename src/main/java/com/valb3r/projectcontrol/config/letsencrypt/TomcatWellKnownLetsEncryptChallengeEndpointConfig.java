@@ -110,7 +110,7 @@ public class TomcatWellKnownLetsEncryptChallengeEndpointConfig implements Tomcat
             @Value("${lets-encrypt-helper.letsencrypt-server:acme://letsencrypt.org/staging}") String letsEncryptServer,
             @Value("${lets-encrypt-helper.key-size:2048}") int keySize,
             @Value("${lets-encrypt-helper.update-before-expiry:P7D}") Duration updateBeforeExpiry,
-            @Value("${lets-encrypt-helper.busy-wait-interval:PT10S}") Duration busyWaitInterval,
+            @Value("${lets-encrypt-helper.busy-wait-interval:PT1M}") Duration busyWaitInterval,
             @Value("${lets-encrypt-helper.enabled:true}") boolean enabled
     ) {
         Security.addProvider(new BouncyCastleProvider());
