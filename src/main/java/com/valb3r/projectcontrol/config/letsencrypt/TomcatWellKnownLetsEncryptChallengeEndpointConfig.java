@@ -33,7 +33,6 @@ import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactor
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.SimpleUrlHandlerMapping;
@@ -104,7 +103,6 @@ public class TomcatWellKnownLetsEncryptChallengeEndpointConfig implements Tomcat
 
     public TomcatWellKnownLetsEncryptChallengeEndpointConfig(
             ServerProperties serverProperties,
-            @Lazy TomcatServletWebServerFactory factory,
             @Value("${lets-encrypt-helper.domain}") String domain,
             @Value("${lets-encrypt-helper.contact}") String contact,
             @Value("${lets-encrypt-helper.account-key-alias:letsencrypt-user}") String accountKeyAlias,
@@ -115,7 +113,6 @@ public class TomcatWellKnownLetsEncryptChallengeEndpointConfig implements Tomcat
             @Value("${lets-encrypt-helper.enabled:true}") boolean enabled
     ) {
         Security.addProvider(new BouncyCastleProvider());
-        factory.addAdditionalTomcatConnectors(httpToHttpsRedirectConnector());
         this.serverProperties = serverProperties;
         this.domain = domain;
         this.contactEmail = contact;
@@ -218,7 +215,8 @@ public class TomcatWellKnownLetsEncryptChallengeEndpointConfig implements Tomcat
     }
 
     @Bean
-    WellKnownLetsEncryptChallenge wellKnownLetsEncryptChallenge() {
+    WellKnownLetsEncryptChallenge wellKnownLetsEncryptChallenge(TomcatServletWebServerFactory tomcatServletWebServerFactory) {
+        tomcatServletWebServerFactory.addAdditionalTomcatConnectors(httpToHttpsRedirectConnector());
         return new WellKnownLetsEncryptChallenge(challengeTokens);
     }
 
