@@ -30,6 +30,7 @@ import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.boot.web.embedded.tomcat.TomcatConnectorCustomizer;
 import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
+import org.springframework.boot.web.server.WebServerFactoryCustomizer;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -215,10 +216,19 @@ public class TomcatWellKnownLetsEncryptChallengeEndpointConfig implements Tomcat
     }
 
     @Bean
-    WellKnownLetsEncryptChallenge wellKnownLetsEncryptChallenge(TomcatServletWebServerFactory tomcatServletWebServerFactory) {
-        tomcatServletWebServerFactory.addAdditionalTomcatConnectors(httpToHttpsRedirectConnector());
+    WellKnownLetsEncryptChallenge wellKnownLetsEncryptChallenge() {
         return new WellKnownLetsEncryptChallenge(challengeTokens);
     }
+
+    @Bean
+    public WebServerFactoryCustomizer<TomcatServletWebServerFactory> servletContainer() {
+        return server -> {
+            if (server != null) {
+                server.addAdditionalTomcatConnectors(httpToHttpsRedirectConnector());
+            }
+        };
+    }
+
 
     private void createBasicKeystoreIfMissing() {
         File keystoreFile = getKeystoreFile();
@@ -251,7 +261,7 @@ public class TomcatWellKnownLetsEncryptChallengeEndpointConfig implements Tomcat
     private Connector httpToHttpsRedirectConnector() {
         Connector connector = new Connector("org.apache.coyote.http11.Http11NioProtocol");
         connector.setScheme("http");
-        connector.setPort(80);
+        connector.setPort(11180);
         connector.setSecure(false);
         connector.setRedirectPort(443);
         return connector;
