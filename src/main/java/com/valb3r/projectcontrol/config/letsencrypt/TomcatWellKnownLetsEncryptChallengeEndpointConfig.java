@@ -56,12 +56,16 @@ import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * This configuration class is responsible for maintaining KeyStore with LetsEncrypt certificates.
- * Key property is {@code lets-encrypt-helper.keystore} that defiles path to the KeyStore with LetsEncrypt certificate.
- * By default, this bean will try to use server.ssl.* configuration variables, so all you need is just to configure your Tomcat SSL properly.
+ *
+ * By default, this bean will try to use server.ssl.* configuration variables, so you need to configure your Tomcat SSL properly.
+ * In addition to {@code server.ssl.*} , the library requires
+ * {@code lets-encrypt-helper.domain} Domain for which the certificate is going to be issued,
+ * {@code lets-encrypt-helper.contact} Email or other contact for LetsEncrypt - i.e. {@code mailto:foo@example.com},
+ * {@code lets-encrypt-helper.account-key-password} Password for Domain/User keys.
  * If the KeyStore does not exist at the moment application is started, this bean will try to issue the certificate
  * After start, this bean will watch LetsEncrypt certificate for expiration and will reissue certificate if it is close to its expiration.
  *
- * Note: It will use same KeyStore to store your Certificate, Traffic encryption key and User key.
+ * Note: It will use same KeyStore to store your Certificate, Domain key and User key.
  */
 @Configuration
 public class TomcatWellKnownLetsEncryptChallengeEndpointConfig implements TomcatConnectorCustomizer, ApplicationListener<ApplicationReadyEvent>, SmartLifecycle {
@@ -74,7 +78,7 @@ public class TomcatWellKnownLetsEncryptChallengeEndpointConfig implements Tomcat
     private final Duration updateBeforeExpiry;
     private final Duration busyWaitInterval;
     private final String accountKeyAlias;
-    private final String accountKeyPassword;
+    private final String domainAndAccountKeyPassword;
     private final boolean enabled;
     private final ServerProperties serverProperties;
 
@@ -86,25 +90,25 @@ public class TomcatWellKnownLetsEncryptChallengeEndpointConfig implements Tomcat
     public TomcatWellKnownLetsEncryptChallengeEndpointConfig(
             ServerProperties serverProperties,
             @Value("${lets-encrypt-helper.domain}") String domain,
-            @Value("${lets-encrypt-helper.contactEmail}") String contactEmail,
+            @Value("${lets-encrypt-helper.contact}") String contact,
+            @Value("${lets-encrypt-helper.domain-and-account-key-password}") String domainAndAccountKeyPassword,
+            @Value("${lets-encrypt-helper.account-key-alias:letsencrypt-user}") String accountKeyAlias,
             @Value("${lets-encrypt-helper.letsencrypt-server:acme://letsencrypt.org/staging}") String letsEncryptServer,
             @Value("${lets-encrypt-helper.key-size:2048}") int keySize,
-            @Value("${lets-encrypt-helper.update-before-expiry:PT7D}") Duration updateBeforeExpiry,
+            @Value("${lets-encrypt-helper.update-before-expiry:P7D}") Duration updateBeforeExpiry,
             @Value("${lets-encrypt-helper.busy-wait-interval:PT10S}") Duration busyWaitInterval,
-            @Value("${lets-encrypt-helper.account-key-alias:letsencrypt-user}") String accountKeyAlias,
-            @Value("${lets-encrypt-helper.account-key-alias:letsencrypt-key-password}") String accountKeyPassword,
             @Value("${lets-encrypt-helper.enabled:true}") boolean enabled
     ) {
         Security.addProvider(new BouncyCastleProvider());
         this.serverProperties = serverProperties;
         this.domain = domain;
-        this.contactEmail = contactEmail;
+        this.contactEmail = contact;
         this.letsEncryptServer = letsEncryptServer;
         this.keySize = keySize;
         this.updateBeforeExpiry = updateBeforeExpiry;
         this.busyWaitInterval = busyWaitInterval;
         this.accountKeyAlias = accountKeyAlias;
-        this.accountKeyPassword = accountKeyPassword;
+        this.domainAndAccountKeyPassword = domainAndAccountKeyPassword;
         this.enabled = enabled;
 
         if (null == this.serverProperties.getSsl()) {
@@ -121,10 +125,6 @@ public class TomcatWellKnownLetsEncryptChallengeEndpointConfig implements Tomcat
 
         if (null == this.serverProperties.getSsl().getKeyAlias()) {
             throw new IllegalStateException("Missing key alias");
-        }
-
-        if (null == this.serverProperties.getSsl().getKeyPassword()) {
-            throw new IllegalStateException("Missing key password");
         }
     }
 
@@ -184,6 +184,7 @@ public class TomcatWellKnownLetsEncryptChallengeEndpointConfig implements Tomcat
             var sslConfig = Arrays.stream(endpoint.findSslHostConfigs())
                     .filter(it -> null != it.getCertificateKeystoreFile())
                     .filter(it -> it.getCertificateKeystoreFile().contains(serverProperties.getSsl().getKeyStore()))
+                    .filter(it -> serverProperties.getSsl().getKeyStorePassword().equals(it.getCertificateKeystorePassword()))
                     .findFirst()
                     .orElse(null);
 
@@ -293,8 +294,16 @@ public class TomcatWellKnownLetsEncryptChallengeEndpointConfig implements Tomcat
             if (null != tos && isNewKeystore) {
                 logger.warn("Please review carefully and accept TOS {}", tos);
             }
+
+            // TODO KeyPair in keystore...
+//            if (isNewKeystore) {
+//                KeyPair accountKey = KeyPairUtils.createKeyPair(keySize);
+//                KeyPair domainKey = KeyPairUtils.createKeyPair(keySize);
+//            }
+
             KeyPair accountKey = KeyPairUtils.createKeyPair(keySize);
             KeyPair domainKey = KeyPairUtils.createKeyPair(keySize);
+
             Account account = new AccountBuilder()
                     .addContact(contactEmail)
                     .agreeToTermsOfService()
@@ -324,7 +333,8 @@ public class TomcatWellKnownLetsEncryptChallengeEndpointConfig implements Tomcat
             }
             var newKeystore = KeyStore.getInstance(serverProperties.getSsl().getKeyStoreType());
             newKeystore.setCertificateEntry(serverProperties.getSsl().getKeyAlias(), certificate.getCertificate());
-            newKeystore.setKeyEntry(accountKeyAlias, accountKey.getPrivate(), accountKeyPassword.toCharArray(), new Certificate[0]);
+            newKeystore.setKeyEntry(serverProperties.getSsl().getKeyAlias(), domainKey.getPrivate(), domainAndAccountKeyPassword.toCharArray(), new Certificate[0]);
+            newKeystore.setKeyEntry(accountKeyAlias, accountKey.getPrivate(), domainAndAccountKeyPassword.toCharArray(), new Certificate[0]);
         } catch (AcmeException|IOException|KeyStoreException e) {
             throw new RuntimeException(e);
         }
