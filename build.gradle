@@ -20,6 +20,7 @@ configurations {
 
 repositories {
 	mavenCentral()
+	maven { url 'https://jitpack.io' }
 }
 
 dependencies {
@@ -31,10 +32,9 @@ dependencies {
 	implementation 'org.springframework.security:spring-security-oauth2-jose'
 	implementation 'org.springframework.security:spring-security-oauth2-resource-server'
 
-	implementation 'org.shredzone.acme4j:acme4j-client:2.12'
-	implementation 'org.shredzone.acme4j:acme4j-utils:2.12'
-
+	implementation 'com.github.valb3r:letsencrypt-helper:0.1.1'
 	implementation 'org.bouncycastle:bcprov-jdk15on:1.69'
+
 	implementation 'org.neo4j:neo4j-ogm-bolt-native-types:3.2.17'
 	implementation 'org.springdoc:springdoc-openapi-ui:1.5.2'
 	implementation 'org.springdoc:springdoc-openapi-data-rest:1.5.2'
