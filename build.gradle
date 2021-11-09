@@ -32,15 +32,15 @@ dependencies {
 	implementation 'org.springframework.security:spring-security-oauth2-jose'
 	implementation 'org.springframework.security:spring-security-oauth2-resource-server'
 
-	implementation 'com.github.valb3r:letsencrypt-helper:0.1.4.1'
-	implementation 'org.bouncycastle:bcprov-jdk15on:1.69'
-
 	implementation 'org.neo4j:neo4j-ogm-bolt-native-types:3.2.17'
 	implementation 'org.springdoc:springdoc-openapi-ui:1.5.2'
 	implementation 'org.springdoc:springdoc-openapi-data-rest:1.5.2'
 
 	implementation 'org.eclipse.jgit:org.eclipse.jgit:5.10.0.202012080955-r'
 	implementation 'org.drools:drools-engine-classic:7.45.0.Final'
+
+	implementation 'com.github.valb3r:letsencrypt-helper:0.1.4.1'
+	implementation 'org.bouncycastle:bcprov-jdk15on:1.69'
 
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
