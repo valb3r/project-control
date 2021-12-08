@@ -39,7 +39,7 @@ dependencies {
 	implementation 'org.eclipse.jgit:org.eclipse.jgit:5.10.0.202012080955-r'
 	implementation 'org.drools:drools-engine-classic:7.45.0.Final'
 
-	implementation 'com.github.valb3r.letsencrypt-helper:letsencrypt-helper-tomcat:0.2.2'
+	implementation 'com.github.valb3r.letsencrypt-helper:letsencrypt-helper-tomcat:0.2.3'
 	implementation 'org.bouncycastle:bcprov-jdk15on:1.69'
 
 	compileOnly 'org.projectlombok:lombok'
