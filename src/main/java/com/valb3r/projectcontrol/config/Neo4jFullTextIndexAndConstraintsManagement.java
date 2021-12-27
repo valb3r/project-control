@@ -50,7 +50,7 @@ public class Neo4jFullTextIndexAndConstraintsManagement {
             });
         } catch (Exception ex) {
             String message = ex.getMessage();
-            if (message.contains("An equivalent index already exists") || message.contains("An equivalent constraint already exists")) {
+            if (message.contains("An equivalent index already exists") || message.contains("An equivalent constraint already exists") || message.contains("Constraint already exists")) {
                 log.info("{} seem to be already executed", statement);
                 return;
             }
