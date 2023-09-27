@@ -77,6 +77,10 @@ export class UserToAliasComponent implements AfterViewInit {
       return;
     }
 
+    if (!this.aliasesSelected.selectedOptions.isEmpty()) {
+      this.newUserName.setValue((this.aliasesSelected.selectedOptions.selected[0].value as EntityModelAlias).name);
+    }
+
     this.mode = Mode.ADD_USER;
   }
 
