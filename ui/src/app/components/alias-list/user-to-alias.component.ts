@@ -90,7 +90,7 @@ export class UserToAliasComponent implements AfterViewInit {
 
   createNewUser() {
     if (!this.newUserName.valid) {
-      return
+      return;
     }
 
     zip(
@@ -99,6 +99,8 @@ export class UserToAliasComponent implements AfterViewInit {
     ).subscribe(res => {
       this.users = res[1]._embedded.users;
       this.inMemorySelectedUser = res[0];
+      this.newUserName.setValue('');
+      this.mode = Mode.NONE;
     });
   }
 
