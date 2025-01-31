@@ -29,8 +29,7 @@ export class ByUserReworkFromOthersComponent extends ByUserComponent {
         res => {
           this.series.push({
             href: user._links.self.href,
-            type: 'bar',
-            stack: true,
+            type: 'line',
             data: res.map(it => [Date.parse(it.from), it.removedLinesOfOthers]),
             name: user.name,
             itemStyle: { normal: { color: ChartsConfig.seriesColor(user.name) } }

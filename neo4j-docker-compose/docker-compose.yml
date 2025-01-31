@@ -3,7 +3,7 @@ version: "3"
 services:
   neo4j:
     container_name: Neo4j-test
-    image: neo4j:4.2.13
+    image: neo4j:4.4.40
     volumes:
       - ./compose-data/neo4j/data:/data
       - ./compose-data/neo4j/plugins:/plugins
@@ -12,6 +12,7 @@ services:
       - "17474:7474"
       - "17687:7687"
     environment:
+      - NEO4J_dbms_security_auth__minimum__password__length=5
       - NEO4J_apoc_export_file_enabled=true
       - NEO4J_apoc_import_file_enabled=true
       - NEO4J_dbms_security_procedures_unrestricted=apoc.*,algo.*

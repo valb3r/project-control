@@ -64,7 +64,7 @@ export abstract class ByUserComponent implements OnInit, AfterContentInit {
 
   onChartInit(ec) {
     this.chart = ec;
-    this.numLoading = this.usersSelected.options.length;
+    this.numLoading = 0;
   }
 
   userSelectionChange(change: MatSelectionListChange): Observable<any> {

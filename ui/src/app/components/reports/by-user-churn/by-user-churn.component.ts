@@ -28,8 +28,7 @@ export class ByUserChurnComponent extends ByUserComponent {
         res => {
           this.series.push({
             href: user._links.self.href,
-            type: 'bar',
-            stack: true,
+            type: 'line',
             data: res.map(it => [Date.parse(it.from), it.linesAdded + it.linesRemoved]),
             name: user.name,
             itemStyle: { normal: { color: ChartsConfig.seriesColor(user.name) } }
